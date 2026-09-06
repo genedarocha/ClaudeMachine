@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Automation 1: Daily Video Content Autopilot Engine - Field Guide</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+  @page {
+    size: A4 portrait;
+    margin: 0;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #1e293b;
+    background: #f8fafc;
+    font-size: 13px;
+    line-height: 1.55;
+  }
+
+  .page {
+    width: 210mm;
+    height: 297mm;
+    page-break-after: always;
+    page-break-inside: avoid;
+    position: relative;
+    padding: 24mm 22mm 20mm 22mm;
+    background: #ffffff;
+    overflow: hidden;
+  }
+
+  /* Cover Page */
+  .page-cover {
+    background: #18172b;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 30mm 25mm 25mm 25mm;
+  }
+
+  .cover-logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: #ffffff;
+  }
+
+  .cover-logo span.star {
+    color: #f59e0b;
+    font-size: 18px;
+  }
+
+  .cover-logo span.brand-vox {
+    color: #ffffff;
+  }
+  .cover-logo span.brand-star {
+    color: #f97316;
+  }
+
+  .cover-visual {
+    margin: 40px 0;
+    position: relative;
+    height: 180px;
+  }
+
+  .card-node {
+    position: absolute;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #ffffff;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .card-node .bar {
+    height: 3px;
+    background: rgba(255,255,255,0.4);
+    border-radius: 2px;
+    width: 100%;
+  }
+
+  .node-blue { background: #3b82f6; top: 10px; left: 180px; width: 140px; }
+  .node-orange { background: #f97316; top: 80px; left: 40px; width: 130px; }
+  .node-purple { background: #6366f1; top: 90px; left: 220px; width: 135px; }
+  .node-green { background: #10b981; top: 40px; left: 320px; width: 130px; }
+  .node-amber { background: #f59e0b; top: 40px; left: 440px; width: 120px; }
+  .node-cyan { background: #06b6d4; top: 120px; left: 380px; width: 125px; }
+
+  .cover-badge {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3.5px;
+    color: #f59e0b;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .cover-title {
+    font-size: 34px;
+    font-weight: 800;
+    line-height: 1.15;
+    margin-bottom: 16px;
+    color: #ffffff;
+  }
+
+  .cover-subtitle {
+    font-size: 14px;
+    color: #94a3b8;
+    line-height: 1.6;
+    max-width: 540px;
+    margin-bottom: 30px;
+  }
+
+  .cover-footer {
+    border-top: 1px solid rgba(255,255,255,0.12);
+    padding-top: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  .cover-author {
+    font-size: 14px;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+  }
+
+  .cover-company {
+    font-size: 12px;
+    color: #94a3b8;
+    margin-top: 4px;
+  }
+
+  /* Interior Page Header & Footer */
+  .page-header {
+    position: absolute;
+    top: 14mm;
+    left: 22mm;
+    right: 22mm;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #64748b;
+    text-transform: uppercase;
+    border-top: 2px solid #4f46e5;
+    padding-top: 6px;
+  }
+
+  .page-footer {
+    position: absolute;
+    bottom: 12mm;
+    left: 22mm;
+    right: 22mm;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 9px;
+    color: #94a3b8;
+    border-top: 1px solid #e2e8f0;
+    padding-top: 6px;
+  }
+
+  .page-footer-logo {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: #1e1b4b;
+    color: #ffffff;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 800;
+    font-size: 8px;
+    letter-spacing: 1px;
+  }
+
+  .page-number {
+    font-weight: 700;
+    color: #1e293b;
+  }
+
+  /* Typography & Structure */
+  .part-tag {
+    font-size: 11px;
+    font-weight: 700;
+    color: #4f46e5;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 6px;
+  }
+
+  h1.page-title {
+    font-size: 26px;
+    font-weight: 800;
+    color: #0f172a;
+    line-height: 1.2;
+    margin-bottom: 14px;
+  }
+
+  h2.section-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1e1b4b;
+    margin: 16px 0 8px 0;
+  }
+
+  p {
+    color: #334155;
+    margin-bottom: 12px;
+    font-size: 12.5px;
+  }
+
+  ul.bullet-list {
+    list-style: none;
+    margin: 10px 0 16px 0;
+  }
+
+  ul.bullet-list li {
+    position: relative;
+    padding-left: 18px;
+    margin-bottom: 8px;
+    font-size: 12.5px;
+    color: #334155;
+  }
+
+  ul.bullet-list li::before {
+    content: "■";
+    position: absolute;
+    left: 0;
+    color: #4f46e5;
+    font-size: 10px;
+    top: 2px;
+  }
+
+  /* Callout Boxes */
+  .callout-box {
+    background: #312e81;
+    color: #ffffff;
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin: 16px 0;
+  }
+
+  .callout-title {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #93c5fd;
+    margin-bottom: 6px;
+  }
+
+  .callout-content {
+    font-size: 12px;
+    color: #e0e7ff;
+    line-height: 1.5;
+  }
+
+  .callout-orange {
+    background: #c2410c;
+  }
+  .callout-orange .callout-title {
+    color: #fed7aa;
+  }
+  .callout-orange .callout-content {
+    color: #fff7ed;
+  }
+
+  .callout-teal {
+    background: #0f766e;
+  }
+  .callout-teal .callout-title {
+    color: #99f6e4;
+  }
+  .callout-teal .callout-content {
+    color: #f0fdfa;
+  }
+
+  /* Step Badges Row */
+  .steps-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    margin: 16px 0;
+  }
+
+  .step-pill {
+    flex: 1;
+    text-align: center;
+    padding: 10px 6px;
+    border-radius: 12px;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  }
+
+  .step-pill .step-circle {
+    width: 24px;
+    height: 24px;
+    background: rgba(255,255,255,0.25);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 6px auto;
+    font-weight: 800;
+    font-size: 12px;
+  }
+
+  .step-pill .step-name {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .step-pill .step-sub {
+    font-size: 8px;
+    opacity: 0.9;
+    margin-top: 2px;
+  }
+
+  .pill-1 { background: #ef4444; }
+  .pill-2 { background: #f59e0b; }
+  .pill-3 { background: #10b981; }
+  .pill-4 { background: #6366f1; }
+  .pill-5 { background: #3b82f6; }
+
+  /* Tables */
+  table.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14px 0;
+    font-size: 11.5px;
+  }
+
+  table.data-table th {
+    background: #1e1b4b;
+    color: #ffffff;
+    text-align: left;
+    padding: 8px 12px;
+    font-weight: 700;
+    font-size: 10.5px;
+    letter-spacing: 0.5px;
+  }
+
+  table.data-table td {
+    padding: 8px 12px;
+    border-bottom: 1px solid #e2e8f0;
+    color: #334155;
+    vertical-align: top;
+  }
+
+  table.data-table tr:nth-child(even) td {
+    background: #f8fafc;
+  }
+
+  /* Code snippet block */
+  .code-block {
+    background: #0f172a;
+    color: #e2e8f0;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    line-height: 1.45;
+    margin: 12px 0;
+    overflow: hidden;
+  }
+
+  .code-block .keyword { color: #f43f5e; }
+  .code-block .string { color: #34d399; }
+  .code-block .function { color: #60a5fa; }
+  .code-block .comment { color: #64748b; font-style: italic; }
+
+  /* Worksheets & Checklists */
+  .checklist-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px 12px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    margin-bottom: 6px;
+    font-size: 11.5px;
+  }
+
+  .checkbox-box {
+    width: 16px;
+    height: 16px;
+    border: 2px solid #cbd5e1;
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .badge-tag {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 9.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+  .tag-purple { background: #ede9fe; color: #6d28d9; }
+  .tag-green { background: #dcfce7; color: #15803d; }
+  .tag-amber { background: #fef3c7; color: #b45309; }
+  .tag-blue { background: #dbeafe; color: #1d4ed8; }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin: 12px 0;
+  }
+
+  .card-box {
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 12px 14px;
+    background: #ffffff;
+  }
+
+  .card-box h4 {
+    font-size: 12px;
+    font-weight: 700;
+    color: #1e1b4b;
+    margin-bottom: 6px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= PAGE 1: COVER ================= -->
+<div class="page page-cover">
+  <div class="cover-logo">
+    <span class="star">★</span>
+    <span class="brand-vox">VOX</span><span class="brand-star">STAR</span>
+  </div>
+
+  <div class="cover-visual">
+    <div class="card-node node-blue">
+      <span>CSV / DB Queue</span>
+      <div class="bar"></div>
+    </div>
+    <div class="card-node node-orange">
+      <span>Gemini • Claude</span>
+      <div class="bar"></div>
+    </div>
+    <div class="card-node node-purple">
+      <span>ChatGPT • Grok</span>
+      <div class="bar"></div>
+    </div>
+    <div class="card-node node-green">
+      <span>LT25 / Sundance</span>
+      <div class="bar"></div>
+    </div>
+    <div class="card-node node-amber">
+      <span>6-Channel Syndicate</span>
+      <div class="bar"></div>
+    </div>
+    <div class="card-node node-cyan">
+      <span>Wiredvibe Audio</span>
+      <div class="bar"></div>
+    </div>
+  </div>
+
+  <div>
+    <div class="cover-badge">A Practical Field Guide</div>
+    <h1 class="cover-title">Automation 1:<br>Daily Video Content<br>Autopilot Engine</h1>
+    <p class="cover-subtitle">
+      Autonomous loop engineering that ingests video ideas from CSV or database tables, synthesizes viral hooks across 4 AI models, renders via LT25, Sundance, or Gemini Veo, and syndicates to 6 social platforms on complete autopilot.
+    </p>
+  </div>
+
+  <div class="cover-footer">
+    <div>
+      <div class="cover-author">GENE DA ROCHA, MSc BSc (Hons)</div>
+      <div class="cover-company">Voxstar Ltd • Voxstar.com • Wiredvibe.ai</div>
+    </div>
+    <div style="text-align: right; color: #94a3b8; font-size: 11px;">
+      Edition: 2026.1<br>Commercial Release
+    </div>
+  </div>
+</div>
+
+<!-- ================= PAGE 2: WELCOME & EXECUTIVE SUMMARY ================= -->
+<div class="page">
+  <div class="page-header">
+    <span>Welcome & Overview</span>
+    <span>Automation 1 Field Guide</span>
+  </div>
+
+  <div class="part-tag">Before You Begin</div>
+  <h1 class="page-title">Stop Manual Scheduling — Run Autonomous Loop Engines</h1>
+
+  <p>
+    The standard approach to social video is broken: founders, growth leads, and marketing teams spend hours every week staring at blank script templates, wrestling with timeline video editors, writing repetitive captions, and manually copying hashtags into five different social apps.
+  </p>
+  <p>
+    <strong>Automation 1</strong> introduces a fundamentally superior architecture: <em>Autonomous Loop Engineering</em>. Instead of relying on human willpower or brittle static schedulers, the system operates as a self-healing daily pipeline. It pulls unexecuted video ideas from a CSV file or SQLite database, runs iterative critique loops across leading LLMs, generates neural-soundtrack paired videos, packages high-converting Call-To-Actions (CTAs), and automatically uploads to 6 major distribution endpoints.
+  </p>
+
+  <h2 class="section-title">What You Will Get From This Package</h2>
+  <ul class="bullet-list">
+    <li><strong>Full 4-Model Code Base:</strong> Ready-to-run automation scripts for <strong>Google Gemini</strong>, <strong>Anthropic Claude</strong>, <strong>OpenAI ChatGPT</strong>, and <strong>xAI Grok</strong>.</li>
+    <li><strong>3 Swappable Video Engines:</strong> Fast-render <strong>LT25</strong> (100% Free / Local), <strong>Sundance AI</strong> (Cinematic Fee/Local), and <strong>Google Gemini App / Veo</strong> (Cloud-Native).</li>
+    <li><strong>6-Channel Automated Syndication:</strong> Direct publishing to X.com, YouTube Shorts, LinkedIn Personal Profile (Gene Da Rocha), LinkedIn Company Page (Wiredvibeapp), Facebook Company Page, and TikTok.</li>
+    <li><strong>Mandatory Brand Hashtags:</strong> Hardcoded brand amplification: <code>#voxstar #voxstar.ai #wiredvibeapp #atltrust #aitoolboard</code>.</li>
+    <li><strong>Turnkey Database & CSV Ingestion:</strong> Zero setup required—reads from <code>video_ideas_queue.csv</code> or SQLite with automated retry and state logging.</li>
+  </ul>
+
+  <div class="callout-box">
+    <div class="callout-title">The Core Principle</div>
+    <div class="callout-content">
+      Your attention belongs on strategy and product development, not on daily social media distribution. Every manual action you eliminate via loop engineering is compound leverage returned to your business.
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <div class="page-footer-logo">★ VOXSTAR</div>
+    <span>© Voxstar Ltd • Voxstar.com</span>
+    <span class="page-number">02</span>
+  </div>
+</div>
+
+<!-- ================= PAGE 3: CONTENTS ================= -->
+<div class="page">
+  <div class="page-header">
+    <span>Table of Contents</span>
+    <span>Automation 1 Field Guide</span>
+  </div>
+
+  <div class="part-tag">What's Inside</div>
+  <h1 class="page-title">Contents</h1>
+
+  <table class="data-table" style="margin-top: 20px;">
+    <thead>
+      <tr>
+        <th style="width: 10%;">Part</th>
+        <th style="width: 50%;">Chapter Title</th>
+        <th style="width: 40%;">Core Focus</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>01</strong></td>
+        <td><strong>The Loop Engineering Architecture</strong></td>
+        <td>Why static schedulers fail & how self-refining loops operate</td>
+      </tr>
+      <tr>
+        <td><strong>02</strong></td>
+        <td><strong>The 5-Step Execution Cycle</strong></td>
+        <td>Ingest, Synthesize, Render, Package, Syndicate</td>
+      </tr>
+      <tr>
+        <td><strong>03</strong></td>
+        <td><strong>Database & CSV Ingestion Layer</strong></td>
+        <td>Schema design, state transitions, and batch queueing</td>
+      </tr>
+      <tr>
+        <td><strong>04</strong></td>
+        <td><strong>The 4-Model AI Matrix</strong></td>
+        <td>Gemini 2.5, Claude 3.7, ChatGPT-4o & Grok 2/3 implementations</td>
+      </tr>
+      <tr>
+        <td><strong>05</strong></td>
+        <td><strong>Video Rendering Engines</strong></td>
+        <td>LT25 (Free), Sundance AI (Fee), and Google Gemini Veo</td>
+      </tr>
+      <tr>
+        <td><strong>06</strong></td>
+        <td><strong>6-Channel Syndication Hub</strong></td>
+        <td>X.com, YouTube Shorts, LinkedIn (x2), FB & TikTok</td>
+      </tr>
+      <tr>
+        <td><strong>07</strong></td>
+        <td><strong>Live Code Reference & Walkthrough</strong></td>
+        <td>Script breakdown and environment configuration</td>
+      </tr>
+      <tr>
+        <td><strong>08</strong></td>
+        <td><strong>Troubleshooting & Failure Modes</strong></td>
+        <td>Handling API limits, network retries & auth token renewal</td>
+      </tr>
+      <tr>
+        <td><strong>09</strong></td>
+        <td><strong>The 30-Day Deployment On-Ramp</strong></td>
+        <td>Week-by-week implementation plan from zero to automated MRR</td>
+      </tr>
+      <tr>
+        <td><strong>10</strong></td>
+        <td><strong>Setup Sheet & Quick Reference</strong></td>
+        <td>Printable configuration worksheet & 1-page operational guide</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout-box callout-teal" style="margin-top: 30px;">
+    <div class="callout-title">Commercial Value Proposition</div>
+    <div class="callout-content">
+      This field guide and accompanying code repository are licensed for individual creators, agencies, and enterprise growth teams. Packaged as a private GitHub repository, this automation delivers an immediate ROI for clients looking to scale multi-channel content without agency overhead.
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <div class="page-footer-logo">★ VOXSTAR</div>
+    <span>© Voxstar Ltd • Voxstar.com</span>
+    <span class="page-number">03</span>
+  </div>
+</div>
+
+<!-- ================= PAGE 4: PART 01 LOOP ARCHITECTURE ================= -->
+<div class="page">
+  <div class="page-header">
+    <span>01 • Loop Architecture</span>
+    <span>Automation 1 Field Guide</span>
+  </div>
+
+  <div class="part-tag">Part 01</div>
+  <h1 class="page-title">Why Loop Engineering Beats Schedulers</h1>
+
+  <p>
+    Traditional social media automation relies on "Linear Schedulers": you write a script, manually click record, upload a video to a tool like Buffer or Hootsuite, and pick a calendar date. If the video fails to upload or the hook underperforms, the scheduler silently fails or publishes flat content that gets zero reach.
+  </p>
+  <p>
+    <strong>Loop Engineering</strong> replaces linear pipelines with an autonomous feedback loop consisting of five synchronized nodes:
+  </p>
+
+  <div class="steps-row">
+    <div class="step-pill pill-1">
+      <div class="step-circle">1</div>
+      <div class="step-name">Queue</div>
+      <div class="step-sub">CSV / Database</div>
+    </div>
+    <div class="step-pill pill-2">
+      <div class="step-circle">2</div>
+      <div class="step-name">Synthesize</div>
+      <div class="step-sub">Multi-Model AI</div>
+    </div>
+    <div class="step-pill pill-3">
+      <div class="step-circle">3</div>
+      <div class="step-name">Render</div>
+      <div class="step-sub">LT25 / Sundance</div>
+    </div>
+    <div class="step-pill pill-4">
+      <div class="step-circle">4</div>
+      <div class="step-name">Package</div>
+      <div class="step-sub">CTA & Hashtags</div>
+    </div>
+    <div class="step-pill pill-5">
+      <div class="step-circle">5</div>
+      <div class="step-name">Syndicate</div>
+      <div class="step-sub">6 Channels</div>
+    </div>
+  </div>
+
+  <h2 class="section-title">The Three Pillars of Loop Engineering</h2>
+  <ul class="bullet-list">
+    <li><strong>1. Self-Critique & Quality Gates:</strong> Before any video prompt is dispatched to rendering, the AI evaluates the retention score and curiosity gap. If score &lt; 90/100, it automatically rewrites the opening 3 seconds.</li>
+    <li><strong>2. Decoupled Rendering:</strong> The video generation layer is abstracted so you can render for $0 using local <strong>LT25</strong>, scale with high-definition <strong>Sundance</strong>, or use <strong>Gemini Veo</strong> in the cloud.</li>
+    <li><strong>3. Idempotent Multi-Channel Syndication:</strong> Each social channel upload is audited in SQLite. If TikTok times out while LinkedIn succeeds, the loop logs the exact failure and retries only the pending endpoint.</li>
+  </ul>
+
+  <div class="callout-box">
+    <div class="callout-title">The Core Principle</div>
+    <div class="callout-content">
+      Schedulers push files. Loop engines evaluate, refine, render, and syndicate. A loop engine never sleeps, never forgets hashtags, and never burns out.
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <div class="page-footer-logo">★ VOXSTAR</div>
+    <span>© Voxstar Ltd • Voxstar.com</span>
+    <span class="page-number">04</span>
+  </div>
+</div>
+
+<!-- ================= PAGE 5: PART 02 5-STEP EXECUTION ================= -->
+<div class="page">
+  <div class="page-header">
+    <span>02 • Execution Cycle</span>
+    <span>Automation 1 Field Guide</span>
+  </div>
+
+  <div class="part-tag">Part 02</div>
+  <h1 class="page-title">The 5-Step Video Execution Pipeline</h1>
+
+  <p>
+    Here is exactly how the daily automation runs from start to finish every morning:
+  </p>
+
+  <div class="grid-2">
+    <div class="card-box">
+      <h4><span class="badge-tag tag-purple">Step 1</span> Ingest Idea from Queue</h4>
+      <p style="font-size:11.5px; margin-bottom:0;">
+        The system queries <code>automation_videos.db</code> for the oldest record with <code>status = 'pending'</code>. If database is uninitialized, it auto-imports from <code>video_ideas_queue.csv</code>.
+      </p>
+    </div>
+
+    <div class="card-box">
+      <h4><span class="badge-tag tag-amber">Step 2</span> AI Prompt Synthesis</h4>
+      <p style="font-size:11.5px; margin-bottom:0;">
+        The active LLM (Gemini, Claude, ChatGPT, or Grok) receives the idea topic and generates a high-velocity hook title, neural soundscape pairing, full SEO description, and custom CTA.
+      </p>
+    </div>
+
+    <div class="card-box">
+      <h4><span class="badge-tag tag-green">Step 3</span> Video Asset Render</h4>
+      <p style="font-size:11.5px; margin-bottom:0;">
+        The synthesized prompt is dispatched to the chosen video engine (LT25, Sundance, or Veo). The engine outputs a vertical 1080x1920 MP4 file with Wiredvibe audio.
+      </p>
+    </div>
+
+    <div class="card-box">
+      <h4><span class="badge-tag tag-blue">Step 4</span> Metadata & CTA Packaging</h4>
+      <p style="font-size:11.5px; margin-bottom:0;">
+        Packages platform-tailored copy and injects the mandatory hashtag bundle: <code>#voxstar #voxstar.ai #wiredvibeapp #atltrust #aitoolboard</code>.
+      </p>
+    </div>
+  </div>
+
+  <div class="card-box" style="margin-top: 10px;">
+    <h4><span class="badge-tag tag-purple">Step 5</span> Multi-Channel Broadcasting (6 Targets)</h4>
+    <p style="font-size:11.5px; margin-bottom:0;">
+      Uploads video and tailored captions simultaneously across:
+      <strong>1) X.com</strong>, <strong>2) YouTube Shorts</strong>, <strong>3) LinkedIn Personal (Gene Da Rocha)</strong>, <strong>4) LinkedIn Company (Wiredvibeapp)</strong>, <strong>5) Facebook Company Page</strong>, and <strong>6) TikTok</strong>.
+    </p>
+  </div>
+
+  <div class="callout-box callout-orange" style="margin-top: 14px;">
+    <div class="callout-title">Loop Refinement Rule</div>
+    <div class="callout-content">
+      Never post a generic video prompt. Every prompt must contain: 1) Visual subject, 2) Lighting & aesthetic (e.g. Cyberpunk Neon), 3) Kinetic camera movement, 4) Audio synchronization cue.
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <div class="page-footer-logo">★ VOXSTAR</div>
+    <span>© Voxstar Ltd • Voxstar.com</span>
+    <span class="page-number">05</span>
+  </div>
+</div>
+
+<!-- ================= PAGE 6: PART 03 DATABASE & CSV LAYER ================= -->
+<div class="page">
+  <div class="page-header">
+    <span>03 • Ingestion Layer</span>
+    <span>Automation 1 Field Guide</span>
+  </div>
+
+  <div class="part-tag">Part 03</div>
+  <h1 class="page-title">CSV & SQLite Database Schema</h1>
+
+  <p>
+    Automation 1 maintains a local SQLite database that mirrors a human-editable CSV queue. You can add 100 video ideas into Excel or Google Sheets, export as CSV, and the automation will consume one idea per day automatically.
+  </p>
+
+  <h2 class="section-title">Queue Table Definition</h2>
+  <div class="code-block">
+<span class="keyword">CREATE TABLE</span> video_queue (
+    id <span class="function">INTEGER PRIMARY KEY AUTOINCREMENT</span>,
+    topic_idea <span class="keyword">TEXT NOT NULL</span>,
+    target_audience <span class="keyword">TEXT</span>,
+    soundscape <span class="keyword">TEXT DEFAULT</span> <span class="string">'Gamma Retention Pulse (40Hz)'</span>,
+    video_engine <span class="keyword">TEXT DEFAULT</span> <span class="string">'LT25'</span>,
+    cta_type <span class="keyword">TEXT DEFAULT</span> <span class="string">'Visit wiredvibe.ai'</span>,
+    status <span class="keyword">TEXT DEFAULT</span> <span class="string">'pending'</span>, <span class="comment">-- pending | rendering | published | failed</span>
+    rendered_video_url <span class="keyword">TEXT</span>,
+    generated_title <span class="keyword">TEXT</span>,
+    published_channels <span class="keyword">TEXT</span>, <span class="comment">-- JSON array of published endpoints</span>
+    created_at <span class="keyword">TIMESTAMP DEFAULT CURRENT_TIMESTAMP</span>
+);
+  </div>
+
+  <h2 class="section-title">CSV Queue Format (<code>video_ideas_queue.csv</code>)</h2>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>id</th>
+        <th>topic_idea</th>
+        <th>target_audience</th>
+        <th>soundscape</th>
+        <th>video_engine</th>
+        <th>status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td>How 40Hz sound boosts deep coding focus by 300%</td>
+        <td>Software Engineers</td>
+        <td>Gamma 40Hz</td>
+        <td>LT25</td>
+        <td><span class="badge-tag tag-amber">pending</span></td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>Why white noise fails ADHD brains</td>
+        <td>ADHD Creators</td>
+        <td>Alpha Flow</td>
+        <td>SUNDANCE</td>
+        <td><span class="badge-tag tag-amber">pending</span></td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>Autonomous AI Video Creation with Loop Engineering</td>
+        <td>SaaS Founders</td>
+        <td>Cyberpunk Hype</td>
+        <td>GEMINI_VEO</td>
+        <td><span class="badge-tag tag-amber">pending</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout-box">
+    <div class="callout-title">Automatic Sync Guarantee</div>
+    <div class="callout-content">
+      When you call <code>sync_csv_to_db()</code>, the engine scans the CSV for any newly added topics and injects them into the database queue without modifying previously completed runs.
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <div class="page-footer-logo">★ VOXSTAR</div>
+    <span>© Voxstar Ltd • Voxstar.com</span>
+    <span class="page-number">06</span>
+  </div>
+</div>
+
+<!-- ================= PAGE 7: PART 04 4-MODEL MATRIX ================= -->
+<div class="page">
+  <div class="page-header">
+    <span>04 • AI Model Matrix</span>
+    <span>Automation 1 Field Guide</span>
+  </div>
+
+  <div class="part-tag">Part 04</div>
+  <h1 class="page-title">The 4-Model AI Engine Matrix</h1>
+
+  <p>
+    Different AI models excel at different creative tasks. Automation 1 provides distinct standalone implementation scripts for the four dominant AI ecosystems:
+  </p>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Model</th>
+        <th>Script File</th>
+        <th>Key Strength</th>
+        <th>Ideal Use Case</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Google Gemini</strong></td>
+        <td><code>automation_gemini.py</code></td>
+        <td>Ultra-fast structured JSON, native integration with Veo video generator</td>
+        <td>High-frequency daily builds, tokenless local cost efficiency</td>
+      </tr>
+      <tr>
+        <td><strong>Anthropic Claude</strong></td>
+        <td><code>automation_claude.py</code></td>
+        <td>Nuanced psychological hooks, high retention narrative copywriting</td>
+        <td>Thought leadership posts for Gene Da Rocha LinkedIn</td>
+      </tr>
+      <tr>
+        <td><strong>OpenAI ChatGPT</strong></td>
+        <td><code>automation_chatgpt.py</code></td>
+        <td>JSON mode reliability, wide ecosystem tool calling compatibility</td>
+        <td>Standard SaaS explainers, YouTube Shorts SEO metadata</td>
+      </tr>
+      <tr>
+        <td><strong>xAI Grok</strong></td>
+        <td><code>automation_grok.py</code></td>
+        <td>Contrarian, viral, irreverent hooks that maximize engagement on X</td>
+        <td>Viral Twitter/X threads and TikTok FYP reach</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2 class="section-title">Self-Critique Prompt Engineering Loop</h2>
+  <p>
+    All four scripts execute an automated 3-pass refinement loop before returning copy:
+  </p>
+  <ul class="bullet-list">
+    <li><strong>Pass 1: Concept Draft:</strong> Generates raw video prompt and draft caption.</li>
+    <li><strong>Pass 2: Friction & Hook Audit:</strong> Checks if the first 5 words create an undeniable curiosity gap.</li>
+    <li><strong>Pass 3: CTA & Brand Polish:</strong> Attaches the high-converting CTA and appends mandatory hashtags.</li>
+  </ul>
+
+  <div class="callout-box callout-teal">
+    <div class="callout-title">Multi-Model Portability</div>
+    <div class="callout-content">
+      Because all 4 model implementations adhere to the unified <code>LoopEngine</code> interface, you can switch from Gemini to Claude or Grok with a single command line flag or environment variable change.
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <div class="page-footer-logo">★ VOXSTAR</div>
+    <span>© Voxstar Ltd • Voxstar.com</span>
+    <span class="page-number">07</span>
+  </div>
+</div>
+
+<!-- ================= PAGE 8: PART 05 VIDEO ENGINES ================= -->
+<div class="page">
+  <div class="page-header">
+    <span>05 • Video Rendering</span>
+    <span>Automation 1 Field Guide</span>
+  </div>
+
+  <div class="part-tag">Part 05</div>
+  <h1 class="page-title">Video Rendering Engines: Free vs Fee</h1>
+
+  <p>
+    Automation 1 abstracts the rendering pipeline into three swappable adapters:
+  </p>
+
+  <div class="grid-2">
+    <div class="card-box">
+      <h4><span class="badge-tag tag-green">LT25 Fast-Render</span> (100% Free / Local)</h4>
+      <p style="font-size:11.5px;">
+        Runs locally on your Mac or Linux workstation. Utilizes lightweight diffusion checkpoints to render vertical video clips in ~4 seconds with $0 cloud API costs.
+      </p>
+      <div style="font-size:10.5px; color:#64748b; margin-top:4px;">
+        ✓ Zero cloud fee &nbsp;•&nbsp; ✓ High speed &nbsp;•&nbsp; ✓ Offline capable
+      </div>
+    </div>
+
+    <div class="card-box">
+      <h4><span class="badge-tag tag-amber">Sundance AI</span> (Fee / Cinematic Local)</h4>
+      <p style="font-size:11.5px;">
+        Cinematic grade rendering engine. Delivers photorealistic lighting, dynamic 3D camera pan movements, and high-fidelity texture rendering (~$0.04/render).
+      </p>
+      <div style="font-size:10.5px; color:#64748b; margin-top:4px;">
+        ✓ Ultra-photorealistic &nbsp;•&nbsp; ✓ 4K textures &nbsp;•&nbsp; ✓ High conversion
+      </div>
+    </div>
+  </div>
+
+  <div class="card-box" style="margin-top: 10px;">
+    <h4><span class="badge-tag tag-purple">Google Gemini App & Veo</span> (Cloud-Native)</h4>
+    <p style="font-size:11.5px; margin-bottom:0;">
+      Google DeepMind's generative video engine. Native vertical video synthesis with cinematic lighting and audio waveform synchronization.
+    </p>
+  </div>
+
+  <h2 class="section-title">Wiredvibe Neuro-Soundscape Audio Layer</h2>
+  <p>
+    Every rendered video is paired with a calibrated neuroscience audio track from Wiredvibe (<code>wiredvibe.ai</code>):
+  </p>
+  <ul class="bullet-list">
+    <li><strong>Gamma Retention Pulse (40Hz):</strong> Stimulates high-focus alertness, increasing video watch completion rates by up to 34%.</li>
+    <li><strong>Deep Tech Alpha Flow (10Hz):</strong> Calming, reflective frequency ideal for software architecture tutorials and code breakdowns.</li>
+    <li><strong>Cyberpunk Hype Beat (140 BPM):</strong> High-energy kinetic rhythm engineered for viral TikTok FYP and YouTube Shorts feeds.</li>
+  </ul>
+
+  <div class="page-footer">
+    <div class="page-footer-logo">★ VOXSTAR</div>
+    <span>© Voxstar Ltd • Voxstar.com</span>
+    <span class="page-number">08</span>
+  </div>
+</div>
+
+<!-- ================= PAGE 9: PART 06 6-CHANNEL SYNDICATION ================= -->
+<div class="page">
+  <div class="page-header">
+    <span>06 • Syndication Hub</span>
+    <span>Automation 1 Field Guide</span>
+  </div>
+
+  <div class="part-tag">Part 06</div>
+  <h1 class="page-title">6-Channel Automated Social Distribution</h1>
+
+  <p>
+    Once the video is rendered and packaged, the <code>SocialPublishersHub</code> executes parallel or queued uploads across 6 high-value destinations:
+  </p>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Destination</th>
+        <th>Target Entity</th>
+        <th>Format & Payload</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>1. X.com (Twitter)</strong></td>
+        <td>Wiredvibeapp / Voxstar</td>
+        <td>Native video tweet + viral hook thread + mandatory hashtags</td>
+      </tr>
+      <tr>
+        <td><strong>2. YouTube.com</strong></td>
+        <td>YouTube Shorts Channel</td>
+        <td>1080x1920 vertical video, SEO title, description, and link</td>
+      </tr>
+      <tr>
+        <td><strong>3. LinkedIn.com</strong></td>
+        <td>Gene Da Rocha (Personal)</td>
+        <td>Thought leadership breakdown with direct business CTA</td>
+      </tr>
+      <tr>
+        <td><strong>4. LinkedIn.com</strong></td>
+        <td>Wiredvibeapp (Company Page)</td>
+        <td>Official company spotlight and neuroscience product update</td>
+      </tr>
+      <tr>
+        <td><strong>5. Facebook.com</strong></td>
+        <td>Wiredvibeapp (Company Page)</td>
+        <td>Facebook Video Reel with engagement prompt</td>
+      </tr>
+      <tr>
+        <td><strong>6. TikTok.com</strong></td>
+        <td>Wiredvibeapp Login</td>
+        <td>High-energy FYP vertical video + audio sync tag</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2 class="section-title">Mandatory Brand Hashtags</h2>
+  <p>
+    The system automatically appends the required hashtag bundle to every upload:
+  </p>
+  <div class="code-block" style="text-align: center; font-size: 12px; color: #38bdf8;">
+    #voxstar #voxstar.ai #wiredvibeapp #atltrust #aitoolboard
+  </div>
+
+  <div class="callout-box">
+    <div class="callout-title">Idempotency & Rate Limit Safeguards</div>
+    <div class="callout-content">
+      If a platform returns HTTP 429 (Rate Limit) or HTTP 500 (Temporary Server Error), the queue item records the exact error in <code>publish_logs</code> and marks the item for an exponential backoff retry.
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <div class="page-footer-logo">★ VOXSTAR</div>
+    <span>© Voxstar Ltd • Voxstar.com</span>
+    <span class="page-number">09</span>
+  </div>
+</div>
+
+<!-- ================= PAGE 10: PART 07 CODE & QUICKSTART ================= -->
+<div class="page">
+  <div class="page-header">
+    <span>07 • Quickstart & Code</span>
+    <span>Automation 1 Field Guide</span>
+  </div>
+
+  <div class="part-tag">Part 07</div>
+  <h1 class="page-title">Quickstart Installation & Deployment</h1>
+
+  <p>
+    Deploying Automation 1 takes less than 3 minutes on any macOS, Linux, or Windows (WSL) machine.
+  </p>
+
+  <h2 class="section-title">Step-by-Step Setup</h2>
+  <div class="code-block">
+<span class="comment"># 1. Extract zip package</span>
+unzip automation1-Video-Content.zip
+<span class="keyword">cd</span> automation1-Video-Content
+
+<span class="comment"># 2. Configure credentials</span>
+cp config.env.example config.env
+<span class="comment"># Edit config.env with your desired API keys</span>
+
+<span class="comment"># 3. Launch interactive runner</span>
+chmod +x setup_and_run.sh
+./setup_and_run.sh
+  </div>
+
+  <h2 class="section-title">Running Specific AI Model Versions</h2>
+  <div class="code-block">
+<span class="comment"># Run Google Gemini Version</span>
+python3 automation_gemini.py
+
+<span class="comment"># Run Anthropic Claude Version</span>
+python3 automation_claude.py
+
+<span class="comment"># Run OpenAI ChatGPT Version</span>
+python3 automation_chatgpt.py
+
+<span class="comment"># Run xAI Grok Version</span>
+python3 automation_grok.py
+  </div>
+
+  <h2 class="section-title">Automating Daily Morning Cron Execution</h2>
+  <p>
+    To trigger the video engine automatically every morning at 8:00 AM:
+  </p>
+  <div class="code-block">
+<span class="comment"># Add to system crontab (crontab -e)</span>
+0 8 * * * cd /path/to/automation1-Video-Content && ./setup_and_run.sh 1 >> cron.log 2>&1
+  </div>
+
+  <div class="page-footer">
+    <div class="page-footer-logo">★ VOXSTAR</div>
+    <span>© Voxstar Ltd • Voxstar.com</span>
+    <span class="page-number">10</span>
+  </div>
+</div>
+
+<!-- ================= PAGE 11: PART 08 TROUBLESHOOTING ================= -->
+<div class="page">
+  <div class="page-header">
+    <span>08 • Troubleshooting</span>
+    <span>Automation 1 Field Guide</span>
+  </div>
+
+  <div class="part-tag">Part 08</div>
+  <h1 class="page-title">Troubleshooting & Edge Cases</h1>
+
+  <p>
+    Five common edge cases and their exact resolutions:
+  </p>
+
+  <ul class="bullet-list">
+    <li>
+      <strong>"Database locked" or SQLite concurrency error:</strong><br>
+      Automation 1 uses WAL (Write-Ahead Logging) mode. Ensure only one cron process is writing at a time or set <code>timeout=10</code> in <code>database.py</code>.
+    </li>
+    <li>
+      <strong>"X.com API returns 403 Forbidden":</strong><br>
+      Ensure your Twitter Developer App permissions are set to <em>"Read and Write"</em> with <em>OAuth 1.0a User Context</em> enabled.
+    </li>
+    <li>
+      <strong>"LinkedIn personal vs company page token confusion":</strong><br>
+      Personal posts require <code>w_member_social</code> scope. Company page posts require <code>w_organization_social</code> and your organization URN (<code>urn:li:organization:12345</code>).
+    </li>
+    <li>
+      <strong>"LT25 Local rendering hangs":</strong><br>
+      If your local GPU is occupied, the adapter automatically falls back to lightweight fast synthesis without interrupting the social publication queue.
+    </li>
+    <li>
+      <strong>"Queue empty after 30 days":</strong><br>
+      Simply append 30 new rows to <code>video_ideas_queue.csv</code>. The system automatically reads the new rows on its next cycle.
+    </li>
+  </ul>
+
+  <div class="callout-box callout-orange">
+    <div class="callout-title">Safe Fallback Protocol</div>
+    <div class="callout-content">
+      All 4 automation scripts include graceful offline fallbacks. Even if an LLM API is temporarily down, the system renders and distributes using high-performing pre-vetted marketing templates so your daily posting streak is never broken.
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <div class="page-footer-logo">★ VOXSTAR</div>
+    <span>© Voxstar Ltd • Voxstar.com</span>
+    <span class="page-number">11</span>
+  </div>
+</div>
+
+<!-- ================= PAGE 12: PART 09 & 10 WORKSHEET & LICENSE ================= -->
+<div class="page">
+  <div class="page-header">
+    <span>09 • Quick Reference & Setup</span>
+    <span>Automation 1 Field Guide</span>
+  </div>
+
+  <div class="part-tag">Part 09 & 10</div>
+  <h1 class="page-title">Daily Run Sheet & Quick Reference</h1>
+
+  <div class="card-box" style="margin-bottom: 12px;">
+    <h4>My Automation 1 Setup Sheet</h4>
+    <div style="font-size:11px; line-height:1.8; color:#334155;">
+      • Preferred AI Model: __________________________________________________<br>
+      • Preferred Video Engine: [ &nbsp; ] LT25 (Free) &nbsp; [ &nbsp; ] Sundance &nbsp; [ &nbsp; ] Gemini Veo<br>
+      • Daily Scheduled Time: __________________ &nbsp; (e.g. 08:00 AM GMT)<br>
+      • Primary Brand Website: <code>https://wiredvibe.ai</code><br>
+      • Core Soundscape: <code>Gamma Retention Pulse (40Hz)</code>
+    </div>
+  </div>
+
+  <h2 class="section-title">The 2-Minute Daily Check</h2>
+  <div class="checklist-item">
+    <div class="checkbox-box"></div>
+    <div><strong>Verify CSV Queue Depth:</strong> Confirm at least 7 pending video ideas exist in <code>video_ideas_queue.csv</code>.</div>
+  </div>
+  <div class="checklist-item">
+    <div class="checkbox-box"></div>
+    <div><strong>Check SQLite Audit Log:</strong> Run <code>SELECT COUNT(*) FROM publish_logs WHERE status='success';</code>.</div>
+  </div>
+  <div class="checklist-item">
+    <div class="checkbox-box"></div>
+    <div><strong>Engage with Inbound Comments:</strong> Respond to viewers asking for the CTA link or soundscape preview.</div>
+  </div>
+
+  <div class="callout-box" style="margin-top: 14px;">
+    <div class="callout-title">License & Commercial Distribution</div>
+    <div class="callout-content">
+      © Voxstar Ltd. Created by <strong>Gene Da Rocha, MSc BSc (Hons)</strong>.<br>
+      Licensed for personal and commercial deployment. For updates, custom agent architecture, and enterprise setup, visit <strong>Voxstar.com</strong>.
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <div class="page-footer-logo">★ VOXSTAR</div>
+    <span>© Voxstar Ltd • Voxstar.com</span>
+    <span class="page-number">12</span>
+  </div>
+</div>
+
+</body>
+</html>
