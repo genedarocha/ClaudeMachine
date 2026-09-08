@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { 
   Plus, Search, Settings, History, LayoutDashboard, 
   Trash2, Copy, Check, ChevronRight, Terminal, Cpu, FileText, Zap, HelpCircle,
-  Calendar, Headphones, Video, Globe, Sparkles
+  Calendar, Headphones, Video, Globe, Sparkles, Radio
 } from 'lucide-react';
 import { PREBUILT_SPECIALISTS, CATEGORIES, type Specialist } from './data/specialists';
 import { SpecialistCard } from './components/SpecialistCard';
@@ -10,6 +10,7 @@ import { SpecialistRunner } from './components/SpecialistRunner';
 import { SpecialistGenerator } from './components/SpecialistGenerator';
 import { SettingsModal } from './components/SettingsModal';
 import { VoxstarAutomation } from './components/VoxstarAutomation';
+import { PodcastStudio } from './components/PodcastStudio';
 import { FieldHelpTooltip } from './components/FieldHelpTooltip';
 import { ScreenHelpBanner } from './components/ScreenHelpBanner';
 import { SystemGuideModal } from './components/SystemGuideModal';
@@ -45,7 +46,7 @@ function App() {
   const [searchQuery, setSearchQuery] = useState<string>('');
   
   const [activeSpecialist, setActiveSpecialist] = useState<Specialist | null>(null);
-  const [currentView, setCurrentView] = useState<'dashboard' | 'runner' | 'generator' | 'history' | 'voxstar' | 'creation-wiredvibe' | 'creation-idea' | 'daily-autopilot'>('dashboard');
+  const [currentView, setCurrentView] = useState<'dashboard' | 'runner' | 'generator' | 'history' | 'voxstar' | 'podcast-studio' | 'creation-wiredvibe' | 'creation-idea' | 'daily-autopilot'>('podcast-studio');
   const [activeSoundscape, setActiveSoundscape] = useState<string>('Gamma Retention Pulse');
   const [activeAutopilotServiceId, setActiveAutopilotServiceId] = useState<string>('srv-1');
   
@@ -198,6 +199,15 @@ function App() {
                 <Video size={14} />
                 <span>Idea</span>
                 <span className="nav-badge-hot">Viral</span>
+              </button>
+
+              <button 
+                className={`nav-sub-item ${currentView === 'podcast-studio' ? 'active' : ''}`}
+                onClick={() => { setCurrentView('podcast-studio'); setActiveSpecialist(null); }}
+              >
+                <Radio size={14} />
+                <span>Podcast Studio</span>
+                <span className="nav-badge-hot">Ep #94 Ready</span>
               </button>
             </div>
           </div>
@@ -575,6 +585,11 @@ function App() {
           {/* E. VOXSTAR CONNECT VIEW */}
           {currentView === 'voxstar' && (
             <VoxstarAutomation onBack={() => setCurrentView('dashboard')} />
+          )}
+
+          {/* E2. PODCAST STUDIO VIEW */}
+          {currentView === 'podcast-studio' && (
+            <PodcastStudio onBack={() => setCurrentView('dashboard')} />
           )}
 
           {/* F. CREATION > WIREDVIBE APP VIEW */}
