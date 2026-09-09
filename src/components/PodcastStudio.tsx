@@ -4,7 +4,7 @@ import {
   Share2, Music, Volume2, Globe, FileText, CheckCircle2,
   Layers, RefreshCw, Send,
   Headphones, ListPlus, Sliders, ShieldCheck, CheckCheck,
-  Clock, Smartphone
+  Clock, Smartphone, ExternalLink, FileAudio, Tag, Info, ChevronDown, ChevronUp
 } from 'lucide-react';
 import { FieldHelpTooltip } from './FieldHelpTooltip';
 import { ScreenHelpBanner } from './ScreenHelpBanner';
@@ -199,6 +199,8 @@ export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
   const [duration, setDuration] = useState(312);
   const [playbackRate, setPlaybackRate] = useState(1);
   const [copiedTab, setCopiedTab] = useState<string | null>(null);
+  const [copiedField, setCopiedField] = useState<string | null>(null);
+  const [showSpotifyHelper, setShowSpotifyHelper] = useState(true);
 
   // Load published state from localStorage on episode change
   useEffect(() => {
@@ -297,6 +299,13 @@ export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
     return `${m}:${s < 10 ? '0' : ''}${s}`;
   };
 
+  // Copy helper with custom feedback key
+  const handleCopyField = (text: string, fieldKey: string) => {
+    navigator.clipboard.writeText(text);
+    setCopiedField(fieldKey);
+    setTimeout(() => setCopiedField(null), 2500);
+  };
+
   const handleCopy = (text: string, tabKey: string) => {
     navigator.clipboard.writeText(text);
     setCopiedTab(tabKey);
@@ -315,7 +324,10 @@ export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
     }));
 
     // Copy respective content to clipboard automatically
-    if (channelKey === 'spotify') navigator.clipboard.writeText(getSpotifyNotes());
+    if (channelKey === 'spotify') {
+      navigator.clipboard.writeText(getSpotifyNotes());
+      setShowSpotifyHelper(true);
+    }
     else if (channelKey === 'linkedin') navigator.clipboard.writeText(getLinkedInPost());
     else if (channelKey === 'x') navigator.clipboard.writeText(getXPost());
     else if (channelKey === 'instagram') navigator.clipboard.writeText(getInstagramCaption());
@@ -855,7 +867,169 @@ _Share with your engineering and leadership teams!_`;
         </div>
       </div>
 
-      {/* --- NEW: OMNI-CHANNEL PUBLISHING COMMAND TABLE --- */}
+      {/* --- SPOTIFY QUICK-PUBLISH ASSISTANT STATION --- */}
+      <div className="spotify-assistant-section glass-panel mt-6">
+        <div className="spotify-assistant-header flex items-center justify-between flex-wrap gap-3">
+          <div className="flex items-center gap-3">
+            <div className="spotify-icon-box">
+              <Radio size={24} className="text-[#1ed760]" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h2 className="text-lg font-bold text-white">Spotify for Podcasters — Instant Publish Assistant</h2>
+                <span className="badge badge-spotify">Episode #{currentEpisode.number}</span>
+              </div>
+              <p className="text-xs text-gray-300 mt-0.5">
+                Spotify requires manual upload and metadata entry. Title, Description, and Audio are ready below for instant 1-click copy and download.
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              className="btn btn-secondary btn-sm"
+              onClick={() => setShowSpotifyHelper(!showSpotifyHelper)}
+            >
+              {showSpotifyHelper ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
+              {showSpotifyHelper ? 'Collapse Assistant' : 'Expand Assistant'}
+            </button>
+            <a
+              href="https://podcasters.spotify.com/pod/dashboard/episode/wizard"
+              target="_blank"
+              rel="noreferrer"
+              className="btn btn-spotify btn-sm"
+            >
+              <ExternalLink size={14} />
+              Open Spotify Upload Wizard ↗
+            </a>
+          </div>
+        </div>
+
+        {showSpotifyHelper && (
+          <div className="spotify-assistant-body mt-4">
+            <div className="spotify-steps-grid">
+              {/* STEP 1: MP3 DOWNLOAD */}
+              <div className="spotify-step-card">
+                <div className="step-badge">STEP 1 • MASTER AUDIO</div>
+                <h4 className="step-title flex items-center gap-2">
+                  <FileAudio size={16} className="text-[#1ed760]" />
+                  Download Master MP3
+                </h4>
+                <div className="file-info-box mt-2">
+                  <div className="file-name truncate">Episode_{currentEpisode.number}_Master.mp3</div>
+                  <div className="file-specs">
+                    <span>Duration: <strong>{currentEpisode.duration}</strong></span>
+                    <span>Loudness: <strong>-16 LUFS</strong></span>
+                    <span>ID3 Tagged: <strong>Yes</strong></span>
+                  </div>
+                </div>
+                <a
+                  href={currentEpisode.audioUrl}
+                  download={`Episode_${currentEpisode.number}_Voxstar_Master.mp3`}
+                  className="btn btn-primary w-full mt-3 flex items-center justify-center gap-2"
+                >
+                  <Download size={15} />
+                  Download Master MP3
+                </a>
+              </div>
+
+              {/* STEP 2: EPISODE TITLE */}
+              <div className="spotify-step-card">
+                <div className="step-badge">STEP 2 • TITLE</div>
+                <h4 className="step-title flex items-center gap-2">
+                  <Tag size={16} className="text-accent" />
+                  Copy Episode Title
+                </h4>
+                <div className="title-display-box mt-2">
+                  <input
+                    type="text"
+                    readOnly
+                    value={currentEpisode.title}
+                    className="title-input-readonly"
+                    onClick={(e) => (e.target as HTMLInputElement).select()}
+                  />
+                </div>
+                <button
+                  className={`btn w-full mt-3 flex items-center justify-center gap-2 ${copiedField === 'title' ? 'btn-success' : 'btn-secondary'}`}
+                  onClick={() => handleCopyField(currentEpisode.title, 'title')}
+                >
+                  {copiedField === 'title' ? <Check size={15} className="text-emerald-400" /> : <Copy size={15} />}
+                  {copiedField === 'title' ? '✓ Title Copied to Clipboard!' : 'Copy Episode Title'}
+                </button>
+              </div>
+
+              {/* STEP 3: METADATA SPECS */}
+              <div className="spotify-step-card">
+                <div className="step-badge">STEP 3 • METADATA</div>
+                <h4 className="step-title flex items-center gap-2">
+                  <Info size={16} className="text-blue-400" />
+                  Spotify Settings
+                </h4>
+                <div className="metadata-specs-list mt-2">
+                  <div className="meta-spec-row">
+                    <span className="spec-label">Season:</span>
+                    <span className="spec-val font-mono">1</span>
+                  </div>
+                  <div className="meta-spec-row">
+                    <span className="spec-label">Episode #:</span>
+                    <span className="spec-val font-mono font-bold text-accent">{currentEpisode.number}</span>
+                  </div>
+                  <div className="meta-spec-row">
+                    <span className="spec-label">Episode Type:</span>
+                    <span className="spec-val font-mono">Full</span>
+                  </div>
+                  <div className="meta-spec-row">
+                    <span className="spec-label">Content:</span>
+                    <span className="spec-val font-mono text-emerald-400">Clean</span>
+                  </div>
+                </div>
+                <a
+                  href="https://podcasters.spotify.com/pod/dashboard/episode/wizard"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="btn btn-spotify w-full mt-3 flex items-center justify-center gap-2"
+                >
+                  <ExternalLink size={15} />
+                  Launch Spotify Wizard
+                </a>
+              </div>
+            </div>
+
+            {/* STEP 4: DESCRIPTION & SHOW NOTES (FULL WIDTH) */}
+            <div className="spotify-desc-card mt-3">
+              <div className="flex items-center justify-between mb-2 flex-wrap gap-2">
+                <div className="flex items-center gap-2">
+                  <div className="step-badge">STEP 4 • SHOW NOTES & HASHTAGS</div>
+                  <h4 className="step-title flex items-center gap-2 text-white">
+                    <FileText size={16} className="text-purple-400" />
+                    Episode Description / Show Notes
+                  </h4>
+                </div>
+                <button
+                  className={`btn btn-sm flex items-center gap-1.5 ${copiedField === 'description' ? 'btn-success' : 'btn-primary'}`}
+                  onClick={() => handleCopyField(getSpotifyNotes(), 'description')}
+                >
+                  {copiedField === 'description' ? <Check size={14} className="text-emerald-400" /> : <Copy size={14} />}
+                  {copiedField === 'description' ? '✓ Description Copied to Clipboard!' : 'Copy Full Description & Show Notes'}
+                </button>
+              </div>
+
+              <textarea
+                readOnly
+                rows={6}
+                className="spotify-desc-textarea"
+                value={getSpotifyNotes()}
+                onClick={(e) => (e.target as HTMLTextAreaElement).select()}
+              />
+              <div className="flex items-center justify-between mt-2 text-xs text-gray-400">
+                <span>Includes: Key Takeaways, Substack Source Article URL, Host Social Profiles & 30-Tag Mandatory Hashtag Vault.</span>
+                <span className="font-mono">{getSpotifyNotes().length} chars</span>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* --- OMNI-CHANNEL PUBLISHING COMMAND TABLE --- */}
       <div className="publish-command-section glass-panel mt-6">
         <div className="publish-command-header">
           <div className="flex items-center gap-3">
@@ -899,7 +1073,7 @@ _Share with your engineering and leadership teams!_`;
               <tr>
                 <th>Platform & Channel</th>
                 <th>Target Account / Handle</th>
-                <th>Content Payload Preview</th>
+                <th>Content Payload & Direct Copy</th>
                 <th>Delivery Status</th>
                 <th className="text-right">Action</th>
               </tr>
@@ -912,7 +1086,7 @@ _Share with your engineering and leadership teams!_`;
                     <span className="platform-tag spotify">
                       <Radio size={14} /> Spotify
                     </span>
-                    <span className="channel-title">Spotify for Podcasters (RSS)</span>
+                    <span className="channel-title">Spotify for Podcasters</span>
                   </div>
                 </td>
                 <td>
@@ -922,8 +1096,37 @@ _Share with your engineering and leadership teams!_`;
                 </td>
                 <td>
                   <div className="payload-preview">
-                    <span className="payload-item">🎧 Audio: Episode_{currentEpisode.number}_Master.mp3</span>
-                    <span className="payload-item">📝 Show Notes with Timestamps & Tags</span>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="payload-item font-semibold text-white truncate max-w-xs">Title: {currentEpisode.title}</span>
+                      <button
+                        className="btn-mini-copy"
+                        title="Copy Title"
+                        onClick={() => handleCopyField(currentEpisode.title, 'tbl-title')}
+                      >
+                        {copiedField === 'tbl-title' ? <Check size={11} className="text-emerald-400" /> : <Copy size={11} />}
+                        {copiedField === 'tbl-title' ? 'Copied Title' : 'Copy Title'}
+                      </button>
+                    </div>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="payload-item text-xs text-gray-400 truncate max-w-xs">Show Notes & Hashtags ready</span>
+                      <button
+                        className="btn-mini-copy"
+                        title="Copy Description"
+                        onClick={() => handleCopyField(getSpotifyNotes(), 'tbl-desc')}
+                      >
+                        {copiedField === 'tbl-desc' ? <Check size={11} className="text-emerald-400" /> : <Copy size={11} />}
+                        {copiedField === 'tbl-desc' ? 'Copied Notes' : 'Copy Notes'}
+                      </button>
+                    </div>
+                    <div className="flex items-center gap-3 mt-0.5">
+                      <a
+                        href={currentEpisode.audioUrl}
+                        download={`Episode_${currentEpisode.number}_Voxstar_Master.mp3`}
+                        className="text-xs text-[#1ed760] hover:underline flex items-center gap-1 font-medium"
+                      >
+                        <Download size={11} /> Download MP3 ({currentEpisode.duration})
+                      </a>
+                    </div>
                   </div>
                 </td>
                 <td>
@@ -938,7 +1141,7 @@ _Share with your engineering and leadership teams!_`;
                   ) : publishStatuses.spotify.status === 'publishing' ? (
                     <div className="status-indicator publishing">
                       <RefreshCw size={14} className="animate-spin text-amber-400" />
-                      <span className="status-text text-amber-400">Uploading MP3 & Notes...</span>
+                      <span className="status-text text-amber-400">Opening Wizard & Copying...</span>
                     </div>
                   ) : (
                     <div className="status-indicator idle">
@@ -948,17 +1151,16 @@ _Share with your engineering and leadership teams!_`;
                   )}
                 </td>
                 <td className="text-right">
-                  <button
-                    className={`btn btn-sm ${publishStatuses.spotify.status === 'published' ? 'btn-ghost text-emerald-400' : 'btn-primary'}`}
-                    onClick={() => handlePublishSingle('spotify')}
-                    disabled={publishStatuses.spotify.status === 'publishing'}
-                  >
-                    {publishStatuses.spotify.status === 'published' ? (
-                      <span className="flex items-center gap-1.5"><CheckCheck size={14} /> Update Episode</span>
-                    ) : (
-                      <span className="flex items-center gap-1.5"><Send size={13} /> Publish to Spotify</span>
-                    )}
-                  </button>
+                  <div className="flex items-center justify-end gap-2">
+                    <button
+                      className={`btn btn-sm ${publishStatuses.spotify.status === 'published' ? 'btn-ghost text-emerald-400' : 'btn-spotify'}`}
+                      onClick={() => handlePublishSingle('spotify')}
+                      disabled={publishStatuses.spotify.status === 'publishing'}
+                    >
+                      <Send size={13} />
+                      {publishStatuses.spotify.status === 'published' ? 'Update on Spotify' : 'Publish to Spotify'}
+                    </button>
+                  </div>
                 </td>
               </tr>
 
@@ -1356,26 +1558,69 @@ _Share with your engineering and leadership teams!_`;
 
           {/* 1. SPOTIFY TAB */}
           {activeTab === 'spotify' && (
-            <div className="copy-block-wrapper">
-              <div className="copy-block-header">
-                <span className="text-sm font-semibold text-white">Spotify for Podcasters / RSS Show Notes (Ep #{currentEpisode.number})</span>
-                <div className="flex items-center gap-2">
-                  <button
-                    className="btn btn-primary btn-sm"
-                    onClick={() => handlePublishSingle('spotify')}
+            <div className="spotify-tab-full-wrapper">
+              <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+                <div>
+                  <h3 className="text-base font-bold text-white flex items-center gap-2">
+                    <Radio size={18} className="text-[#1ed760]" />
+                    Spotify for Podcasters — Publishing Package (Ep #{currentEpisode.number})
+                  </h3>
+                  <p className="text-xs text-gray-400">Copy the title & description below and upload the master MP3 to Spotify Podcaster Dashboard.</p>
+                </div>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <a
+                    href={currentEpisode.audioUrl}
+                    download={`Episode_${currentEpisode.number}_Voxstar_Master.mp3`}
+                    className="btn btn-secondary btn-sm flex items-center gap-1.5"
                   >
-                    <Send size={14} /> Publish to Spotify
-                  </button>
-                  <button
-                    className="btn btn-secondary btn-sm"
-                    onClick={() => handleCopy(getSpotifyNotes(), 'spotify')}
+                    <Download size={14} /> Download MP3 ({currentEpisode.duration})
+                  </a>
+                  <a
+                    href="https://podcasters.spotify.com/pod/dashboard/episode/wizard"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="btn btn-spotify btn-sm flex items-center gap-1.5"
                   >
-                    {copiedTab === 'spotify' ? <Check size={14} className="text-emerald-400" /> : <Copy size={14} />}
-                    {copiedTab === 'spotify' ? 'Copied to Clipboard!' : 'Copy Show Notes'}
-                  </button>
+                    <ExternalLink size={14} /> Open Spotify Wizard ↗
+                  </a>
                 </div>
               </div>
-              <pre className="copy-block-text">{getSpotifyNotes()}</pre>
+
+              {/* Title Section */}
+              <div className="spotify-tab-block mb-4">
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="text-xs font-bold text-gray-300 uppercase tracking-wider flex items-center gap-1.5">
+                    <Tag size={13} className="text-accent" /> 1. Episode Title
+                  </span>
+                  <button
+                    className={`btn btn-xs flex items-center gap-1 ${copiedField === 'tab-title' ? 'btn-success' : 'btn-primary'}`}
+                    onClick={() => handleCopyField(currentEpisode.title, 'tab-title')}
+                  >
+                    {copiedField === 'tab-title' ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}
+                    {copiedField === 'tab-title' ? '✓ Copied Title!' : 'Copy Title'}
+                  </button>
+                </div>
+                <div className="p-3 bg-black/40 border border-white/10 rounded-lg text-sm text-white font-medium">
+                  {currentEpisode.title}
+                </div>
+              </div>
+
+              {/* Description Section */}
+              <div className="spotify-tab-block">
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="text-xs font-bold text-gray-300 uppercase tracking-wider flex items-center gap-1.5">
+                    <FileText size={13} className="text-purple-400" /> 2. Episode Description & Show Notes (With Vault Hashtags)
+                  </span>
+                  <button
+                    className={`btn btn-xs flex items-center gap-1 ${copiedField === 'tab-desc' ? 'btn-success' : 'btn-primary'}`}
+                    onClick={() => handleCopyField(getSpotifyNotes(), 'tab-desc')}
+                  >
+                    {copiedField === 'tab-desc' ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}
+                    {copiedField === 'tab-desc' ? '✓ Copied Description!' : 'Copy Description & Show Notes'}
+                  </button>
+                </div>
+                <pre className="copy-block-text">{getSpotifyNotes()}</pre>
+              </div>
             </div>
           )}
 
@@ -2034,9 +2279,196 @@ _Share with your engineering and leadership teams!_`;
           border-bottom: 1px solid rgba(255, 255, 255, 0.1);
           font-weight: 600;
         }
-        .batch-table td {
+        /* SPOTIFY ASSISTANT STYLES */
+        .spotify-assistant-section {
+          padding: 1.5rem;
+          border-radius: 12px;
+          background: linear-gradient(180deg, rgba(20, 83, 45, 0.25), rgba(15, 23, 42, 0.7));
+          border: 1px solid rgba(30, 215, 96, 0.35);
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+        }
+        .spotify-assistant-header {
+          border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+          padding-bottom: 1rem;
+        }
+        .spotify-icon-box {
+          width: 46px;
+          height: 46px;
+          border-radius: 10px;
+          background: rgba(30, 215, 96, 0.15);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border: 1px solid rgba(30, 215, 96, 0.35);
+        }
+        .badge-spotify {
+          background: rgba(30, 215, 96, 0.2);
+          color: #1ed760;
+          border: 1px solid rgba(30, 215, 96, 0.4);
+          font-weight: 700;
+          font-size: 0.7rem;
+          padding: 0.15rem 0.55rem;
+          border-radius: 10px;
+        }
+        .btn-spotify {
+          background: #1ed760 !important;
+          color: #050505 !important;
+          font-weight: 700 !important;
+          border: none !important;
+          transition: all 0.2s;
+          box-shadow: 0 2px 10px rgba(30, 215, 96, 0.3);
+        }
+        .btn-spotify:hover {
+          background: #1fdf64 !important;
+          transform: translateY(-1px);
+          box-shadow: 0 4px 18px rgba(30, 215, 96, 0.5);
+        }
+        .btn-success {
+          background: #10b981 !important;
+          color: white !important;
+          border: none !important;
+          font-weight: 600 !important;
+        }
+        .btn-mini-copy {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.25rem;
+          background: rgba(255, 255, 255, 0.08);
+          border: 1px solid rgba(255, 255, 255, 0.15);
+          color: #cbd5e1;
+          font-size: 0.7rem;
+          font-weight: 600;
+          padding: 0.15rem 0.45rem;
+          border-radius: 4px;
+          cursor: pointer;
+          transition: all 0.15s;
+        }
+        .btn-mini-copy:hover {
+          background: rgba(255, 255, 255, 0.18);
+          color: #fff;
+        }
+        .btn-xs {
+          padding: 0.25rem 0.55rem;
+          font-size: 0.75rem;
+          font-weight: 600;
+          border-radius: 6px;
+        }
+        .spotify-steps-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 1rem;
+        }
+        @media (max-width: 900px) {
+          .spotify-steps-grid {
+            grid-template-columns: 1fr;
+          }
+        }
+        .spotify-step-card {
+          background: rgba(0, 0, 0, 0.35);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: 10px;
+          padding: 1rem;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+        }
+        .step-badge {
+          font-size: 0.65rem;
+          font-weight: 800;
+          letter-spacing: 0.06em;
+          color: #1ed760;
+          text-transform: uppercase;
+          margin-bottom: 0.25rem;
+        }
+        .step-title {
+          font-size: 0.9rem;
+          font-weight: 700;
+          color: #fff;
+        }
+        .file-info-box, .title-display-box {
+          background: rgba(0, 0, 0, 0.4);
+          border: 1px solid rgba(255, 255, 255, 0.06);
+          border-radius: 6px;
+          padding: 0.6rem;
+        }
+        .file-name {
+          font-size: 0.8rem;
+          font-weight: 600;
+          color: #f1f5f9;
+        }
+        .file-specs {
+          display: flex;
+          gap: 0.75rem;
+          font-size: 0.7rem;
+          color: #94a3b8;
+          margin-top: 0.25rem;
+          flex-wrap: wrap;
+        }
+        .title-input-readonly {
+          width: 100%;
+          background: transparent;
+          border: none;
+          color: #fff;
+          font-size: 0.82rem;
+          font-weight: 600;
+          outline: none;
+          cursor: text;
+        }
+        .metadata-specs-list {
+          background: rgba(0, 0, 0, 0.4);
+          border: 1px solid rgba(255, 255, 255, 0.06);
+          border-radius: 6px;
+          padding: 0.5rem 0.75rem;
+          display: flex;
+          flex-direction: column;
+          gap: 0.35rem;
+        }
+        .meta-spec-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          font-size: 0.75rem;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+          padding-bottom: 0.2rem;
+        }
+        .meta-spec-row:last-child {
+          border-bottom: none;
+          padding-bottom: 0;
+        }
+        .spec-label {
+          color: #94a3b8;
+        }
+        .spec-val {
+          color: #e2e8f0;
+        }
+        .spotify-desc-card {
+          background: rgba(0, 0, 0, 0.35);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: 10px;
+          padding: 1rem;
+        }
+        .spotify-desc-textarea {
+          width: 100%;
+          background: rgba(0, 0, 0, 0.5);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 8px;
           padding: 0.75rem;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+          color: #e2e8f0;
+          font-size: 0.82rem;
+          line-height: 1.5;
+          resize: vertical;
+          outline: none;
+          font-family: inherit;
+        }
+        .spotify-tab-full-wrapper {
+          display: flex;
+          flex-direction: column;
+        }
+        .spotify-tab-block {
+          background: rgba(0, 0, 0, 0.25);
+          border: 1px solid rgba(255, 255, 255, 0.06);
+          border-radius: 8px;
+          padding: 1rem;
         }
       `}</style>
     </div>
