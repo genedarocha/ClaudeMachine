@@ -5,10 +5,16 @@ import {
   Layers, RefreshCw, Send,
   Headphones, ListPlus, Sliders, ShieldCheck, CheckCheck,
   Clock, Smartphone, ExternalLink, FileAudio, Tag, Info, ChevronDown, ChevronUp,
-  Video
+  Video, Search, Filter, FolderDown
 } from 'lucide-react';
 import { FieldHelpTooltip } from './FieldHelpTooltip';
 import { ScreenHelpBanner } from './ScreenHelpBanner';
+import {
+  YOUTUBE_SHORTS_ARCHIVE_93,
+  type YoutubeShortPackage,
+  SPOTIFY_PODCAST_SHOW_URL,
+  YOUTUBE_STUDIO_UPLOAD_URL
+} from '../data/youtubeShortsArchive';
 
 const YoutubeIcon: React.FC<{ size?: number; className?: string }> = ({ size = 16, className = "" }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className} style={{ display: 'inline-block', verticalAlign: 'middle' }}>
@@ -42,8 +48,6 @@ interface ChannelPublishStatus {
 }
 
 const BRAND_HASHTAGS = "#ArtificialIntelligence #MachineLearning #DeepLearning #NeuralNetworks #ComputerVision #AI #DataScience #NaturalLanguageProcessing #BigData #Robotics #Automation #IntelligentSystems #CognitiveComputing #SmartTechnology #Analytics #Innovation #Industry40 #FutureTech #QuantumComputing #IoT #genedarocha #voxstar #aitoolboard #voxstarai #writerplus #wiredvibeapp #wiredvibe #atltrust #albionlm #elonmusk";
-
-const YOUTUBE_STUDIO_UPLOAD_URL = "https://studio.youtube.com/channel/UCa-q0YbY6yAMXgjPlYlZbvQ/videos/upload?filter=%5B%5D&sort=%7B%22columnType%22%3A%22date%22%2C%22sortOrder%22%3A%22DESCENDING%22%7D";
 
 const PRESET_EPISODES: Record<number, EpisodeData> = {
   95: {
@@ -137,7 +141,7 @@ const BATCH_QUEUE_INITIAL = [
 
 export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
   // --- STATE ---
-  const [activeTab, setActiveTab] = useState<'publisher-table' | 'spotify' | 'youtube' | 'linkedin' | 'x' | 'instagram' | 'tiktok' | 'whatsapp' | 'script' | 'batch' | 'publish-guide'>('publisher-table');
+  const [activeTab, setActiveTab] = useState<'publisher-table' | 'spotify' | 'youtube' | 'youtube-archive' | 'linkedin' | 'x' | 'instagram' | 'tiktok' | 'whatsapp' | 'script' | 'batch' | 'publish-guide'>('publisher-table');
   const [episodeNumber, setEpisodeNumber] = useState(95);
   const [episodeTitle, setEpisodeTitle] = useState("#95 Microsoft AI Spearheads Innovation with a New Hub in London");
   const [articleUrl, setArticleUrl] = useState("https://voxstar.substack.com/p/95-microsoft-ai-spearheads-innovation-with-a-new-hub-in-london");
@@ -151,6 +155,110 @@ export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
   const [currentEpisode, setCurrentEpisode] = useState<EpisodeData>(PRESET_EPISODES[95]);
   const [batchQueue, setBatchQueue] = useState(BATCH_QUEUE_INITIAL);
   const [newBatchUrl, setNewBatchUrl] = useState('');
+
+  // 93 YouTube Shorts Archive State
+  const [archiveSearchQuery, setArchiveSearchQuery] = useState('');
+  const [archiveFilterStatus, setArchiveFilterStatus] = useState<'all' | 'pending' | 'uploaded'>('all');
+  const [selectedArchiveEpNum, setSelectedArchiveEpNum] = useState<number>(93);
+  const [uploadedShorts, setUploadedShorts] = useState<Record<number, boolean>>(() => {
+    try {
+      const saved = localStorage.getItem('voxstar_uploaded_shorts_v1');
+      return saved ? JSON.parse(saved) : {};
+    } catch {
+      return {};
+    }
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('voxstar_uploaded_shorts_v1', JSON.stringify(uploadedShorts));
+    } catch (e) {
+      console.error('Failed to save uploaded shorts status', e);
+    }
+  }, [uploadedShorts]);
+
+  const handleToggleShortUploaded = (epNum: number, e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    setUploadedShorts(prev => ({
+      ...prev,
+      [epNum]: !prev[epNum]
+    }));
+  };
+
+  const handleMarkAllShorts = (val: boolean) => {
+    const next: Record<number, boolean> = {};
+    if (val) {
+      YOUTUBE_SHORTS_ARCHIVE_93.forEach(s => {
+        next[s.episodeNumber] = true;
+      });
+    }
+    setUploadedShorts(next);
+  };
+
+  const handleUploadArchiveShort = (pkg: YoutubeShortPackage, e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    navigator.clipboard.writeText(pkg.youtubeShortDescription);
+    setUploadedShorts(prev => ({ ...prev, [pkg.episodeNumber]: true }));
+    setCopiedField(`archive-desc-${pkg.episodeNumber}`);
+    setTimeout(() => setCopiedField(null), 3000);
+    window.open(YOUTUBE_STUDIO_UPLOAD_URL, '_blank');
+  };
+
+  const handleDownloadArchiveJSON = () => {
+    const blob = new Blob([JSON.stringify(YOUTUBE_SHORTS_ARCHIVE_93, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'youtube_shorts_ep1_to_93.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  const handleDownloadArchiveCSV = () => {
+    const headers = ["Episode Number", "Title", "Substack URL", "Spotify URL", "YouTube Short Title", "YouTube Description", "60s Script"];
+    const rows = YOUTUBE_SHORTS_ARCHIVE_93.map(s => [
+      s.episodeNumber,
+      `"${s.title.replace(/"/g, '""')}"`,
+      `"${s.substackUrl.replace(/"/g, '""')}"`,
+      `"${s.spotifyUrl.replace(/"/g, '""')}"`,
+      `"${s.youtubeShortTitle.replace(/"/g, '""')}"`,
+      `"${s.youtubeShortDescription.replace(/"/g, '""')}"`,
+      `"${s.youtubeShortScript.replace(/"/g, '""')}"`
+    ]);
+    const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'youtube_shorts_ep1_to_93.csv';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  const filteredArchiveShorts = YOUTUBE_SHORTS_ARCHIVE_93.filter(s => {
+    const q = archiveSearchQuery.toLowerCase().trim();
+    const matchesSearch = 
+      !q ||
+      s.episodeNumber.toString() === q ||
+      s.title.toLowerCase().includes(q) ||
+      s.summary.toLowerCase().includes(q);
+    
+    const isUploaded = !!uploadedShorts[s.episodeNumber];
+    const matchesStatus = 
+      archiveFilterStatus === 'all' ||
+      (archiveFilterStatus === 'uploaded' && isUploaded) ||
+      (archiveFilterStatus === 'pending' && !isUploaded);
+    
+    return matchesSearch && matchesStatus;
+  });
+
+  const currentArchiveShort = YOUTUBE_SHORTS_ARCHIVE_93.find(s => s.episodeNumber === selectedArchiveEpNum) || YOUTUBE_SHORTS_ARCHIVE_93[YOUTUBE_SHORTS_ARCHIVE_93.length - 1];
+  const uploadedCount = Object.keys(uploadedShorts).filter(k => uploadedShorts[Number(k)]).length;
+  const uploadPercentage = Math.round((uploadedCount / 93) * 100);
 
   // Channel Publishing Statuses (persisted per episode)
   const [publishStatuses, setPublishStatuses] = useState<Record<string, ChannelPublishStatus>>({
@@ -1625,7 +1733,18 @@ _Share with your engineering and leadership teams!_`;
               onClick={() => setActiveTab('youtube')}
             >
               <YoutubeIcon size={14} />
-              YouTube Shorts
+              Current Short
+            </button>
+            <button
+              className={`tab-pill ${activeTab === 'youtube-archive' ? 'active' : ''}`}
+              onClick={() => setActiveTab('youtube-archive')}
+              style={activeTab === 'youtube-archive' ? { borderColor: '#ef4444', background: 'rgba(239, 68, 68, 0.15)' } : {}}
+            >
+              <YoutubeIcon size={14} className="text-red-400" />
+              93 Shorts Catalog
+              <span className="ml-1.5 px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-red-500/20 text-red-300 border border-red-500/30">
+                {uploadedCount}/93
+              </span>
             </button>
             <button
               className={`tab-pill ${activeTab === 'linkedin' ? 'active' : ''}`}
@@ -1802,6 +1921,23 @@ _Share with your engineering and leadership teams!_`;
           {/* 2. YOUTUBE SHORTS TAB */}
           {activeTab === 'youtube' && (
             <div className="youtube-tab-full-wrapper">
+              {/* Quick Switcher Banner to 93 Shorts Archive */}
+              <div className="mb-4 p-3 bg-gradient-to-r from-red-950/40 via-red-900/20 to-black/40 border border-red-500/30 rounded-lg flex items-center justify-between flex-wrap gap-2">
+                <div className="flex items-center gap-2">
+                  <Sparkles size={16} className="text-amber-400" />
+                  <span className="text-xs text-gray-200">
+                    Need YouTube Shorts for all <strong>93 published AI Automation episodes</strong> (Ep #1 to #93)?
+                  </span>
+                </div>
+                <button 
+                  className="btn btn-youtube btn-xs flex items-center gap-1.5"
+                  onClick={() => setActiveTab('youtube-archive')}
+                >
+                  <YoutubeIcon size={12} />
+                  Open 93 Shorts Catalog ({uploadedCount}/93 Uploaded) →
+                </button>
+              </div>
+
               <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
                 <div>
                   <h3 className="text-base font-bold text-white flex items-center gap-2">
@@ -1883,6 +2019,306 @@ _Share with your engineering and leadership teams!_`;
                   </button>
                 </div>
                 <pre className="copy-block-text">{getYoutubeShortScript()}</pre>
+              </div>
+            </div>
+          )}
+
+          {/* 93 YOUTUBE SHORTS CATALOG & FAST DISPATCHER */}
+          {activeTab === 'youtube-archive' && (
+            <div className="youtube-archive-wrapper flex flex-col gap-4">
+              {/* Header & Stats Banner */}
+              <div className="p-4 bg-gradient-to-r from-red-950/40 via-black/60 to-black/40 border border-red-500/30 rounded-xl">
+                <div className="flex items-center justify-between flex-wrap gap-3 mb-3">
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="p-1.5 bg-red-500/20 border border-red-500/40 rounded-lg text-red-400">
+                        <YoutubeIcon size={20} />
+                      </span>
+                      <h3 className="text-base font-bold text-white">
+                        93 YouTube Shorts Catalog & 1-Click Dispatcher
+                      </h3>
+                    </div>
+                    <p className="text-xs text-gray-300 mt-1">
+                      Complete pre-formatted 60-second vertical scripts, YouTube titles, and descriptions pointing directly to your <strong>Spotify Master Podcast</strong> (<a href={SPOTIFY_PODCAST_SHOW_URL} target="_blank" rel="noreferrer" className="text-[#1ed760] underline">4zS1fF5v9Rj9g7e3K1L8</a>) and Substack articles for Episodes #1 through #93.
+                    </p>
+                  </div>
+
+                  {/* Global Batch Actions */}
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <button
+                      className="btn btn-secondary btn-sm flex items-center gap-1.5"
+                      onClick={handleDownloadArchiveJSON}
+                      title="Download full database as JSON"
+                    >
+                      <FolderDown size={14} className="text-blue-400" />
+                      Download JSON (93)
+                    </button>
+                    <button
+                      className="btn btn-secondary btn-sm flex items-center gap-1.5"
+                      onClick={handleDownloadArchiveCSV}
+                      title="Download full database as CSV"
+                    >
+                      <Download size={14} className="text-emerald-400" />
+                      Download CSV (93)
+                    </button>
+                    <a
+                      href={YOUTUBE_STUDIO_UPLOAD_URL}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="btn btn-youtube btn-sm flex items-center gap-1.5"
+                    >
+                      <ExternalLink size={14} />
+                      YouTube Studio Upload ↗
+                    </a>
+                  </div>
+                </div>
+
+                {/* Progress Bar & Status Counters */}
+                <div className="bg-black/50 border border-white/10 rounded-lg p-3">
+                  <div className="flex items-center justify-between text-xs text-gray-300 mb-1.5 flex-wrap gap-2">
+                    <div className="flex items-center gap-3">
+                      <span>Progress: <strong className="text-white">{uploadedCount}</strong> of 93 Uploaded</span>
+                      <span className="text-emerald-400 font-semibold">({uploadPercentage}% Complete)</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <button
+                        className="text-[11px] text-gray-400 hover:text-white underline cursor-pointer"
+                        onClick={() => handleMarkAllShorts(true)}
+                      >
+                        Mark All Uploaded
+                      </button>
+                      <span className="text-gray-600">•</span>
+                      <button
+                        className="text-[11px] text-gray-400 hover:text-white underline cursor-pointer"
+                        onClick={() => handleMarkAllShorts(false)}
+                      >
+                        Reset Status
+                      </button>
+                    </div>
+                  </div>
+                  <div className="w-full h-2.5 bg-white/10 rounded-full overflow-hidden border border-white/5">
+                    <div
+                      className="h-full bg-gradient-to-r from-red-600 via-amber-500 to-emerald-500 transition-all duration-300"
+                      style={{ width: `${uploadPercentage}%` }}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Search & Filter Bar */}
+              <div className="flex items-center justify-between flex-wrap gap-3 p-3 bg-black/30 border border-white/10 rounded-xl">
+                <div className="flex items-center gap-2 flex-1 min-w-[240px]">
+                  <div className="relative w-full">
+                    <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                    <input
+                      type="text"
+                      className="w-full bg-black/60 border border-white/10 rounded-lg pl-9 pr-3 py-1.5 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-red-500"
+                      placeholder="Search by Ep # (e.g. '12', '93') or topic ('RAG', 'Swarm', 'Llama', 'Vision')..."
+                      value={archiveSearchQuery}
+                      onChange={(e) => setArchiveSearchQuery(e.target.value)}
+                    />
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  <span className="text-xs text-gray-400 flex items-center gap-1 mr-1">
+                    <Filter size={12} /> Filter:
+                  </span>
+                  <button
+                    className={`px-2.5 py-1 text-xs rounded-lg border font-medium transition-all ${archiveFilterStatus === 'all' ? 'bg-white/15 text-white border-white/30' : 'bg-black/30 text-gray-400 border-white/5 hover:text-white'}`}
+                    onClick={() => setArchiveFilterStatus('all')}
+                  >
+                    All (93)
+                  </button>
+                  <button
+                    className={`px-2.5 py-1 text-xs rounded-lg border font-medium transition-all ${archiveFilterStatus === 'pending' ? 'bg-amber-500/20 text-amber-300 border-amber-500/40' : 'bg-black/30 text-gray-400 border-white/5 hover:text-white'}`}
+                    onClick={() => setArchiveFilterStatus('pending')}
+                  >
+                    Pending ({93 - uploadedCount})
+                  </button>
+                  <button
+                    className={`px-2.5 py-1 text-xs rounded-lg border font-medium transition-all ${archiveFilterStatus === 'uploaded' ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40' : 'bg-black/30 text-gray-400 border-white/5 hover:text-white'}`}
+                    onClick={() => setArchiveFilterStatus('uploaded')}
+                  >
+                    Uploaded ({uploadedCount})
+                  </button>
+                </div>
+              </div>
+
+              {/* Two-Column Explorer Layout */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+                {/* Left Column: 93 Episodes Scrollable Directory */}
+                <div className="lg:col-span-5 bg-black/40 border border-white/10 rounded-xl p-3 flex flex-col h-[650px]">
+                  <div className="flex items-center justify-between pb-2 mb-2 border-b border-white/10">
+                    <span className="text-xs font-bold text-gray-300 uppercase tracking-wider">
+                      Episode Catalog ({filteredArchiveShorts.length} Matches)
+                    </span>
+                    <span className="text-[11px] text-gray-400">Click to inspect</span>
+                  </div>
+
+                  <div className="flex-1 overflow-y-auto pr-1 space-y-2 custom-scrollbar">
+                    {filteredArchiveShorts.length === 0 ? (
+                      <div className="text-center py-12 text-gray-500 text-xs">
+                        No matching episodes found. Try another search query.
+                      </div>
+                    ) : (
+                      filteredArchiveShorts.map(shortPkg => {
+                        const isSelected = shortPkg.episodeNumber === selectedArchiveEpNum;
+                        const isUploaded = !!uploadedShorts[shortPkg.episodeNumber];
+
+                        return (
+                          <div
+                            key={shortPkg.episodeNumber}
+                            onClick={() => setSelectedArchiveEpNum(shortPkg.episodeNumber)}
+                            className={`p-2.5 rounded-lg border transition-all cursor-pointer flex flex-col gap-1.5 ${isSelected ? 'bg-red-950/30 border-red-500/50 shadow-sm' : 'bg-black/30 border-white/5 hover:border-white/20 hover:bg-white/5'}`}
+                          >
+                            <div className="flex items-center justify-between gap-2">
+                              <div className="flex items-center gap-1.5 min-w-0">
+                                <span className={`px-1.5 py-0.5 text-[10px] font-bold rounded ${isSelected ? 'bg-red-500 text-white' : 'bg-white/10 text-gray-300'}`}>
+                                  #{shortPkg.episodeNumber}
+                                </span>
+                                <span className="text-xs font-semibold text-white truncate" title={shortPkg.title}>
+                                  {shortPkg.title}
+                                </span>
+                              </div>
+
+                              <button
+                                onClick={(e) => handleToggleShortUploaded(shortPkg.episodeNumber, e)}
+                                className={`text-[10px] font-bold px-1.5 py-0.5 rounded border transition-all shrink-0 ${isUploaded ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40' : 'bg-white/5 text-gray-400 border-white/10 hover:text-white'}`}
+                                title={isUploaded ? "Mark as pending" : "Mark as uploaded"}
+                              >
+                                {isUploaded ? '✓ Uploaded' : '○ Pending'}
+                              </button>
+                            </div>
+
+                            <p className="text-[11px] text-gray-400 line-clamp-2 leading-relaxed">
+                              {shortPkg.summary}
+                            </p>
+
+                            <div className="flex items-center justify-between pt-1 border-t border-white/5 text-[10px]">
+                              <span className="text-gray-500 truncate max-w-[180px]">
+                                voxstar.substack.com/p/{shortPkg.slug}
+                              </span>
+                              <button
+                                className="text-red-400 hover:text-red-300 font-semibold flex items-center gap-0.5 cursor-pointer"
+                                onClick={(e) => handleUploadArchiveShort(shortPkg, e)}
+                                title="Copy description & launch YouTube Studio"
+                              >
+                                Upload ↗
+                              </button>
+                            </div>
+                          </div>
+                        );
+                      })
+                    )}
+                  </div>
+                </div>
+
+                {/* Right Column: Selected Episode Detail & Direct Launcher */}
+                <div className="lg:col-span-7 bg-black/40 border border-white/10 rounded-xl p-4 flex flex-col gap-4">
+                  {/* Selected Episode Header */}
+                  <div className="flex items-center justify-between flex-wrap gap-2 pb-3 border-b border-white/10">
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="px-2 py-0.5 text-xs font-bold rounded-md bg-red-600 text-white">
+                          Short #{currentArchiveShort.episodeNumber}
+                        </span>
+                        <h4 className="text-sm font-bold text-white">
+                          {currentArchiveShort.title}
+                        </h4>
+                      </div>
+                      <p className="text-xs text-gray-400 mt-1">
+                        {currentArchiveShort.summary}
+                      </p>
+                    </div>
+
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <button
+                        onClick={() => handleToggleShortUploaded(currentArchiveShort.episodeNumber)}
+                        className={`btn btn-xs ${uploadedShorts[currentArchiveShort.episodeNumber] ? 'btn-success' : 'btn-secondary'}`}
+                      >
+                        {uploadedShorts[currentArchiveShort.episodeNumber] ? <CheckCircle2 size={12} className="text-emerald-400" /> : <Clock size={12} />}
+                        {uploadedShorts[currentArchiveShort.episodeNumber] ? 'Status: Uploaded' : 'Mark as Uploaded'}
+                      </button>
+                      <button
+                        onClick={() => handleUploadArchiveShort(currentArchiveShort)}
+                        className="btn btn-youtube btn-sm flex items-center gap-1.5"
+                      >
+                        <YoutubeIcon size={14} />
+                        Upload Short to YouTube Studio ↗
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* 1. YouTube Short Title */}
+                  <div className="youtube-tab-block">
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="text-xs font-bold text-gray-300 uppercase tracking-wider flex items-center gap-1.5">
+                        <Tag size={13} className="text-accent" /> 1. YouTube Short Title
+                      </span>
+                      <button
+                        className={`btn btn-xs flex items-center gap-1 ${copiedField === `archive-title-${currentArchiveShort.episodeNumber}` ? 'btn-success' : 'btn-primary'}`}
+                        onClick={() => handleCopyField(currentArchiveShort.youtubeShortTitle, `archive-title-${currentArchiveShort.episodeNumber}`)}
+                      >
+                        {copiedField === `archive-title-${currentArchiveShort.episodeNumber}` ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}
+                        {copiedField === `archive-title-${currentArchiveShort.episodeNumber}` ? '✓ Copied Title!' : 'Copy Title'}
+                      </button>
+                    </div>
+                    <div className="p-2.5 bg-black/50 border border-white/10 rounded-lg text-xs text-white font-mono font-medium">
+                      {currentArchiveShort.youtubeShortTitle}
+                    </div>
+                  </div>
+
+                  {/* 2. YouTube Video Description */}
+                  <div className="youtube-tab-block">
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="text-xs font-bold text-gray-300 uppercase tracking-wider flex items-center gap-1.5">
+                        <FileText size={13} className="text-red-400" /> 2. YouTube Description (With Spotify Link & 30-Tag Vault)
+                      </span>
+                      <button
+                        className={`btn btn-xs flex items-center gap-1 ${copiedField === `archive-desc-${currentArchiveShort.episodeNumber}` ? 'btn-success' : 'btn-primary'}`}
+                        onClick={() => handleCopyField(currentArchiveShort.youtubeShortDescription, `archive-desc-${currentArchiveShort.episodeNumber}`)}
+                      >
+                        {copiedField === `archive-desc-${currentArchiveShort.episodeNumber}` ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}
+                        {copiedField === `archive-desc-${currentArchiveShort.episodeNumber}` ? '✓ Copied Description!' : 'Copy Full Description'}
+                      </button>
+                    </div>
+                    <pre className="copy-block-text max-h-44 overflow-y-auto text-xs">{currentArchiveShort.youtubeShortDescription}</pre>
+                  </div>
+
+                  {/* 3. 60-Second Vertical Director Script */}
+                  <div className="youtube-tab-block">
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="text-xs font-bold text-gray-300 uppercase tracking-wider flex items-center gap-1.5">
+                        <Video size={13} className="text-yellow-400" /> 3. 60-Second Director's Script & Visual Flow
+                      </span>
+                      <button
+                        className={`btn btn-xs flex items-center gap-1 ${copiedField === `archive-script-${currentArchiveShort.episodeNumber}` ? 'btn-success' : 'btn-primary'}`}
+                        onClick={() => handleCopyField(currentArchiveShort.youtubeShortScript, `archive-script-${currentArchiveShort.episodeNumber}`)}
+                      >
+                        {copiedField === `archive-script-${currentArchiveShort.episodeNumber}` ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}
+                        {copiedField === `archive-script-${currentArchiveShort.episodeNumber}` ? '✓ Copied Script!' : 'Copy 60s Script'}
+                      </button>
+                    </div>
+                    <pre className="copy-block-text max-h-40 overflow-y-auto text-xs">{currentArchiveShort.youtubeShortScript}</pre>
+                  </div>
+
+                  {/* Quick Links Footer */}
+                  <div className="p-3 bg-black/30 border border-white/5 rounded-lg flex items-center justify-between flex-wrap gap-2 text-xs text-gray-400">
+                    <div className="flex items-center gap-3">
+                      <a href={currentArchiveShort.spotifyUrl} target="_blank" rel="noreferrer" className="text-[#1ed760] hover:underline flex items-center gap-1">
+                        <Radio size={12} /> Spotify Master Podcast ↗
+                      </a>
+                      <span className="text-gray-600">•</span>
+                      <a href={currentArchiveShort.substackUrl} target="_blank" rel="noreferrer" className="text-accent hover:underline flex items-center gap-1">
+                        <Globe size={12} /> Substack Article ↗
+                      </a>
+                    </div>
+                    <div className="text-[11px] text-gray-500">
+                      Channel: Gene Da Rocha (UCa-q0YbY6yAMXgjPlYlZbvQ)
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           )}
