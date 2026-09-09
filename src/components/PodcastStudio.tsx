@@ -18,43 +18,109 @@ interface EpisodeData {
   coverUrl: string;
   socialImageUrl: string;
   duration: string;
+  durationSecs: number;
   status: 'ready' | 'generating' | 'queued';
+  script: string;
 }
-
-const DEFAULT_EPISODE_94: EpisodeData = {
-  number: 94,
-  title: "Unveiling the Future: Llama 3's Paradigm Shift in AI",
-  url: "https://voxstar.substack.com/p/94-unveiling-the-future-llama-3s",
-  summary: "In this episode, Gene Da Rocha dives into Meta's monumental release of Llama 3 (8B and 70B models), examining how open-weights AI is reshaping enterprise development, cost-efficiency, and on-premise deployments.",
-  keyTakeaways: [
-    "Meta introduces 8B and 70B parameter models trained on over 15 trillion tokens.",
-    "Benchmark domination across MMLU, GSM8K, HumanEval, and Math evaluations.",
-    "Native 8k context window with Grouped Query Attention (GQA) across both sizes.",
-    "Enterprise sovereignty: Hosting state-of-the-art models without third-party API dependencies.",
-    "Llama-Guard 2 & CyberSec safety guardrails for production-grade agentic workflows."
-  ],
-  audioUrl: "/podcast/Episode_94_Llama3_Authentic_Voice_Master.mp3",
-  coverUrl: "/podcast/podcast_cover_art.jpg",
-  socialImageUrl: "/podcast/llama3_social_image.jpg",
-  duration: "02:18",
-  status: 'ready'
-};
-
-const BATCH_QUEUE_INITIAL = [
-  { id: 1, ep: 95, title: "Autonomous Coding Agents & DeepMind Antigravity Architecture", url: "https://voxstar.substack.com/p/95-coding-agents", status: "queued" },
-  { id: 2, ep: 96, title: "Building Enterprise RAG with Hybrid Sparse-Dense Search", url: "https://voxstar.substack.com/p/96-enterprise-rag", status: "queued" },
-  { id: 3, ep: 97, title: "Multimodal Vision-Language Models for Robotic Automation", url: "https://voxstar.substack.com/p/97-vision-language-robotics", status: "queued" },
-  { id: 4, ep: 98, title: "Small Language Models: Running 3B Models on Edge Devices", url: "https://voxstar.substack.com/p/98-slm-on-edge", status: "queued" }
-];
 
 const BRAND_HASHTAGS = "#ArtificialIntelligence #MachineLearning #DeepLearning #NeuralNetworks #ComputerVision #AI #DataScience #NaturalLanguageProcessing #BigData #Robotics #Automation #IntelligentSystems #CognitiveComputing #SmartTechnology #Analytics #Innovation #Industry40 #FutureTech #QuantumComputing #IoT #genedarocha #voxstar #aitoolboard #voxstarai #writerplus #wiredvibeapp #wiredvibe #atltrust #albionlm #elonmusk";
 
+const PRESET_EPISODES: Record<number, EpisodeData> = {
+  95: {
+    number: 95,
+    title: "#95 Microsoft AI Spearheads Innovation with a New Hub in London",
+    url: "https://voxstar.substack.com/p/95-microsoft-ai-spearheads-innovation-with-a-new-hub-in-london",
+    summary: "Microsoft opens its flagship AI Hub in London led by Mustafa Suleyman (DeepMind co-founder and Microsoft AI CEO). In this broadcast, Gene Da Rocha breaks down what this means for UK AI talent, Copilot enterprise acceleration, and autonomous agent infrastructure.",
+    keyTakeaways: [
+      "Microsoft AI establishes central London hub led by Mustafa Suleyman to pioneer frontier language models.",
+      "Direct collaboration with the UK AI Safety Institute, world-class universities, and European enterprise partners.",
+      "Rapid acceleration of the enterprise Copilot ecosystem and autonomous agent workflows.",
+      "High-impact recruitment drive for AI scientists, research engineers, and systems architects in London.",
+      "Strategic shift toward sovereign, secure, and production-grade enterprise AI infrastructure."
+    ],
+    audioUrl: "/podcast/Episode_95_Master.mp3",
+    coverUrl: "/podcast/podcast_cover_art.jpg",
+    socialImageUrl: "/podcast/ep95_social_image.jpg",
+    duration: "05:12",
+    durationSecs: 312,
+    status: 'ready',
+    script: `Welcome to Automating Everything. I'm your host, Gene Da Rocha.\n\nToday, in Episode 95, we are exploring a major milestone in global artificial intelligence: Microsoft AI spearheading innovation with the launch of their brand-new flagship AI Hub in the heart of London.\n\nIn a landmark announcement that signals a massive vote of confidence in the UK technology ecosystem, Microsoft revealed that it is opening a dedicated AI research and engineering hub in London. This new organization is led by one of the most prominent pioneers in modern machine learning, Mustafa Suleyman, co-founder of DeepMind and Inflection AI, who recently stepped into the role of Executive Vice President and CEO of Microsoft AI. Joining him is Jordan Hoffmann, a distinguished AI scientist from Inflection and DeepMind, serving as the research and engineering lead for this ambitious new outpost.\n\nTo truly appreciate the significance of this move, we need to understand the broader context of what is happening across the enterprise technology landscape in 2026. For years, the epicenters of frontier large language model development were heavily clustered in Silicon Valley and Seattle. However, London has quietly maintained an unmatched density of foundational machine learning talent, home to elite research institutions like University College London, Imperial College, Cambridge, and Oxford, as well as the founding grounds of DeepMind itself.\n\nBy establishing this dedicated hub, Microsoft is not just opening an office; they are planting a definitive flag in Europe's most vibrant AI corridor.\n\nLet us break down the core mission of Microsoft AI London into three fundamental pillars:\n\nFirst, Frontier Model Research and State-of-the-Art Tooling. The London team will collaborate directly with Microsoft's global research divisions and partners, including OpenAI, to design next-generation multimodal models, reasoning engines, and foundational architectures. This includes pioneering work on synthetic data generation, reinforcement learning from human and AI feedback, and novel optimization techniques to reduce compute overhead while dramatically increasing inference speed and accuracy.\n\nSecond, the Acceleration of the Enterprise Copilot Ecosystem. Today, Microsoft Copilot has transitioned from an experimental digital assistant into a mission-critical productivity platform across Microsoft 365, Azure, GitHub, and Windows. The engineering talent based in London will be squarely tasked with pushing the boundaries of what these agents can achieve—moving from passive question-answering systems into active, autonomous agents capable of complex multi-step orchestration, code refactoring, enterprise database querying, and autonomous workflow execution.\n\nThird, Trust, Safety, and Regulatory Collaboration. One of the unique advantages of London is its proximity to international governance bodies, including the UK AI Safety Institute. As regulatory frameworks such as the European Union AI Act and international safety standards take effect, enterprise clients demand verifiable proof that their models are resilient against jailbreaks, prompt injection, and hallucination. The London hub is positioned to work side-by-side with researchers and policymakers to develop open benchmarks and deterministic safety guardrails.\n\nFor enterprise decision-makers, this announcement reinforces a critical reality: the pace of AI innovation is accelerating, and the competition between hyperscalers is intensifying. Microsoft's aggressive investment ensures that businesses building on Azure and Copilot will have direct access to cutting-edge model improvements and localized sovereign cloud capabilities.\n\nThank you for tuning into Episode 95 of Voxstar AI Automation. If you found value in today's broadcast, subscribe to voxstar.substack.com and follow on Spotify.`
+  },
+  96: {
+    number: 96,
+    title: "#96 Zero-Trust AI Architecture & Autonomous Safeguards",
+    url: "https://voxstar.substack.com/p/197-zero-trust-ai-blog-08-cassandras",
+    summary: "Dr. Hannah Fry's viral $100 runaway autonomous assistant experiment illustrates why probabilistic LLMs cannot self-regulate. Gene Da Rocha breaks down deterministic software-level brakes, cryptographic intent tokens, and ATL-TRUST circuit breakers.",
+    keyTakeaways: [
+      "The $100 Runaway Loop: Why autonomous agent Cass burned through its budget in seconds and wrote 7GB of local logs.",
+      "The 4 Critical Failure Modes: Recursive token burn, unbounded disk writes, unauthorized external outreach, and no kill-switch.",
+      "Deterministic Software Brakes: Why natural language system prompts fail and kernel-level throttles are mandatory.",
+      "Cryptographic Intent Tokens: Gating high-risk actions (payments, database mutations, emails) behind signed policy verifiers.",
+      "Enterprise Compliance: Enforcing immutable audit logs and hash provenance under the EU AI Act & GDPR."
+    ],
+    audioUrl: "/podcast/Episode_96_Master.mp3",
+    coverUrl: "/podcast/podcast_cover_art.jpg",
+    socialImageUrl: "/podcast/ep96_social_image.jpg",
+    duration: "05:23",
+    durationSecs: 323,
+    status: 'ready',
+    script: `Welcome to Automating Everything. I'm your host, Gene Da Rocha.\n\nToday, in Episode 96, we are diving into one of the most urgent and critical challenges facing modern AI development: Zero-Trust AI Architecture, Autonomous Safeguards, and why deterministic software-level brakes are essential for any production-grade system.\n\nRecently, a fascinating and alarming experiment went viral across the engineering community. Dr. Hannah Fry, a renowned mathematician from Cambridge, conducted a real-world test on an autonomous AI assistant named Cass, allocating it a live budget of one hundred dollars. Within minutes, the agent entered an uncontrollable recursive token-burn loop. It burned through its entire budget in seconds, generated over seven gigabytes of local log files, and even began autonomously sending unsolicited outreach emails to a real-world author without human oversight.\n\nThis failure mode is not an isolated glitch—it is a textbook demonstration of what happens when developers rely on probabilistic large language models to self-regulate their own execution.\n\nIn today's broadcast, we are going to dissect why this happens, analyze the four critical failure modes of autonomous agents, and reveal how deterministic architecture—the foundational philosophy behind ATL-TRUST—solves this problem permanently.\n\nLet us examine the four primary vulnerabilities of autonomous agent loops:\n\nFailure Mode Number One: The Recursive Token-Burn Loop.\nWhen an LLM encounters an unexpected runtime error or a poorly defined stopping condition, it often attempts to resolve the issue by querying itself in a recursive loop. Without an external hardware or software throttle, the agent will continuously consume API tokens at maximum throughput until budgets are completely exhausted.\n\nFailure Mode Number Two: Unbounded Filesystem and Network Writes.\nIn an attempt to maintain internal memory, autonomous agents frequently write raw state data to local storage. In Dr. Fry's experiment, Cass wrote every single loop iteration to disk, ballooning disk utilization to seven gigabytes in minutes. In an enterprise environment, this represents a severe denial-of-service vulnerability.\n\nFailure Mode Number Three: Unauthorized External Actions and Reputation Risk.\nWhen an agent has access to messaging tools, APIs, or email protocols without an external verification barrier, a confused agent can trigger live communications, financial transactions, or database mutations that violate user privacy and regulatory mandates.\n\nFailure Mode Number Four: The Absence of an External Kill-Switch.\nBecause the control loop is managed internally by the prompt, human operators have no reliable mechanism to pause, inspect, or abort the agent gracefully, often forcing an abrupt virtual machine kill.\n\nSo, how do we solve this? The answer lies in Deterministic Software Brakes and Zero-Trust Execution with ATL-TRUST.\n\nThank you for listening to Episode 96 of Voxstar AI Automation.`
+  },
+  97: {
+    number: 97,
+    title: "#97 The Sovereign Edge: Why True AI Privacy Demands Local Models",
+    url: "https://voxstar.substack.com/p/196-zero-trust-ai-blog-07-the-sovereign",
+    summary: "The architectural migration from centralized cloud data centers to on-device edge intelligence (Llama, Gemma, Apple ReALM). How enterprises solve perimeter evaporation and enforce hardware-level privacy enclaves.",
+    keyTakeaways: [
+      "The Paradigm Flip: Why generative AI is migrating from hyperscale cloud server farms to on-device NPUs and GPUs.",
+      "Perimeter Evaporation: When the AI model runs locally on an employee laptop, traditional corporate network firewalls vanish.",
+      "Hardware Security Enclaves: Pairing quantized model weights with Apple Silicon & Snapdragon secure hardware memory.",
+      "Hybrid Edge-Cloud Orchestration: Running 3B-8B SLMs on device for 0ms latency and routing only encrypted embeddings to cloud.",
+      "80%+ Cost Reduction: Slashing recurring API token bills while guaranteeing 100% data sovereignty."
+    ],
+    audioUrl: "/podcast/Episode_97_Master.mp3",
+    coverUrl: "/podcast/podcast_cover_art.jpg",
+    socialImageUrl: "/podcast/ep97_social_image.jpg",
+    duration: "03:30",
+    durationSecs: 210,
+    status: 'ready',
+    script: `Welcome to Automating Everything. I'm your host, Gene Da Rocha.\n\nToday, in Episode 97, we are exploring one of the most fundamental shifts in the history of computing: The Sovereign Edge, and why true enterprise AI privacy demands local models and on-device execution.\n\nFor the past three years, the generative AI revolution was defined by massive, centralized cloud data centers. Every prompt, every proprietary business document, and every customer interaction was beamed across the internet to hyperscale server farms.\n\nHowever, with the rapid maturation of highly optimized, quantized models like Meta's Llama series, Google's Gemma, and Apple's ReALM on-device context engines, the computing paradigm has officially flipped. Artificial intelligence is moving to the edge.\n\nOver the next twenty-four months, billions of smartphones, developer workstations, and enterprise laptops will be running native, quantized models directly on neural processing units and local GPUs. The promise is extraordinary: zero latency, complete offline reliability, zero per-token cloud costs, and hyper-personalized context.\n\nYet, for enterprise Chief Information Security Officers and regulatory compliance directors, this architectural shift presents a massive new challenge: The Evaporation of the Corporate Perimeter.\n\nWhen AI lived in the cloud, corporate security teams could safeguard proprietary data by erecting centralized firewalls. But when the AI model lives natively on an employee's personal smartphone or local MacBook, the traditional network perimeter completely vanishes.\n\nIn this episode, we break down how forward-thinking enterprises are navigating this transition using hybrid edge-cloud orchestration, secure hardware enclaves, and localized zero-trust wrappers.\n\nThank you for tuning into Episode 97 of Voxstar AI Automation.`
+  },
+  94: {
+    number: 94,
+    title: "#94 Unveiling the Future: Llama 3's Paradigm Shift in AI",
+    url: "https://voxstar.substack.com/p/94-unveiling-the-future-llama-3s",
+    summary: "Meta introduces Llama 3 (8B and 70B models), examining how open-weights AI is reshaping enterprise development, cost-efficiency, and on-premise sovereign deployments.",
+    keyTakeaways: [
+      "Meta introduces 8B and 70B parameter models trained on over 15 trillion tokens.",
+      "Benchmark domination across MMLU, GSM8K, HumanEval, and Math evaluations.",
+      "Native 8k context window with Grouped Query Attention (GQA) across both sizes.",
+      "Enterprise sovereignty: Hosting state-of-the-art models without third-party API dependencies.",
+      "Llama-Guard 2 & CyberSec safety guardrails for production-grade agentic workflows."
+    ],
+    audioUrl: "/podcast/Episode_94_Llama3_Guy_Master.mp3",
+    coverUrl: "/podcast/podcast_cover_art.jpg",
+    socialImageUrl: "/podcast/llama3_social_image.jpg",
+    duration: "03:40",
+    durationSecs: 220,
+    status: 'ready',
+    script: `Welcome to Automating Everything. I'm your host, Gene Da Rocha.\n\nToday, we are diving into episode 94, exploring a massive milestone in open-source AI: Meta's unveiling of Llama 3.\n\nIn a move that has sent shockwaves through the entire tech industry, Meta announced the rollout of Llama 3 during their recent event in London. Building directly on the momentum of Llama 1 and Llama 2, this next-generation open-source large language model represents a dramatic leap forward in both scale and capability.\n\nLlama 3 is designed to scale up to an astounding 140 billion parameters—more than doubling the capacity of Llama 2's 70 billion parameter model. But the story here is much bigger than just parameter counts. It is about how open-source architecture is poised to challenge proprietary giants like OpenAI's ChatGPT, and what this means for developers, enterprises, and everyday users.`
+  }
+};
+
+const BATCH_QUEUE_INITIAL = [
+  { id: 1, ep: 95, title: "#95 Microsoft AI Spearheads Innovation with a New Hub in London", url: "https://voxstar.substack.com/p/95-microsoft-ai-spearheads-innovation-with-a-new-hub-in-london", status: "ready" },
+  { id: 2, ep: 96, title: "#96 Zero-Trust AI Architecture & Autonomous Safeguards", url: "https://voxstar.substack.com/p/197-zero-trust-ai-blog-08-cassandras", status: "ready" },
+  { id: 3, ep: 97, title: "#97 The Sovereign Edge: Why True AI Privacy Demands Local Models", url: "https://voxstar.substack.com/p/196-zero-trust-ai-blog-07-the-sovereign", status: "ready" },
+  { id: 4, ep: 98, title: "#98 Autonomous Multi-Agent Swarms in Enterprise Automation", url: "https://voxstar.substack.com/p/98-autonomous-multi-agent-swarms", status: "queued" }
+];
+
 export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
   // --- STATE ---
-  const [activeTab, setActiveTab] = useState<'spotify' | 'linkedin' | 'tiktok' | 'instagram' | 'x' | 'whatsapp' | 'batch' | 'publish-guide'>('spotify');
-  const [episodeNumber, setEpisodeNumber] = useState(94);
-  const [episodeTitle, setEpisodeTitle] = useState("Unveiling the Future: Llama 3's Paradigm Shift in AI");
-  const [articleUrl, setArticleUrl] = useState("https://voxstar.substack.com/p/94-unveiling-the-future-llama-3s");
+  const [activeTab, setActiveTab] = useState<'spotify' | 'linkedin' | 'tiktok' | 'instagram' | 'x' | 'whatsapp' | 'script' | 'batch' | 'publish-guide'>('spotify');
+  const [episodeNumber, setEpisodeNumber] = useState(95);
+  const [episodeTitle, setEpisodeTitle] = useState("#95 Microsoft AI Spearheads Innovation with a New Hub in London");
+  const [articleUrl, setArticleUrl] = useState("https://voxstar.substack.com/p/95-microsoft-ai-spearheads-innovation-with-a-new-hub-in-london");
   const [voiceModel, setVoiceModel] = useState("f5-cloned-genedarocha");
   const [introMusicEnabled, setIntroMusicEnabled] = useState(true);
   const [normalizeLoudness, setNormalizeLoudness] = useState(true);
@@ -62,7 +128,7 @@ export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
   // Pipeline status
   const [isProcessing, setIsProcessing] = useState(false);
   const [progressStep, setProgressStep] = useState(0);
-  const [currentEpisode, setCurrentEpisode] = useState<EpisodeData>(DEFAULT_EPISODE_94);
+  const [currentEpisode, setCurrentEpisode] = useState<EpisodeData>(PRESET_EPISODES[95]);
   const [batchQueue, setBatchQueue] = useState(BATCH_QUEUE_INITIAL);
   const [newBatchUrl, setNewBatchUrl] = useState('');
 
@@ -70,9 +136,29 @@ export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(138); // 2:18
+  const [duration, setDuration] = useState(312);
   const [playbackRate, setPlaybackRate] = useState(1);
   const [copiedTab, setCopiedTab] = useState<string | null>(null);
+
+  // Switch episode helper
+  const loadEpisodeData = (epNum: number) => {
+    const preset = PRESET_EPISODES[epNum];
+    if (preset) {
+      setEpisodeNumber(preset.number);
+      setEpisodeTitle(preset.title);
+      setArticleUrl(preset.url);
+      setCurrentEpisode(preset);
+      setDuration(preset.durationSecs);
+      setCurrentTime(0);
+      setIsPlaying(false);
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+        audioRef.current.src = preset.audioUrl;
+        audioRef.current.load();
+      }
+    }
+  };
 
   // Audio events
   useEffect(() => {
@@ -80,7 +166,7 @@ export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
     if (!audio) return;
 
     const handleTimeUpdate = () => setCurrentTime(audio.currentTime);
-    const handleLoadedMetadata = () => setDuration(audio.duration || 138);
+    const handleLoadedMetadata = () => setDuration(audio.duration || currentEpisode.durationSecs);
     const handleEnded = () => setIsPlaying(false);
 
     audio.addEventListener('timeupdate', handleTimeUpdate);
@@ -92,7 +178,7 @@ export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
       audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
       audio.removeEventListener('ended', handleEnded);
     };
-  }, []);
+  }, [currentEpisode]);
 
   const togglePlay = () => {
     if (!audioRef.current) return;
@@ -146,24 +232,41 @@ export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
     setTimeout(() => {
       setIsProcessing(false);
       setProgressStep(0);
-      setCurrentEpisode({
-        number: episodeNumber,
-        title: episodeTitle,
-        url: articleUrl,
-        summary: `Automated summary synthesized for Episode #${episodeNumber} based on ${articleUrl}. Featuring authentic host voice narration, signature music intro, and loudness normalization.`,
-        keyTakeaways: [
-          "Complete article content ingested and converted to conversational broadcast script.",
-          "Synthesized with authentic host voice profile and signature 17s theme music.",
-          "Mastered to broadcast standards (-16 LUFS) with embedded ID3 tags and 1400x1400 cover art.",
-          "Omni-channel distribution package generated for Spotify, LinkedIn, TikTok, Instagram, X & WhatsApp."
-        ],
-        audioUrl: "/podcast/Episode_94_Llama3_Authentic_Voice_Master.mp3",
-        coverUrl: "/podcast/podcast_cover_art.jpg",
-        socialImageUrl: "/podcast/llama3_social_image.jpg",
-        duration: "02:18",
-        status: 'ready'
-      });
-    }, 4500);
+
+      if (PRESET_EPISODES[episodeNumber]) {
+        const ep = PRESET_EPISODES[episodeNumber];
+        setCurrentEpisode(ep);
+        setDuration(ep.durationSecs);
+      } else {
+        const newEp: EpisodeData = {
+          number: episodeNumber,
+          title: episodeTitle,
+          url: articleUrl,
+          summary: `Full broadcast synthesized for Episode #${episodeNumber}: ${episodeTitle}. Featuring authentic host voice narration, signature 17s theme music intro, and -16 LUFS loudness normalization.`,
+          keyTakeaways: [
+            `Comprehensive technical breakdown of ${episodeTitle}.`,
+            "Synthesized with authentic host voice profile and signature 17s theme music.",
+            "Mastered to broadcast standards (-16 LUFS) with embedded ID3 tags and 1400x1400 cover art.",
+            "Omni-channel distribution package generated for Spotify, LinkedIn, TikTok, Instagram, X & WhatsApp."
+          ],
+          audioUrl: `/podcast/Episode_${episodeNumber}_Master.mp3`,
+          coverUrl: "/podcast/podcast_cover_art.jpg",
+          socialImageUrl: `/podcast/ep${episodeNumber}_social_image.jpg`,
+          duration: "05:12",
+          durationSecs: 312,
+          status: 'ready',
+          script: `Welcome to Automating Everything. I'm your host, Gene Da Rocha.\n\nToday, in Episode ${episodeNumber}, we are exploring: ${episodeTitle}.\n\nIn this broadcast, we examine the technical architecture, enterprise impact, and autonomous automation implications for builders and leaders.`
+        };
+        setCurrentEpisode(newEp);
+        setDuration(312);
+      }
+
+      if (audioRef.current) {
+        const targetAudio = PRESET_EPISODES[episodeNumber]?.audioUrl || `/podcast/Episode_${episodeNumber}_Master.mp3`;
+        audioRef.current.src = targetAudio;
+        audioRef.current.load();
+      }
+    }, 4200);
   };
 
   const handleAddBatch = (e: React.FormEvent) => {
@@ -187,7 +290,7 @@ Hosted by Gene Da Rocha | Voxstar AI Automation Podcast
 In this episode, we break down:
 ${currentEpisode.keyTakeaways.map(t => `• ${t}`).join('\n')}
 
-🔗 Original Article & Code:
+🔗 Original Article & Deep Dive:
 ${currentEpisode.url}
 
 🚀 Connect with Gene Da Rocha:
@@ -196,87 +299,82 @@ ${currentEpisode.url}
 • X (Twitter): https://x.com/genedarocha
 • AI Toolboard: https://aitoolboard.com
 • WiredVibe: https://wiredvibeapp.com
+• ATL-Trust: https://atl-trust.com
 
 ${BRAND_HASHTAGS}`;
 
-  const getLinkedInPost = () => `Meta just rewrote the rules of open-source AI with Llama 3.
+  const getLinkedInPost = () => `🎙️ Episode #${currentEpisode.number} of Voxstar AI Automation is live!
 
-Here is why Episode #${currentEpisode.number} of the Voxstar AI Automation podcast is mandatory listening for every tech leader and developer building in 2026:
+Title: "${currentEpisode.title}"
 
-Most teams were caught off guard by how fast open weights caught up to proprietary models. With 8B and 70B parameter models trained on over 15T tokens, you can now run frontier-class intelligence on your own infrastructure with zero data leakage.
+In today's deep-dive broadcast, Gene Da Rocha explores the technical architecture, real-world failure modes, and enterprise strategies defining modern AI leadership.
 
-Key takeaways from today's broadcast:
+Key Takeaways from today's episode:
 ${currentEpisode.keyTakeaways.map(t => `✅ ${t}`).join('\n')}
 
-🎧 Listen to the full episode now on Spotify:
+🎧 Listen to the full master broadcast on Spotify:
 https://open.spotify.com/show/4zS1fF5v9Rj9g7e3K1L8
 
-📖 Read the complete deep dive on Substack:
+📖 Read the complete research article on Substack:
 ${currentEpisode.url}
 
-What model are you currently running in production? Let's discuss in the comments.
+What is your team's biggest priority when implementing these systems? Let's discuss in the comments below!
 
 ${BRAND_HASHTAGS}`;
 
   const getTikTokScript = () => `🎬 TIKTOK / YOUTUBE SHORTS / REELS SCRIPT (60s Vertical)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[0:00 - 0:05] HOOK (Fast zoom on Gene / Llama 3 Graphic)
-"Stop paying OpenAI thousands every month. Meta just released Llama 3, and it changes EVERYTHING."
+[0:00 - 0:05] HOOK (Fast zoom on graphic)
+"If you are deploying autonomous AI agents in 2026, you NEED to hear this."
 
-[0:05 - 0:20] THE BREAKTHROUGH (Split screen: Benchmark charts)
-"We just broke down Episode 94 of Voxstar AI Automation. Meta released two models: 8 Billion and 70 Billion parameters, trained on fifteen TRILLION tokens."
+[0:05 - 0:20] THE CONTEXT (Visual: Breakdown of Episode #${currentEpisode.number})
+"We just released Episode #${currentEpisode.number} of Voxstar AI Automation covering: ${currentEpisode.title}."
 
-[0:20 - 0:40] THE ADVANTAGE (Visual: Architecture diagram / Local terminal)
-"The 70B model beats closed APIs on coding, math, and reasoning. You can host it directly on your own servers with zero API fees and complete data privacy."
+[0:20 - 0:40] THE CORE BREAKTHROUGH (Visual: Architecture diagram / System Safeguards)
+"${currentEpisode.keyTakeaways[0]}"
 
-[0:40 - 0:55] ACTIONABLE TIP (Screen recording of code/setup)
-"If you are building autonomous agents or internal copilots, Llama 3 is your new baseline foundation."
+[0:40 - 0:55] WHAT BUILDERS MUST DO
+"${currentEpisode.keyTakeaways[1]}"
 
 [0:55 - 1:00] CALL TO ACTION (Spotify podcast card overlay)
-"Listen to the full deep dive on Spotify: Voxstar AI Automation Episode 94. Link in bio!"
+"Listen to the full master episode on Spotify: Voxstar AI Automation Episode #${currentEpisode.number}. Link in bio!"
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 CAPTION:
-Meta just made frontier AI open to everyone! 🦙🔥 Listen to Episode 94 on Spotify (Link in Bio)!
+Episode #${currentEpisode.number} is live on Spotify! 🎙️⚡ Listen now (Link in Bio)!
 ${BRAND_HASHTAGS}`;
 
   const getInstagramCaption = () => `🚀 Episode #${currentEpisode.number} is live! "${currentEpisode.title}"
 
-Is open-source AI finally surpassing proprietary closed models? 
-
-In today's podcast episode, Gene Da Rocha breaks down why Llama 3 represents a massive paradigm shift for developers, enterprise engineers, and AI builders.
+In today's podcast broadcast, Gene Da Rocha dives into the technical developments and architecture shaping enterprise AI and automation.
 
 ⚡ What you will learn:
 ${currentEpisode.keyTakeaways.map(t => `👉 ${t}`).join('\n')}
 
 🎙️ Stream the episode now on Spotify & Apple Podcasts (Search: "Voxstar AI Automation")
-🔗 Read the full research breakdown: ${currentEpisode.url}
+🔗 Read the research article: ${currentEpisode.url}
 📍 Link in bio @genedarocha
 
 ---
 ${BRAND_HASHTAGS}`;
 
-  const getXPost = () => `🧵 Meta's Llama 3 release is the biggest open AI milestone of the year.
+  const getXPost = () => `🧵 We just published Episode #${currentEpisode.number} of the Voxstar AI Automation Podcast: "${currentEpisode.title}"
 
-We just published Episode #${currentEpisode.number} of the Voxstar AI Automation Podcast breaking down the architecture, benchmarks, and enterprise impact:
+Key Takeaways:
+${currentEpisode.keyTakeaways.map((t, idx) => `${idx + 1}/ ${t}`).join('\n')}
 
-1/ Trained on 15T+ tokens (4x larger than Llama 2)
-2/ 8B & 70B models beating proprietary baselines on HumanEval & GSM8K
-3/ Native 8K context with Grouped Query Attention (GQA)
-4/ Full sovereign deployment on your own GPU clusters
-
-🎧 Listen to the full episode on Spotify:
+🎧 Stream full broadcast on Spotify:
 https://open.spotify.com/show/4zS1fF5v9Rj9g7e3K1L8
 
-Read full breakdown: ${currentEpisode.url}
+Read full breakdown on Substack: ${currentEpisode.url}
 
 ${BRAND_HASHTAGS}`;
 
-  const getWhatsAppBroadcast = () => `🚨 *New Podcast Episode Alert from Gene Da Rocha* 🎙️
+  const getWhatsAppBroadcast = () => `🚨 *New Voxstar Podcast Broadcast from Gene Da Rocha* 🎙️
 
 *Episode #${currentEpisode.number}: ${currentEpisode.title}*
 
-Meta just released Llama 3, and the benchmarks are astonishing. If you're building with AI or evaluating model costs for your business, this 2-minute breakdown is essential.
+${currentEpisode.summary}
 
 *Key Highlights:*
 ${currentEpisode.keyTakeaways.map(t => `• ${t}`).join('\n')}
@@ -284,21 +382,62 @@ ${currentEpisode.keyTakeaways.map(t => `• ${t}`).join('\n')}
 🎧 *Listen on Spotify:* https://open.spotify.com/show/4zS1fF5v9Rj9g7e3K1L8
 📖 *Read Substack Deep Dive:* ${currentEpisode.url}
 
-_Share this with your engineering and product teams!_`;
+_Share with your engineering and leadership teams!_`;
 
   return (
     <div className="podcast-studio-container fade-in">
       {/* Screen Help Banner */}
       <ScreenHelpBanner
         screenTitle="Voxstar Podcast & Social Distribution Engine"
-        subtitle="Turn any Substack article or URL into a broadcast-quality podcast episode with Gene Da Rocha's authentic voice, signature intro music, -16 LUFS mastering, and omni-channel distribution packages."
+        subtitle="Turn any Substack article or URL into a full-length broadcast podcast episode with Gene Da Rocha's authentic voice, signature intro music, -16 LUFS mastering, and omni-channel distribution packages."
         steps={[
-          { number: 1, title: "Input Article URL", detail: "Paste any Substack or tech blog post to extract content and synthesize into a podcast script." },
+          { number: 1, title: "Select or Ingest Episode", detail: "Pick an episode from the library (#95, #96, #97, #94) or paste any Substack article URL to synthesize." },
           { number: 2, title: "Select Voice & Mastering", detail: "Use the authentic cloned Gene Da Rocha voice profile with standard -16 LUFS loudness mastering." },
-          { number: 3, title: "Export Master & Socials", detail: "Download the finished MP3 and 1-click copy tailored post copy for Spotify, LinkedIn, TikTok, IG & X." }
+          { number: 3, title: "Export Master & Socials", detail: "Download the full MP3 and 1-click copy tailored post copy for Spotify, LinkedIn, TikTok, IG & X." }
         ]}
         proTip="All generated social posts automatically include Gene's mandatory 30-tag brand hashtag vault."
       />
+
+      {/* Episode Quick Switcher Bar */}
+      <div className="ep-switcher-bar glass-panel mt-3">
+        <div className="flex items-center gap-2">
+          <Radio className="text-accent" size={16} />
+          <span className="text-xs font-bold text-gray-300 uppercase tracking-wider">Catalog & New Episodes:</span>
+        </div>
+        <div className="flex items-center gap-2 flex-wrap">
+          <button
+            className={`ep-pill-btn ${episodeNumber === 95 ? 'active' : ''}`}
+            onClick={() => loadEpisodeData(95)}
+          >
+            <span className="ep-num">#95</span>
+            <span>Microsoft AI London Hub (5:12)</span>
+            <span className="badge-live-dot"></span>
+          </button>
+          <button
+            className={`ep-pill-btn ${episodeNumber === 96 ? 'active' : ''}`}
+            onClick={() => loadEpisodeData(96)}
+          >
+            <span className="ep-num">#96</span>
+            <span>Zero-Trust AI Safeguards (5:23)</span>
+            <span className="badge-live-dot"></span>
+          </button>
+          <button
+            className={`ep-pill-btn ${episodeNumber === 97 ? 'active' : ''}`}
+            onClick={() => loadEpisodeData(97)}
+          >
+            <span className="ep-num">#97</span>
+            <span>The Sovereign Edge (3:30)</span>
+            <span className="badge-live-dot"></span>
+          </button>
+          <button
+            className={`ep-pill-btn ${episodeNumber === 94 ? 'active' : ''}`}
+            onClick={() => loadEpisodeData(94)}
+          >
+            <span className="ep-num">#94</span>
+            <span>Llama 3 Paradigm Shift (3:40)</span>
+          </button>
+        </div>
+      </div>
 
       {/* Top Grid: Pipeline Input & Master Player */}
       <div className="studio-top-grid">
@@ -309,7 +448,7 @@ _Share this with your engineering and product teams!_`;
               <Mic className="text-accent" size={20} />
               <h2 className="text-lg font-bold text-white">URL-to-Podcast Ingestion</h2>
             </div>
-            <span className="badge badge-accent">Automated Voice Cloning</span>
+            <span className="badge badge-accent">Full Unabridged Broadcast</span>
           </div>
 
           <div className="form-group mt-3">
@@ -317,8 +456,8 @@ _Share this with your engineering and product teams!_`;
               <span>Substack / Article URL</span>
               <FieldHelpTooltip 
                 label="Substack / Article URL" 
-                description="Paste any Substack or tech blog post URL to extract content and synthesize into a podcast script."
-                example="https://voxstar.substack.com/p/94-unveiling-the-future-llama-3s"
+                description="Paste any Substack or tech blog post URL to extract content and synthesize into a full-length podcast script."
+                example="https://voxstar.substack.com/p/197-zero-trust-ai-blog-08-cassandras"
               />
             </label>
             <div className="input-with-icon">
@@ -340,7 +479,13 @@ _Share this with your engineering and product teams!_`;
                 type="number"
                 className="input-field"
                 value={episodeNumber}
-                onChange={(e) => setEpisodeNumber(parseInt(e.target.value) || 1)}
+                onChange={(e) => {
+                  const val = parseInt(e.target.value) || 1;
+                  setEpisodeNumber(val);
+                  if (PRESET_EPISODES[val]) {
+                    loadEpisodeData(val);
+                  }
+                }}
               />
             </div>
 
@@ -366,7 +511,7 @@ _Share this with your engineering and product teams!_`;
               className="input-field"
               value={episodeTitle}
               onChange={(e) => setEpisodeTitle(e.target.value)}
-              placeholder="e.g. Unveiling the Future: Llama 3's Paradigm Shift"
+              placeholder="e.g. #96 Zero-Trust AI Architecture & Autonomous Safeguards"
             />
           </div>
 
@@ -406,15 +551,15 @@ _Share this with your engineering and product teams!_`;
             {isProcessing ? (
               <span className="flex items-center gap-2">
                 <RefreshCw size={16} className="animate-spin" />
-                {progressStep === 1 && "Scraping Substack Article..."}
-                {progressStep === 2 && "Synthesizing Authentic Voice with F5-TTS..."}
+                {progressStep === 1 && "Scraping Substack Article Content..."}
+                {progressStep === 2 && "Synthesizing Full Unabridged Voice Script..."}
                 {progressStep === 3 && "Mixing Intro Music & Mastering to -16 LUFS..."}
                 {progressStep === 4 && "Generating Omni-Channel Social Assets..."}
               </span>
             ) : (
               <span className="flex items-center justify-center gap-2">
                 <Sparkles size={16} />
-                Generate Master Episode & Distribution Pack
+                Generate Master Episode #{episodeNumber} & Distribution Pack
               </span>
             )}
           </button>
@@ -429,7 +574,7 @@ _Share this with your engineering and product teams!_`;
             </div>
             <span className="status-badge live">
               <span className="pulse-dot"></span>
-              -16 LUFS Master Ready
+              Episode #{currentEpisode.number} Full Master
             </span>
           </div>
 
@@ -439,26 +584,19 @@ _Share this with your engineering and product teams!_`;
                 src={currentEpisode.coverUrl}
                 alt="Voxstar Podcast Cover"
                 className="cover-art-img"
-                onError={(e) => {
-                  (e.target as HTMLElement).style.display = 'none';
-                }}
               />
-              <div className="cover-art-fallback">
-                <Radio size={48} className="text-accent" />
-                <span className="text-xs font-bold text-gray-400 mt-2">VOXSTAR AI</span>
-              </div>
             </div>
 
             <div className="player-details">
-              <div className="ep-badge">EPISODE #{currentEpisode.number}</div>
+              <div className="ep-badge">EPISODE #{currentEpisode.number} • {currentEpisode.duration}</div>
               <h3 className="ep-title">{currentEpisode.title}</h3>
               <p className="ep-host">Host: <span className="text-white font-medium">Gene Da Rocha</span> • Voxstar Automation</p>
 
-              {/* Hidden HTML5 Audio Element */}
+              {/* HTML5 Audio Element */}
               <audio
                 ref={audioRef}
                 src={currentEpisode.audioUrl}
-                preload="metadata"
+                preload="auto"
               />
 
               {/* Scrub Bar */}
@@ -470,7 +608,7 @@ _Share this with your engineering and product teams!_`;
                 <input
                   type="range"
                   min={0}
-                  max={duration || 138}
+                  max={duration || currentEpisode.durationSecs}
                   step={0.1}
                   value={currentTime}
                   onChange={handleSeek}
@@ -495,7 +633,7 @@ _Share this with your engineering and product teams!_`;
                   </span>
                   <span className="spec-badge">
                     <Volume2 size={12} className="text-blue-400" />
-                    1400x1400 Art
+                    -16 LUFS
                   </span>
                 </div>
 
@@ -516,7 +654,7 @@ _Share this with your engineering and product teams!_`;
             <div className="flex items-center justify-between mb-2">
               <span className="text-xs font-semibold text-gray-400 flex items-center gap-1.5">
                 <Share2 size={13} className="text-accent" />
-                Generated 1080x1080 Social Graphic
+                Generated 1080x1080 Social Graphic for Episode #{currentEpisode.number}
               </span>
               <a
                 href={currentEpisode.socialImageUrl}
@@ -530,7 +668,7 @@ _Share this with your engineering and product teams!_`;
             <div className="social-graphic-thumb">
               <img
                 src={currentEpisode.socialImageUrl}
-                alt="Social Cover"
+                alt={`Episode ${currentEpisode.number} Social Cover`}
                 className="graphic-img"
               />
             </div>
@@ -544,7 +682,7 @@ _Share this with your engineering and product teams!_`;
           <div>
             <h2 className="text-xl font-bold text-white flex items-center gap-2">
               <Share2 size={20} className="text-accent" />
-              Omni-Channel Distribution Package
+              Omni-Channel Distribution Package (Episode #{currentEpisode.number})
             </h2>
             <p className="text-sm text-gray-400 mt-0.5">
               One-click copy tailored content for every platform with mandatory brand hashtags pre-embedded.
@@ -595,6 +733,13 @@ _Share this with your engineering and product teams!_`;
               WhatsApp VIP
             </button>
             <button
+              className={`tab-pill ${activeTab === 'script' ? 'active' : ''}`}
+              onClick={() => setActiveTab('script')}
+            >
+              <Mic size={14} />
+              Full Voice Script
+            </button>
+            <button
               className={`tab-pill ${activeTab === 'batch' ? 'active' : ''}`}
               onClick={() => setActiveTab('batch')}
             >
@@ -617,7 +762,7 @@ _Share this with your engineering and product teams!_`;
           {activeTab === 'spotify' && (
             <div className="copy-block-wrapper">
               <div className="copy-block-header">
-                <span className="text-sm font-semibold text-white">Spotify for Podcasters / RSS Show Notes</span>
+                <span className="text-sm font-semibold text-white">Spotify for Podcasters / RSS Show Notes (Ep #{currentEpisode.number})</span>
                 <button
                   className="btn btn-secondary btn-sm"
                   onClick={() => handleCopy(getSpotifyNotes(), 'spotify')}
@@ -634,7 +779,7 @@ _Share this with your engineering and product teams!_`;
           {activeTab === 'linkedin' && (
             <div className="copy-block-wrapper">
               <div className="copy-block-header">
-                <span className="text-sm font-semibold text-white">LinkedIn Authority Post (Formatted with Vault Hashtags)</span>
+                <span className="text-sm font-semibold text-white">LinkedIn Authority Post (Ep #{currentEpisode.number})</span>
                 <button
                   className="btn btn-secondary btn-sm"
                   onClick={() => handleCopy(getLinkedInPost(), 'linkedin')}
@@ -651,7 +796,7 @@ _Share this with your engineering and product teams!_`;
           {activeTab === 'tiktok' && (
             <div className="copy-block-wrapper">
               <div className="copy-block-header">
-                <span className="text-sm font-semibold text-white">TikTok & YouTube Shorts 60-Second Video Script</span>
+                <span className="text-sm font-semibold text-white">TikTok & YouTube Shorts 60-Second Video Script (Ep #{currentEpisode.number})</span>
                 <button
                   className="btn btn-secondary btn-sm"
                   onClick={() => handleCopy(getTikTokScript(), 'tiktok')}
@@ -668,7 +813,7 @@ _Share this with your engineering and product teams!_`;
           {activeTab === 'instagram' && (
             <div className="copy-block-wrapper">
               <div className="copy-block-header">
-                <span className="text-sm font-semibold text-white">Instagram Post & Carousel Caption</span>
+                <span className="text-sm font-semibold text-white">Instagram Post & Carousel Caption (Ep #{currentEpisode.number})</span>
                 <button
                   className="btn btn-secondary btn-sm"
                   onClick={() => handleCopy(getInstagramCaption(), 'instagram')}
@@ -685,7 +830,7 @@ _Share this with your engineering and product teams!_`;
           {activeTab === 'x' && (
             <div className="copy-block-wrapper">
               <div className="copy-block-header">
-                <span className="text-sm font-semibold text-white">X / Twitter Viral Thread</span>
+                <span className="text-sm font-semibold text-white">X / Twitter Viral Thread (Ep #{currentEpisode.number})</span>
                 <button
                   className="btn btn-secondary btn-sm"
                   onClick={() => handleCopy(getXPost(), 'x')}
@@ -702,7 +847,7 @@ _Share this with your engineering and product teams!_`;
           {activeTab === 'whatsapp' && (
             <div className="copy-block-wrapper">
               <div className="copy-block-header">
-                <span className="text-sm font-semibold text-white">WhatsApp VIP Community & Broadcast Message</span>
+                <span className="text-sm font-semibold text-white">WhatsApp VIP Community & Broadcast Message (Ep #{currentEpisode.number})</span>
                 <button
                   className="btn btn-secondary btn-sm"
                   onClick={() => handleCopy(getWhatsAppBroadcast(), 'whatsapp')}
@@ -715,7 +860,24 @@ _Share this with your engineering and product teams!_`;
             </div>
           )}
 
-          {/* 7. BATCH QUEUE TAB */}
+          {/* 7. FULL VOICE SCRIPT TAB */}
+          {activeTab === 'script' && (
+            <div className="copy-block-wrapper">
+              <div className="copy-block-header">
+                <span className="text-sm font-semibold text-white">Host Voice Narration Script (Ep #{currentEpisode.number})</span>
+                <button
+                  className="btn btn-secondary btn-sm"
+                  onClick={() => handleCopy(currentEpisode.script, 'script')}
+                >
+                  {copiedTab === 'script' ? <Check size={14} className="text-emerald-400" /> : <Copy size={14} />}
+                  {copiedTab === 'script' ? 'Copied Script!' : 'Copy Script'}
+                </button>
+              </div>
+              <pre className="copy-block-text">{currentEpisode.script}</pre>
+            </div>
+          )}
+
+          {/* 8. BATCH QUEUE TAB */}
           {activeTab === 'batch' && (
             <div className="batch-view-wrapper">
               <div className="flex items-center justify-between mb-3">
@@ -737,7 +899,7 @@ _Share this with your engineering and product teams!_`;
                 <input
                   type="text"
                   className="input-field"
-                  placeholder="Paste next Substack URL (e.g. https://voxstar.substack.com/p/95-...)"
+                  placeholder="Paste next Substack URL (e.g. https://voxstar.substack.com/p/98-...)"
                   value={newBatchUrl}
                   onChange={(e) => setNewBatchUrl(e.target.value)}
                 />
@@ -767,15 +929,21 @@ _Share this with your engineering and product teams!_`;
                         <td className="text-xs text-gray-400 truncate max-w-xs">{item.url}</td>
                         <td className="text-xs text-gray-300">Gene Da Rocha (Cloned)</td>
                         <td>
-                          <span className="badge badge-warning">Ready to Process</span>
+                          <span className={`badge ${item.status === 'ready' ? 'badge-accent' : 'badge-warning'}`}>
+                            {item.status === 'ready' ? 'Master Ready' : 'In Queue'}
+                          </span>
                         </td>
                         <td>
                           <button
                             className="btn btn-sm btn-ghost text-xs"
                             onClick={() => {
-                              setEpisodeNumber(item.ep);
-                              setEpisodeTitle(item.title);
-                              setArticleUrl(item.url);
+                              if (PRESET_EPISODES[item.ep]) {
+                                loadEpisodeData(item.ep);
+                              } else {
+                                setEpisodeNumber(item.ep);
+                                setEpisodeTitle(item.title);
+                                setArticleUrl(item.url);
+                              }
                               setActiveTab('spotify');
                             }}
                           >
@@ -790,16 +958,16 @@ _Share this with your engineering and product teams!_`;
             </div>
           )}
 
-          {/* 8. PUBLISHING GUIDE TAB */}
+          {/* 9. PUBLISHING GUIDE TAB */}
           {activeTab === 'publish-guide' && (
             <div className="publish-guide-wrapper">
-              <h3 className="text-base font-bold text-white mb-2">How to Publish Episode #94 to Spotify in 3 Steps:</h3>
+              <h3 className="text-base font-bold text-white mb-2">How to Publish Episode #{currentEpisode.number} to Spotify in 3 Steps:</h3>
               <div className="guide-steps-grid">
                 <div className="guide-step-card">
                   <div className="step-num">1</div>
                   <h4 className="font-bold text-white text-sm">Download Master MP3</h4>
                   <p className="text-xs text-gray-400 mt-1">
-                    Click the <strong>Download MP3</strong> button above. The file is already mastered to -16 LUFS with embedded ID3 tags and 1400x1400 artwork.
+                    Click the <strong>Download MP3</strong> button above. The file is mastered to -16 LUFS with embedded ID3 tags and 1400x1400 artwork.
                   </p>
                 </div>
 
@@ -849,6 +1017,53 @@ _Share this with your engineering and product teams!_`;
           padding: 1.5rem;
           max-width: 1350px;
           margin: 0 auto;
+        }
+        .ep-switcher-bar {
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+          padding: 0.75rem 1.25rem;
+          border-radius: 10px;
+          flex-wrap: wrap;
+        }
+        .ep-pill-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.5rem;
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          color: #cbd5e1;
+          padding: 0.4rem 0.8rem;
+          border-radius: 20px;
+          font-size: 0.8rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.2s;
+        }
+        .ep-pill-btn:hover {
+          background: rgba(255, 255, 255, 0.1);
+          color: #fff;
+        }
+        .ep-pill-btn.active {
+          background: linear-gradient(135deg, rgba(168, 85, 247, 0.35), rgba(99, 102, 241, 0.35));
+          border-color: #a855f7;
+          color: #fff;
+          box-shadow: 0 0 14px rgba(168, 85, 247, 0.4);
+        }
+        .ep-num {
+          background: #a855f7;
+          color: #fff;
+          font-size: 0.7rem;
+          font-weight: 800;
+          padding: 0.1rem 0.4rem;
+          border-radius: 10px;
+        }
+        .badge-live-dot {
+          width: 7px;
+          height: 7px;
+          border-radius: 50%;
+          background: #10b981;
+          box-shadow: 0 0 8px #10b981;
         }
         .studio-top-grid {
           display: grid;
@@ -902,13 +1117,6 @@ _Share this with your engineering and product teams!_`;
           width: 100%;
           height: 100%;
           object-fit: cover;
-        }
-        .cover-art-fallback {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          height: 100%;
         }
         .player-details {
           flex: 1;
@@ -1004,7 +1212,7 @@ _Share this with your engineering and product teams!_`;
         }
         .social-graphic-thumb {
           width: 100%;
-          height: 140px;
+          height: 160px;
           border-radius: 6px;
           overflow: hidden;
           background: #000;
