@@ -4,10 +4,17 @@ import {
   Share2, Music, Volume2, Globe, FileText, CheckCircle2,
   Layers, RefreshCw, Send,
   Headphones, ListPlus, Sliders, ShieldCheck, CheckCheck,
-  Clock, Smartphone, ExternalLink, FileAudio, Tag, Info, ChevronDown, ChevronUp
+  Clock, Smartphone, ExternalLink, FileAudio, Tag, Info, ChevronDown, ChevronUp,
+  Video
 } from 'lucide-react';
 import { FieldHelpTooltip } from './FieldHelpTooltip';
 import { ScreenHelpBanner } from './ScreenHelpBanner';
+
+const YoutubeIcon: React.FC<{ size?: number; className?: string }> = ({ size = 16, className = "" }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className} style={{ display: 'inline-block', verticalAlign: 'middle' }}>
+    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+  </svg>
+);
 
 interface EpisodeData {
   number: number;
@@ -25,7 +32,7 @@ interface EpisodeData {
 }
 
 interface ChannelPublishStatus {
-  channelId: 'spotify' | 'linkedin' | 'x' | 'instagram' | 'tiktok' | 'whatsapp';
+  channelId: 'spotify' | 'youtube' | 'linkedin' | 'x' | 'instagram' | 'tiktok' | 'whatsapp';
   channelName: string;
   account: string;
   iconName: string;
@@ -35,6 +42,8 @@ interface ChannelPublishStatus {
 }
 
 const BRAND_HASHTAGS = "#ArtificialIntelligence #MachineLearning #DeepLearning #NeuralNetworks #ComputerVision #AI #DataScience #NaturalLanguageProcessing #BigData #Robotics #Automation #IntelligentSystems #CognitiveComputing #SmartTechnology #Analytics #Innovation #Industry40 #FutureTech #QuantumComputing #IoT #genedarocha #voxstar #aitoolboard #voxstarai #writerplus #wiredvibeapp #wiredvibe #atltrust #albionlm #elonmusk";
+
+const YOUTUBE_STUDIO_UPLOAD_URL = "https://studio.youtube.com/channel/UCa-q0YbY6yAMXgjPlYlZbvQ/videos/upload?filter=%5B%5D&sort=%7B%22columnType%22%3A%22date%22%2C%22sortOrder%22%3A%22DESCENDING%22%7D";
 
 const PRESET_EPISODES: Record<number, EpisodeData> = {
   95: {
@@ -128,7 +137,7 @@ const BATCH_QUEUE_INITIAL = [
 
 export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
   // --- STATE ---
-  const [activeTab, setActiveTab] = useState<'publisher-table' | 'spotify' | 'linkedin' | 'x' | 'instagram' | 'tiktok' | 'whatsapp' | 'script' | 'batch' | 'publish-guide'>('publisher-table');
+  const [activeTab, setActiveTab] = useState<'publisher-table' | 'spotify' | 'youtube' | 'linkedin' | 'x' | 'instagram' | 'tiktok' | 'whatsapp' | 'script' | 'batch' | 'publish-guide'>('publisher-table');
   const [episodeNumber, setEpisodeNumber] = useState(95);
   const [episodeTitle, setEpisodeTitle] = useState("#95 Microsoft AI Spearheads Innovation with a New Hub in London");
   const [articleUrl, setArticleUrl] = useState("https://voxstar.substack.com/p/95-microsoft-ai-spearheads-innovation-with-a-new-hub-in-london");
@@ -150,6 +159,13 @@ export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
       channelName: 'Spotify for Podcasters',
       account: 'Voxstar AI Automation (Feed #116de8764)',
       iconName: 'spotify',
+      status: 'idle'
+    },
+    youtube: {
+      channelId: 'youtube',
+      channelName: 'YouTube Shorts Studio',
+      account: 'Gene Da Rocha (Channel UCa-q0YbY6yAMXgjPlYlZbvQ)',
+      iconName: 'youtube',
       status: 'idle'
     },
     linkedin: {
@@ -215,6 +231,7 @@ export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
       // Reset to default idle
       setPublishStatuses({
         spotify: { channelId: 'spotify', channelName: 'Spotify for Podcasters', account: 'Voxstar AI Automation (Feed #116de8764)', iconName: 'spotify', status: 'idle' },
+        youtube: { channelId: 'youtube', channelName: 'YouTube Shorts Studio', account: 'Gene Da Rocha (Channel UCa-q0YbY6yAMXgjPlYlZbvQ)', iconName: 'youtube', status: 'idle' },
         linkedin: { channelId: 'linkedin', channelName: 'LinkedIn', account: 'Gene Da Rocha (Personal Profile)', iconName: 'linkedin', status: 'idle' },
         x: { channelId: 'x', channelName: 'X (Twitter)', account: 'Gene Da Rocha (@genedarocha)', iconName: 'x', status: 'idle' },
         instagram: { channelId: 'instagram', channelName: 'Instagram', account: '@rochagenda', iconName: 'instagram', status: 'idle' },
@@ -313,7 +330,7 @@ export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
   };
 
   // --- PUBLISHING ACTIONS ---
-  const handlePublishSingle = (channelKey: 'spotify' | 'linkedin' | 'x' | 'instagram' | 'tiktok' | 'whatsapp') => {
+  const handlePublishSingle = (channelKey: 'spotify' | 'youtube' | 'linkedin' | 'x' | 'instagram' | 'tiktok' | 'whatsapp') => {
     // Set to publishing
     setPublishStatuses(prev => ({
       ...prev,
@@ -327,6 +344,9 @@ export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
     if (channelKey === 'spotify') {
       navigator.clipboard.writeText(getSpotifyNotes());
       setShowSpotifyHelper(true);
+    }
+    else if (channelKey === 'youtube') {
+      navigator.clipboard.writeText(getYoutubeShortDescription());
     }
     else if (channelKey === 'linkedin') navigator.clipboard.writeText(getLinkedInPost());
     else if (channelKey === 'x') navigator.clipboard.writeText(getXPost());
@@ -354,7 +374,9 @@ export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
       });
 
       // Launch native web intent in new tab for seamless 1-click posting
-      if (channelKey === 'linkedin') {
+      if (channelKey === 'youtube') {
+        window.open(YOUTUBE_STUDIO_UPLOAD_URL, '_blank');
+      } else if (channelKey === 'linkedin') {
         window.open(`https://www.linkedin.com/feed/?shareActive=true&text=${encodeURIComponent(getLinkedInPost().substring(0, 800) + '...')}`, '_blank');
       } else if (channelKey === 'x') {
         window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(`🎙️ Episode #${currentEpisode.number}: ${currentEpisode.title}\n\nListen on Spotify: https://open.spotify.com/show/4zS1fF5v9Rj9g7e3K1L8\n\n#AI #Voxstar #GeneDaRocha`)}`, '_blank');
@@ -369,8 +391,8 @@ export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
     setIsBlastingAll(true);
     setBlastProgress(1);
 
-    const keys: ('spotify' | 'linkedin' | 'x' | 'instagram' | 'tiktok' | 'whatsapp')[] = [
-      'spotify', 'linkedin', 'x', 'instagram', 'tiktok', 'whatsapp'
+    const keys: ('spotify' | 'youtube' | 'linkedin' | 'x' | 'instagram' | 'tiktok' | 'whatsapp')[] = [
+      'spotify', 'youtube', 'linkedin', 'x', 'instagram', 'tiktok', 'whatsapp'
     ];
 
     keys.forEach((k, idx) => {
@@ -493,6 +515,60 @@ ${currentEpisode.url}
 • ATL-Trust: https://atl-trust.com
 
 ${BRAND_HASHTAGS}`;
+
+  const getYoutubeShortTitle = () => `🎙️ #${currentEpisode.number} ${currentEpisode.title} #Shorts #AI #Podcast`;
+
+  const getYoutubeShortDescription = () => `🎙️ Episode #${currentEpisode.number}: ${currentEpisode.title}
+Hosted by Gene Da Rocha | Voxstar AI Automation
+
+🎧 LISTEN TO THE FULL MASTER BROADCAST ON SPOTIFY:
+👉 https://open.spotify.com/show/4zS1fF5v9Rj9g7e3K1L8
+
+📖 Read the complete research article on Substack:
+👉 ${currentEpisode.url}
+
+⚡ What we uncover in today's broadcast:
+${currentEpisode.keyTakeaways.map(t => `• ${t}`).join('\n')}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🚀 CONNECT WITH GENE DA ROCHA & THE VOXSTAR ECOSYSTEM:
+• Creator & Host: Gene Da Rocha
+• Substack Newsletter: https://voxstar.substack.com
+• Spotify Podcast: https://open.spotify.com/show/4zS1fF5v9Rj9g7e3K1L8
+• LinkedIn: https://linkedin.com/in/genedarocha
+• X (Twitter): https://x.com/genedarocha
+• Instagram: https://instagram.com/rochagenda
+• YouTube Channel: https://youtube.com/@genedarocha
+• AI Toolboard: https://aitoolboard.com
+• WiredVibe: https://wiredvibeapp.com
+• ATL-Trust: https://atl-trust.com
+
+#Shorts #YouTubeShorts #Podcast #AI #ArtificialIntelligence #GeneDaRocha #Voxstar
+${BRAND_HASHTAGS}`;
+
+  const getYoutubeShortScript = () => `🎬 YOUTUBE SHORTS (60s Vertical Video Director Script)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[0:00 - 0:05] HOOK (Fast Zoom on Episode Cover Art & Host Voice)
+"If you are deploying enterprise AI or autonomous agents in 2026, you NEED to hear this."
+
+[0:05 - 0:18] THE CONTEXT (Visual: Animated Title Card + Substack Headline)
+"We just released Episode #${currentEpisode.number} of Voxstar AI Automation: ${currentEpisode.title}."
+
+[0:18 - 0:38] THE CORE BREAKTHROUGH (Visual: Architecture Diagram & System Safeguards)
+"${currentEpisode.keyTakeaways[0]}"
+"${currentEpisode.keyTakeaways[1]}"
+
+[0:38 - 0:52] WHAT BUILDERS & LEADERS MUST DO
+"${currentEpisode.keyTakeaways[2] || currentEpisode.summary}"
+
+[0:52 - 1:00] CALL TO ACTION (Overlay: Spotify Podcast Waveform Card)
+"Listen to the full unabridged master broadcast on Spotify: Search 'Voxstar AI Automation' or click the link in the description & pinned comment below!"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+YOUTUBE UPLOAD METADATA:
+• Format: 9:16 Vertical (1080x1920)
+• Target Channel: Gene Da Rocha (UCa-q0YbY6yAMXgjPlYlZbvQ)
+• Primary CTA: Full Episode on Spotify (https://open.spotify.com/show/4zS1fF5v9Rj9g7e3K1L8)`;
 
   const getLinkedInPost = () => `🎙️ Episode #${currentEpisode.number} of Voxstar AI Automation is live!
 
@@ -1055,7 +1131,7 @@ _Share with your engineering and leadership teams!_`;
             {isBlastingAll ? (
               <span className="flex items-center gap-2">
                 <RefreshCw size={16} className="animate-spin" />
-                Broadcasting ({blastProgress}/6 Channels)...
+                Broadcasting ({blastProgress}/7 Channels)...
               </span>
             ) : (
               <span className="flex items-center gap-2">
@@ -1161,6 +1237,91 @@ _Share with your engineering and leadership teams!_`;
                       {publishStatuses.spotify.status === 'published' ? 'Update on Spotify' : 'Publish to Spotify'}
                     </button>
                   </div>
+                </td>
+              </tr>
+
+              {/* 2. YOUTUBE SHORTS */}
+              <tr className="channel-row">
+                <td>
+                  <div className="channel-identity">
+                    <span className="platform-tag youtube">
+                      <YoutubeIcon size={14} /> YouTube Shorts
+                    </span>
+                    <span className="channel-title">YouTube Shorts Studio</span>
+                  </div>
+                </td>
+                <td>
+                  <span className="account-handle font-mono text-xs text-red-300 font-semibold">
+                    Gene Da Rocha (Channel UCa-q0YbY6yAMXgjPlYlZbvQ)
+                  </span>
+                </td>
+                <td>
+                  <div className="payload-preview">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="payload-item font-semibold text-white truncate max-w-xs">{getYoutubeShortTitle()}</span>
+                      <button
+                        className="btn-mini-copy"
+                        title="Copy YouTube Short Title"
+                        onClick={() => handleCopyField(getYoutubeShortTitle(), 'tbl-yt-title')}
+                      >
+                        {copiedField === 'tbl-yt-title' ? <Check size={11} className="text-emerald-400" /> : <Copy size={11} />}
+                        {copiedField === 'tbl-yt-title' ? 'Copied Title' : 'Copy Title'}
+                      </button>
+                    </div>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="payload-item text-xs text-gray-400 truncate max-w-xs">Full Links (Spotify, Substack, Owner & Ecosystem)</span>
+                      <button
+                        className="btn-mini-copy"
+                        title="Copy YouTube Description"
+                        onClick={() => handleCopyField(getYoutubeShortDescription(), 'tbl-yt-desc')}
+                      >
+                        {copiedField === 'tbl-yt-desc' ? <Check size={11} className="text-emerald-400" /> : <Copy size={11} />}
+                        {copiedField === 'tbl-yt-desc' ? 'Copied Desc' : 'Copy Desc'}
+                      </button>
+                      <button
+                        className="btn-mini-copy"
+                        title="Copy 60s Director Script"
+                        onClick={() => handleCopyField(getYoutubeShortScript(), 'tbl-yt-script')}
+                      >
+                        {copiedField === 'tbl-yt-script' ? <Check size={11} className="text-emerald-400" /> : <Copy size={11} />}
+                        {copiedField === 'tbl-yt-script' ? 'Copied Script' : 'Copy Script'}
+                      </button>
+                    </div>
+                    <div className="text-xs text-emerald-400 flex items-center gap-1 mt-0.5 font-medium">
+                      <Radio size={11} /> Points directly to Spotify Podcast for full broadcast
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  {publishStatuses.youtube?.status === 'published' ? (
+                    <div className="status-indicator published">
+                      <CheckCheck size={14} className="text-emerald-400" />
+                      <div>
+                        <span className="status-text font-bold text-emerald-400">Uploaded / Opened Studio</span>
+                        <span className="status-meta">{publishStatuses.youtube.publishedAt}</span>
+                      </div>
+                    </div>
+                  ) : publishStatuses.youtube?.status === 'publishing' ? (
+                    <div className="status-indicator publishing">
+                      <RefreshCw size={14} className="animate-spin text-amber-400" />
+                      <span className="status-text text-amber-400">Opening YouTube Studio...</span>
+                    </div>
+                  ) : (
+                    <div className="status-indicator idle">
+                      <Clock size={14} className="text-gray-400" />
+                      <span className="status-text text-gray-400">Ready to Upload</span>
+                    </div>
+                  )}
+                </td>
+                <td className="text-right">
+                  <button
+                    className={`btn btn-sm ${publishStatuses.youtube?.status === 'published' ? 'btn-ghost text-emerald-400' : 'btn-youtube'}`}
+                    onClick={() => handlePublishSingle('youtube')}
+                    disabled={publishStatuses.youtube?.status === 'publishing'}
+                  >
+                    <YoutubeIcon size={14} />
+                    {publishStatuses.youtube?.status === 'published' ? 'Studio Uploaded' : 'Upload to YouTube ↗'}
+                  </button>
                 </td>
               </tr>
 
@@ -1460,6 +1621,13 @@ _Share with your engineering and leadership teams!_`;
               Spotify Notes
             </button>
             <button
+              className={`tab-pill ${activeTab === 'youtube' ? 'active' : ''}`}
+              onClick={() => setActiveTab('youtube')}
+            >
+              <YoutubeIcon size={14} />
+              YouTube Shorts
+            </button>
+            <button
               className={`tab-pill ${activeTab === 'linkedin' ? 'active' : ''}`}
               onClick={() => setActiveTab('linkedin')}
             >
@@ -1525,28 +1693,35 @@ _Share with your engineering and leadership teams!_`;
               </div>
               <div className="channel-quick-summary-grid">
                 <div className="summary-card">
-                  <div className="summary-title">Spotify Show Notes</div>
+                  <div className="summary-title text-[#1ed760] flex items-center gap-1.5"><Radio size={13} /> Spotify Show Notes</div>
                   <div className="summary-value">{currentEpisode.title}</div>
                   <button className="btn btn-secondary btn-sm mt-2 w-full" onClick={() => handlePublishSingle('spotify')}>
                     <Send size={13} /> Publish to Spotify
                   </button>
                 </div>
                 <div className="summary-card">
-                  <div className="summary-title">LinkedIn Post (Gene Da Rocha)</div>
+                  <div className="summary-title text-[#ef4444] flex items-center gap-1.5"><YoutubeIcon size={13} /> YouTube Shorts</div>
+                  <div className="summary-value">{getYoutubeShortTitle()}</div>
+                  <button className="btn btn-youtube btn-sm mt-2 w-full" onClick={() => handlePublishSingle('youtube')}>
+                    <YoutubeIcon size={13} /> Upload to YouTube ↗
+                  </button>
+                </div>
+                <div className="summary-card">
+                  <div className="summary-title text-blue-400 flex items-center gap-1.5"><FileText size={13} /> LinkedIn Post (Gene Da Rocha)</div>
                   <div className="summary-value">{currentEpisode.keyTakeaways[0]}</div>
                   <button className="btn btn-primary btn-sm mt-2 w-full" onClick={() => handlePublishSingle('linkedin')}>
                     <Send size={13} /> Send to LinkedIn
                   </button>
                 </div>
                 <div className="summary-card">
-                  <div className="summary-title">X Tweet (@genedarocha)</div>
+                  <div className="summary-title text-gray-200 flex items-center gap-1.5"><Layers size={13} /> X Tweet (@genedarocha)</div>
                   <div className="summary-value">Thread: 5 Key Points + Spotify Link</div>
                   <button className="btn btn-secondary btn-sm mt-2 w-full" onClick={() => handlePublishSingle('x')}>
                     <Send size={13} /> Post to Gene Da Rocha X
                   </button>
                 </div>
                 <div className="summary-card">
-                  <div className="summary-title">Instagram Post (@rochagenda)</div>
+                  <div className="summary-title text-pink-400 flex items-center gap-1.5"><Share2 size={13} /> Instagram Post (@rochagenda)</div>
                   <div className="summary-value">1080x1080 Graphic + Reel Caption</div>
                   <button className="btn btn-secondary btn-sm mt-2 w-full" onClick={() => handlePublishSingle('instagram')}>
                     <Send size={13} /> Post to @rochagenda IG
@@ -1620,6 +1795,94 @@ _Share with your engineering and leadership teams!_`;
                   </button>
                 </div>
                 <pre className="copy-block-text">{getSpotifyNotes()}</pre>
+              </div>
+            </div>
+          )}
+
+          {/* 2. YOUTUBE SHORTS TAB */}
+          {activeTab === 'youtube' && (
+            <div className="youtube-tab-full-wrapper">
+              <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+                <div>
+                  <h3 className="text-base font-bold text-white flex items-center gap-2">
+                    <YoutubeIcon size={18} className="text-[#ef4444]" />
+                    YouTube Shorts Studio Package (Ep #{currentEpisode.number})
+                  </h3>
+                  <p className="text-xs text-gray-400">
+                    Pre-formatted for <strong>Gene Da Rocha's YouTube Channel</strong> (UCa-q0YbY6yAMXgjPlYlZbvQ) with direct call-to-action directing viewers to the Spotify Master Podcast.
+                  </p>
+                </div>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <a
+                    href="https://open.spotify.com/show/4zS1fF5v9Rj9g7e3K1L8"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="btn btn-secondary btn-sm flex items-center gap-1.5"
+                  >
+                    <Radio size={14} className="text-[#1ed760]" /> View Spotify Podcast ↗
+                  </a>
+                  <a
+                    href={YOUTUBE_STUDIO_UPLOAD_URL}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="btn btn-youtube btn-sm flex items-center gap-1.5"
+                  >
+                    <ExternalLink size={14} /> Open YouTube Studio Upload ↗
+                  </a>
+                </div>
+              </div>
+
+              {/* Title Section */}
+              <div className="youtube-tab-block mb-4">
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="text-xs font-bold text-gray-300 uppercase tracking-wider flex items-center gap-1.5">
+                    <Tag size={13} className="text-accent" /> 1. YouTube Short Title
+                  </span>
+                  <button
+                    className={`btn btn-xs flex items-center gap-1 ${copiedField === 'yt-title' ? 'btn-success' : 'btn-primary'}`}
+                    onClick={() => handleCopyField(getYoutubeShortTitle(), 'yt-title')}
+                  >
+                    {copiedField === 'yt-title' ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}
+                    {copiedField === 'yt-title' ? '✓ Copied Short Title!' : 'Copy Short Title'}
+                  </button>
+                </div>
+                <div className="p-3 bg-black/40 border border-white/10 rounded-lg text-sm text-white font-medium font-mono">
+                  {getYoutubeShortTitle()}
+                </div>
+              </div>
+
+              {/* Description Section */}
+              <div className="youtube-tab-block mb-4">
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="text-xs font-bold text-gray-300 uppercase tracking-wider flex items-center gap-1.5">
+                    <FileText size={13} className="text-red-400" /> 2. YouTube Video Description (Points to Spotify & Ecosystem URLs)
+                  </span>
+                  <button
+                    className={`btn btn-xs flex items-center gap-1 ${copiedField === 'yt-desc' ? 'btn-success' : 'btn-primary'}`}
+                    onClick={() => handleCopyField(getYoutubeShortDescription(), 'yt-desc')}
+                  >
+                    {copiedField === 'yt-desc' ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}
+                    {copiedField === 'yt-desc' ? '✓ Copied Description!' : 'Copy Full Description'}
+                  </button>
+                </div>
+                <pre className="copy-block-text">{getYoutubeShortDescription()}</pre>
+              </div>
+
+              {/* 60s Vertical Script Section */}
+              <div className="youtube-tab-block">
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="text-xs font-bold text-gray-300 uppercase tracking-wider flex items-center gap-1.5">
+                    <Video size={13} className="text-yellow-400" /> 3. 60-Second Director Script & Visual Cues
+                  </span>
+                  <button
+                    className={`btn btn-xs flex items-center gap-1 ${copiedField === 'yt-script' ? 'btn-success' : 'btn-primary'}`}
+                    onClick={() => handleCopyField(getYoutubeShortScript(), 'yt-script')}
+                  >
+                    {copiedField === 'yt-script' ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}
+                    {copiedField === 'yt-script' ? '✓ Copied Director Script!' : 'Copy Director Script'}
+                  </button>
+                </div>
+                <pre className="copy-block-text">{getYoutubeShortScript()}</pre>
               </div>
             </div>
           )}
@@ -2459,6 +2722,42 @@ _Share with your engineering and leadership teams!_`;
           resize: vertical;
           outline: none;
           font-family: inherit;
+        }
+        .platform-tag.youtube { background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.35); }
+        .badge-youtube {
+          background: rgba(239, 68, 68, 0.2);
+          color: #ef4444;
+          border: 1px solid rgba(239, 68, 68, 0.4);
+          font-weight: 700;
+          font-size: 0.7rem;
+          padding: 0.15rem 0.55rem;
+          border-radius: 10px;
+        }
+        .btn-youtube {
+          background: #ef4444 !important;
+          color: #ffffff !important;
+          font-weight: 700 !important;
+          border: none !important;
+          transition: all 0.2s;
+          box-shadow: 0 2px 10px rgba(239, 68, 68, 0.3);
+          display: inline-flex;
+          align-items: center;
+          gap: 0.4rem;
+        }
+        .btn-youtube:hover {
+          background: #dc2626 !important;
+          transform: translateY(-1px);
+          box-shadow: 0 4px 18px rgba(239, 68, 68, 0.5);
+        }
+        .youtube-tab-full-wrapper {
+          display: flex;
+          flex-direction: column;
+        }
+        .youtube-tab-block {
+          background: rgba(0, 0, 0, 0.25);
+          border: 1px solid rgba(255, 255, 255, 0.06);
+          border-radius: 8px;
+          padding: 1rem;
         }
         .spotify-tab-full-wrapper {
           display: flex;
