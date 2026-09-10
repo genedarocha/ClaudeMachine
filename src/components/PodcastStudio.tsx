@@ -492,6 +492,80 @@ export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
     URL.revokeObjectURL(url);
   };
 
+  const [downloadingAudio, setDownloadingAudio] = useState(false);
+
+  const handleDownloadAudioFile = async (url: string, filename: string) => {
+    if (!url) return;
+    setDownloadingAudio(true);
+    try {
+      const res = await fetch(url);
+      if (!res.ok) {
+        throw new Error(`Server returned HTTP ${res.status}`);
+      }
+      const contentType = res.headers.get('content-type') || '';
+      if (contentType.includes('text/html')) {
+        alert(`The requested audio file (${url}) is not found on the server (returned HTML fallback). Please ensure it has been synthesized and deployed.`);
+        setDownloadingAudio(false);
+        return;
+      }
+      const blob = await res.blob();
+      const audioBlob = new Blob([blob], { type: 'audio/mpeg' });
+      const blobUrl = window.URL.createObjectURL(audioBlob);
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      setTimeout(() => window.URL.revokeObjectURL(blobUrl), 2000);
+    } catch (err) {
+      console.error('Download audio failed:', err);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = filename;
+      link.target = '_blank';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } finally {
+      setDownloadingAudio(false);
+    }
+  };
+
+  const handleDownloadImageFile = async (url: string, filename: string) => {
+    if (!url) return;
+    try {
+      const res = await fetch(url);
+      if (!res.ok) {
+        throw new Error(`Server returned HTTP ${res.status}`);
+      }
+      const contentType = res.headers.get('content-type') || '';
+      if (contentType.includes('text/html')) {
+        alert(`The requested image (${url}) is not found on the server.`);
+        return;
+      }
+      const blob = await res.blob();
+      const imgBlob = new Blob([blob], { type: 'image/jpeg' });
+      const blobUrl = window.URL.createObjectURL(imgBlob);
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      setTimeout(() => window.URL.revokeObjectURL(blobUrl), 2000);
+    } catch (err) {
+      console.error('Download image failed:', err);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = filename;
+      link.target = '_blank';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  };
+
   const filteredArchiveShorts = YOUTUBE_SHORTS_ARCHIVE_93.filter(s => {
     const q = archiveSearchQuery.toLowerCase().trim();
     const matchesSearch = 
@@ -1358,14 +1432,15 @@ _Share with your engineering and leadership teams!_`;
                 </div>
 
                 {currentEpisode.audioUrl ? (
-                  <a
-                    href={currentEpisode.audioUrl}
-                    download={`Episode_${currentEpisode.number}_Voxstar_Master.mp3`}
-                    className="btn btn-secondary btn-sm ml-auto"
+                  <button
+                    onClick={() => handleDownloadAudioFile(currentEpisode.audioUrl, `Episode_${currentEpisode.number}_Voxstar_Master.mp3`)}
+                    disabled={downloadingAudio}
+                    className="btn btn-secondary btn-sm ml-auto flex items-center gap-1.5"
+                    title="Download Master Broadcast MP3"
                   >
-                    <Download size={14} />
-                    Download MP3
-                  </a>
+                    <Download size={14} className={downloadingAudio ? "animate-bounce" : ""} />
+                    {downloadingAudio ? "Downloading..." : "Download MP3"}
+                  </button>
                 ) : (
                   <span className="text-xs text-gray-500 ml-auto italic">
                     Audio generated upon ingest
@@ -1385,14 +1460,14 @@ _Share with your engineering and leadership teams!_`;
                   : `1080x1080 Social Graphic (Synthesizes on Generation)`}
               </span>
               {currentEpisode.socialImageUrl && (
-                <a
-                  href={currentEpisode.socialImageUrl}
-                  download={`Episode_${currentEpisode.number}_Social_Cover.jpg`}
-                  className="text-xs text-accent hover:underline flex items-center gap-1"
+                <button
+                  onClick={() => handleDownloadImageFile(currentEpisode.socialImageUrl, `Episode_${currentEpisode.number}_Social_Cover.jpg`)}
+                  className="text-xs text-accent hover:underline flex items-center gap-1 bg-transparent border-0 p-0 cursor-pointer"
+                  title="Download 1080x1080 Social Graphic"
                 >
                   <Download size={12} />
                   Download Graphic
-                </a>
+                </button>
               )}
             </div>
             <div className="social-graphic-thumb">
@@ -1469,14 +1544,14 @@ _Share with your engineering and leadership teams!_`;
                     <span>ID3 Tagged: <strong>Yes</strong></span>
                   </div>
                 </div>
-                <a
-                  href={currentEpisode.audioUrl}
-                  download={`Episode_${currentEpisode.number}_Voxstar_Master.mp3`}
+                <button
+                  onClick={() => handleDownloadAudioFile(currentEpisode.audioUrl, `Episode_${currentEpisode.number}_Voxstar_Master.mp3`)}
+                  disabled={downloadingAudio || !currentEpisode.audioUrl}
                   className="btn btn-primary w-full mt-3 flex items-center justify-center gap-2"
                 >
-                  <Download size={15} />
-                  Download Master MP3
-                </a>
+                  <Download size={15} className={downloadingAudio ? "animate-bounce" : ""} />
+                  {downloadingAudio ? "Downloading MP3..." : "Download Master MP3"}
+                </button>
               </div>
 
               {/* STEP 2: EPISODE TITLE */}
@@ -1666,13 +1741,13 @@ _Share with your engineering and leadership teams!_`;
                       </button>
                     </div>
                     <div className="flex items-center gap-3 mt-0.5">
-                      <a
-                        href={currentEpisode.audioUrl}
-                        download={`Episode_${currentEpisode.number}_Voxstar_Master.mp3`}
-                        className="text-xs text-[#1ed760] hover:underline flex items-center gap-1 font-medium"
+                      <button
+                        onClick={() => handleDownloadAudioFile(currentEpisode.audioUrl, `Episode_${currentEpisode.number}_Voxstar_Master.mp3`)}
+                        disabled={downloadingAudio || !currentEpisode.audioUrl}
+                        className="text-xs text-[#1ed760] hover:underline flex items-center gap-1 font-medium bg-transparent border-0 p-0 cursor-pointer"
                       >
                         <Download size={11} /> Download MP3 ({currentEpisode.duration})
-                      </a>
+                      </button>
                     </div>
                   </div>
                 </td>
@@ -2225,13 +2300,14 @@ _Share with your engineering and leadership teams!_`;
                   <p className="text-xs text-gray-400">Copy the title & description below and upload the master MP3 to Spotify Podcaster Dashboard.</p>
                 </div>
                 <div className="flex items-center gap-2 flex-wrap">
-                  <a
-                    href={currentEpisode.audioUrl}
-                    download={`Episode_${currentEpisode.number}_Voxstar_Master.mp3`}
+                  <button
+                    onClick={() => handleDownloadAudioFile(currentEpisode.audioUrl, `Episode_${currentEpisode.number}_Voxstar_Master.mp3`)}
+                    disabled={downloadingAudio || !currentEpisode.audioUrl}
                     className="btn btn-secondary btn-sm flex items-center gap-1.5"
                   >
-                    <Download size={14} /> Download MP3 ({currentEpisode.duration})
-                  </a>
+                    <Download size={14} className={downloadingAudio ? "animate-bounce" : ""} />
+                    {downloadingAudio ? "Downloading..." : `Download MP3 (${currentEpisode.duration})`}
+                  </button>
                   <a
                     href="https://podcasters.spotify.com/pod/dashboard/episode/wizard"
                     target="_blank"
