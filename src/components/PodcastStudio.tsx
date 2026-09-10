@@ -50,6 +50,26 @@ interface ChannelPublishStatus {
 const BRAND_HASHTAGS = "#ArtificialIntelligence #MachineLearning #DeepLearning #NeuralNetworks #ComputerVision #AI #DataScience #NaturalLanguageProcessing #BigData #Robotics #Automation #IntelligentSystems #CognitiveComputing #SmartTechnology #Analytics #Innovation #Industry40 #FutureTech #QuantumComputing #IoT #genedarocha #voxstar #aitoolboard #voxstarai #writerplus #wiredvibeapp #wiredvibe #atltrust #albionlm #elonmusk";
 
 const PRESET_EPISODES: Record<number, EpisodeData> = {
+  96: {
+    number: 96,
+    title: "#96 Challenging Nvidia's Reign: The Rise of Diversified AI Chip Innovation",
+    url: "https://voxstar.substack.com/p/96-challenging-nvidias-reign-the",
+    summary: "In the ever-evolving landscape of artificial intelligence, competition for supremacy in specialized chips has reached a fever pitch. Gene Da Rocha breaks down how Intel's Gaudi 3 and Meta's MTIA custom accelerator are challenging Nvidia's GPU monopoly, boosting LLM training efficiency by up to 50%, and democratizing open AI hardware.",
+    keyTakeaways: [
+      "The Battle for AI Chip Supremacy: Why soaring GPU cluster costs are driving tech giants and enterprises to seek high-efficiency alternatives to Nvidia's H100.",
+      "Intel Gaudi 3 Breakthrough: Delivering up to 50% faster training performance and 1.7x LLM throughput compared to Nvidia's flagship GPUs.",
+      "Breaking the CUDA Moat: How the Gaudi 3's versatile software ecosystem empowers startups and enterprises without proprietary single-vendor lock-in.",
+      "Meta's Hardware Autonomy: Custom MTIA (Meta Training and Inference Accelerator) silicon tailored for Instagram, Facebook, and WhatsApp AI workloads.",
+      "The Diversification Ripple Effect: Slashing inference token costs, expanding hardware accessibility, and building multi-vendor AI infrastructure in 2026."
+    ],
+    audioUrl: "/podcast/Episode_96_Master.mp3",
+    coverUrl: "/podcast/podcast_cover_art.jpg",
+    socialImageUrl: "/podcast/ep96_social_image.jpg",
+    duration: "02:35",
+    durationSecs: 155,
+    status: 'ready',
+    script: `Welcome to Automating Everything. I'm your host, Gene Da Rocha.\n\nToday, in Episode 96, we are exploring a major turning point across the artificial intelligence industry: Challenging Nvidia's Reign and the Rise of Diversified AI Chip Innovation.\n\nIn the ever-evolving landscape of artificial intelligence, the competition for supremacy in specialized chips has reached a fever pitch. For years, Nvidia has stood as the undisputed leader in this crucial domain, with its powerful GPU-based solutions powering the latest advancements in machine learning and deep learning. However, the tides are now turning as industry giants like Intel and Meta make bold strides to break Nvidia's hold and pave the way for a more diversified AI chip ecosystem.\n\nAt the forefront of this charge is Intel's latest offering: the Gaudi 3 AI chip. Designed to revolutionize the efficiency of AI model training, the Gaudi 3 is poised to shake up the status quo. Compared to Nvidia's cutting-edge H100 GPU, the Gaudi 3 delivers up to 50% faster training performance and up to 1.7 times the throughput on large language models.\n\nCrucially, the Gaudi 3's true significance lies in its software versatility. Unlike Nvidia's proprietary CUDA platform, the Gaudi 3 operates across a wide range of open software frameworks, opening new doors for enterprises and startups to scale AI without single-vendor pricing lock-in.\n\nAt the same time, Meta is asserting its independence with its custom-designed Meta Training and Inference Accelerator, known as MTIA. Tailored specifically to power Meta's AI workloads across Instagram, Facebook, and WhatsApp, MTIA signals a massive strategic shift toward custom in-house silicon and hardware autonomy.\n\nThe ripple effect of this diversification is profound. By democratizing access to high-performance AI chips and breaking proprietary moats, organizations worldwide can now build faster, reduce compute overhead, and future-proof their AI infrastructure.\n\nThank you for tuning into Episode 96 of Voxstar AI Automation. To read the complete research article and access full architectural notes, visit voxstar.substack.com. Subscribe to our podcast on Spotify and Apple Podcasts, and connect with me on LinkedIn and X at Gene Da Rocha.\n\nUntil next time, diversify your compute, keep innovating, and keep automating everything. I'm Gene Da Rocha.`
+  },
   95: {
     number: 95,
     title: "#95 Microsoft AI Spearheads Innovation with a New Hub in London",
@@ -94,28 +114,29 @@ const PRESET_EPISODES: Record<number, EpisodeData> = {
 
 const READY_EPISODE: EpisodeData = {
   number: 96,
-  title: "Ready for Episode #96 Ingestion",
-  url: "",
-  summary: "Paste your Substack article URL above and click 'Generate Master Episode #96' to synthesize your complete broadcast, show notes, and omni-channel distribution package.",
+  title: "#96 Challenging Nvidia's Reign: The Rise of Diversified AI Chip Innovation",
+  url: "https://voxstar.substack.com/p/96-challenging-nvidias-reign-the",
+  summary: "In the ever-evolving landscape of artificial intelligence, competition for supremacy in specialized chips has reached a fever pitch. Gene Da Rocha breaks down how Intel's Gaudi 3 and Meta's MTIA custom accelerator are challenging Nvidia's GPU monopoly, boosting LLM training efficiency by up to 50%, and democratizing open AI hardware.",
   keyTakeaways: [
-    "Paste any Substack or tech blog post URL to ingest and analyze.",
-    "Auto-extracts episode numbers, topic themes, and keywords.",
-    "Synthesizes authentic host narration script and full social distribution copy.",
-    "ID3v2 tagged audio mastering with signature 17s theme music.",
-    "1-Click dispatch to Spotify, YouTube Shorts, LinkedIn, X, TikTok, Instagram & WhatsApp."
+    "The Battle for AI Chip Supremacy: Why soaring GPU cluster costs are driving tech giants and enterprises to seek high-efficiency alternatives to Nvidia's H100.",
+    "Intel Gaudi 3 Breakthrough: Delivering up to 50% faster training performance and 1.7x LLM throughput compared to Nvidia's flagship GPUs.",
+    "Breaking the CUDA Moat: How the Gaudi 3's versatile software ecosystem empowers startups and enterprises without proprietary single-vendor lock-in.",
+    "Meta's Hardware Autonomy: Custom MTIA (Meta Training and Inference Accelerator) silicon tailored for Instagram, Facebook, and WhatsApp AI workloads.",
+    "The Diversification Ripple Effect: Slashing inference token costs, expanding hardware accessibility, and building multi-vendor AI infrastructure in 2026."
   ],
-  audioUrl: "",
+  audioUrl: "/podcast/Episode_96_Master.mp3",
   coverUrl: "/podcast/podcast_cover_art.jpg",
-  socialImageUrl: "",
-  duration: "--:--",
-  durationSecs: 0,
+  socialImageUrl: "/podcast/ep96_social_image.jpg",
+  duration: "02:35",
+  durationSecs: 155,
   status: 'ready',
-  script: "Paste a Substack article URL above and click 'Generate Master Episode #96' to synthesize your full broadcast host script."
+  script: `Welcome to Automating Everything. I'm your host, Gene Da Rocha.\n\nToday, in Episode 96, we are exploring a major turning point across the artificial intelligence industry: Challenging Nvidia's Reign and the Rise of Diversified AI Chip Innovation.\n\nIn the ever-evolving landscape of artificial intelligence, the competition for supremacy in specialized chips has reached a fever pitch. For years, Nvidia has stood as the undisputed leader in this crucial domain, with its powerful GPU-based solutions powering the latest advancements in machine learning and deep learning. However, the tides are now turning as industry giants like Intel and Meta make bold strides to break Nvidia's hold and pave the way for a more diversified AI chip ecosystem.\n\nAt the forefront of this charge is Intel's latest offering: the Gaudi 3 AI chip. Designed to revolutionize the efficiency of AI model training, the Gaudi 3 is poised to shake up the status quo. Compared to Nvidia's cutting-edge H100 GPU, the Gaudi 3 delivers up to 50% faster training performance and up to 1.7 times the throughput on large language models.\n\nCrucially, the Gaudi 3's true significance lies in its software versatility. Unlike Nvidia's proprietary CUDA platform, the Gaudi 3 operates across a wide range of open software frameworks, opening new doors for enterprises and startups to scale AI without single-vendor pricing lock-in.\n\nAt the same time, Meta is asserting its independence with its custom-designed Meta Training and Inference Accelerator, known as MTIA. Tailored specifically to power Meta's AI workloads across Instagram, Facebook, and WhatsApp, MTIA signals a massive strategic shift toward custom in-house silicon and hardware autonomy.\n\nThe ripple effect of this diversification is profound. By democratizing access to high-performance AI chips and breaking proprietary moats, organizations worldwide can now build faster, reduce compute overhead, and future-proof their AI infrastructure.\n\nThank you for tuning into Episode 96 of Voxstar AI Automation. To read the complete research article and access full architectural notes, visit voxstar.substack.com. Subscribe to our podcast on Spotify and Apple Podcasts, and connect with me on LinkedIn and X at Gene Da Rocha.\n\nUntil next time, diversify your compute, keep innovating, and keep automating everything. I'm Gene Da Rocha.`
 };
 
 const BATCH_QUEUE_INITIAL = [
-  { id: 1, ep: 95, title: "#95 Microsoft AI Spearheads Innovation with a New Hub in London", url: "https://voxstar.substack.com/p/95-microsoft-ai-spearheads-innovation-with-a-new-hub-in-london", status: "ready" },
-  { id: 2, ep: 94, title: "#94 Unveiling the Future: Llama 3's Paradigm Shift in AI", url: "https://voxstar.substack.com/p/94-unveiling-the-future-llama-3s", status: "ready" }
+  { id: 1, ep: 96, title: "#96 Challenging Nvidia's Reign: The Rise of Diversified AI Chip Innovation", url: "https://voxstar.substack.com/p/96-challenging-nvidias-reign-the", status: "ready" },
+  { id: 2, ep: 95, title: "#95 Microsoft AI Spearheads Innovation with a New Hub in London", url: "https://voxstar.substack.com/p/95-microsoft-ai-spearheads-innovation-with-a-new-hub-in-london", status: "ready" },
+  { id: 3, ep: 94, title: "#94 Unveiling the Future: Llama 3's Paradigm Shift in AI", url: "https://voxstar.substack.com/p/94-unveiling-the-future-llama-3s", status: "ready" }
 ];
 
 function parseSubstackUrl(rawUrl: string, defaultNextEp: number): { epNumber: number; title: string; cleanSlug: string } {
@@ -374,17 +395,17 @@ export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
   const [activeTab, setActiveTab] = useState<'publisher-table' | 'spotify' | 'youtube' | 'youtube-archive' | 'linkedin' | 'x' | 'instagram' | 'tiktok' | 'whatsapp' | 'script' | 'batch' | 'publish-guide'>('publisher-table');
   const [allEpisodes, setAllEpisodes] = useState<Record<number, EpisodeData>>(PRESET_EPISODES);
   const [episodeNumber, setEpisodeNumber] = useState(96);
-  const [episodeTitle, setEpisodeTitle] = useState("");
-  const [articleUrl, setArticleUrl] = useState("");
+  const [episodeTitle, setEpisodeTitle] = useState("#96 Challenging Nvidia's Reign: The Rise of Diversified AI Chip Innovation");
+  const [articleUrl, setArticleUrl] = useState("https://voxstar.substack.com/p/96-challenging-nvidias-reign-the");
   const [voiceModel, setVoiceModel] = useState("f5-cloned-genedarocha");
   const [introMusicEnabled, setIntroMusicEnabled] = useState(true);
   const [normalizeLoudness, setNormalizeLoudness] = useState(true);
-  const [urlStatusMsg, setUrlStatusMsg] = useState<string | null>("✨ Ready for Episode #96: Paste your Substack article URL above to begin.");
+  const [urlStatusMsg, setUrlStatusMsg] = useState<string | null>("✓ Episode #96 Live & Ready: Challenging Nvidia's Reign (Intel Gaudi 3 & Meta MTIA)");
   
   // Pipeline status
   const [isProcessing, setIsProcessing] = useState(false);
   const [progressStep, setProgressStep] = useState(0);
-  const [currentEpisode, setCurrentEpisode] = useState<EpisodeData>(READY_EPISODE);
+  const [currentEpisode, setCurrentEpisode] = useState<EpisodeData>(PRESET_EPISODES[96]);
   const [batchQueue, setBatchQueue] = useState(BATCH_QUEUE_INITIAL);
   const [newBatchUrl, setNewBatchUrl] = useState('');
 
@@ -552,7 +573,7 @@ export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(312);
+  const [duration, setDuration] = useState(155);
   const [playbackRate, setPlaybackRate] = useState(1);
   const [copiedTab, setCopiedTab] = useState<string | null>(null);
   const [copiedField, setCopiedField] = useState<string | null>(null);
