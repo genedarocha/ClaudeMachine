@@ -46,11 +46,19 @@ export interface VideoQueueItem {
   video_engine: 'LT25 (Free / Local)' | 'Sundance AI (Fee / Local)' | 'Google Gemini App / Veo';
   cta_type: string;
   scheduled_date: string;
+  slot: '9:00 AM' | '12:00 PM' | '5:00 PM';
   status: 'pending' | 'rendering' | 'published';
+  stages: {
+    ideated: boolean;
+    scripted: boolean;
+    rendered: boolean;
+    published: boolean;
+  };
   published_channels?: string[];
 }
 
 const INITIAL_QUEUE: VideoQueueItem[] = [
+  // DAY 1 (TODAY)
   {
     id: 1,
     topic_idea: "How 40Hz Gamma sound waves boost deep coding focus by 300% without coffee",
@@ -58,8 +66,10 @@ const INITIAL_QUEUE: VideoQueueItem[] = [
     soundscape: "Gamma Retention Pulse (40Hz)",
     video_engine: "LT25 (Free / Local)",
     cta_type: "Drop DAILY for free setup script",
-    scheduled_date: "Today (8:00 AM)",
+    scheduled_date: "Today (9:00 AM)",
+    slot: "9:00 AM",
     status: "published",
+    stages: { ideated: true, scripted: true, rendered: true, published: true },
     published_channels: ["X.com", "YouTube", "LinkedIn Personal", "LinkedIn Company", "Facebook", "TikTok"]
   },
   {
@@ -69,8 +79,10 @@ const INITIAL_QUEUE: VideoQueueItem[] = [
     soundscape: "Alpha Flow Focus (10Hz)",
     video_engine: "Sundance AI (Fee / Local)",
     cta_type: "Visit wiredvibe.ai/adhd for 7-day boost",
-    scheduled_date: "Tomorrow (8:00 AM)",
-    status: "pending"
+    scheduled_date: "Today (12:00 PM)",
+    slot: "12:00 PM",
+    status: "pending",
+    stages: { ideated: true, scripted: false, rendered: false, published: false }
   },
   {
     id: 3,
@@ -79,9 +91,12 @@ const INITIAL_QUEUE: VideoQueueItem[] = [
     soundscape: "Theta Creative Wave (6Hz)",
     video_engine: "Google Gemini App / Veo",
     cta_type: "Comment FOCUS to get prompt bundle",
-    scheduled_date: "In 2 Days (8:00 AM)",
-    status: "pending"
+    scheduled_date: "Today (5:00 PM)",
+    slot: "5:00 PM",
+    status: "pending",
+    stages: { ideated: true, scripted: false, rendered: false, published: false }
   },
+  // DAY 2 (TOMORROW)
   {
     id: 4,
     topic_idea: "Stop listening to high-tempo Spotify tracks while coding: Neural frequency science",
@@ -89,18 +104,71 @@ const INITIAL_QUEUE: VideoQueueItem[] = [
     soundscape: "Gamma Retention Pulse (40Hz)",
     video_engine: "LT25 (Free / Local)",
     cta_type: "Get free audio preview at wiredvibe.ai",
-    scheduled_date: "In 3 Days (8:00 AM)",
-    status: "pending"
+    scheduled_date: "Tomorrow (9:00 AM)",
+    slot: "9:00 AM",
+    status: "pending",
+    stages: { ideated: true, scripted: false, rendered: false, published: false }
   },
   {
     id: 5,
+    topic_idea: "Pomodoro 2.0: Syncing 25-minute sprint cycles with dynamic brainwave entrainment",
+    target_audience: "Students & Knowledge Workers",
+    soundscape: "Alpha Flow Focus (10Hz)",
+    video_engine: "LT25 (Free / Local)",
+    cta_type: "Try Wiredvibe timer at wiredvibe.ai",
+    scheduled_date: "Tomorrow (12:00 PM)",
+    slot: "12:00 PM",
+    status: "pending",
+    stages: { ideated: true, scripted: false, rendered: false, published: false }
+  },
+  {
+    id: 6,
+    topic_idea: "Auditory Decoupling for Sleep: How Delta frequencies shut down racing cortisol",
+    target_audience: "High-Stress Executives & Creators",
+    soundscape: "Delta Deep Recovery (3Hz)",
+    video_engine: "Sundance AI (Fee / Local)",
+    cta_type: "Stream evening sleep track free",
+    scheduled_date: "Tomorrow (5:00 PM)",
+    slot: "5:00 PM",
+    status: "pending",
+    stages: { ideated: true, scripted: false, rendered: false, published: false }
+  },
+  // DAY 3
+  {
+    id: 7,
+    topic_idea: "Exam & Study Memorization: Boosting recall with 10Hz Alpha harmonic acoustic layers",
+    target_audience: "University Students & Researchers",
+    soundscape: "Alpha Flow Focus (10Hz)",
+    video_engine: "LT25 (Free / Local)",
+    cta_type: "Download study soundscape pack",
+    scheduled_date: "In 2 Days (9:00 AM)",
+    slot: "9:00 AM",
+    status: "pending",
+    stages: { ideated: true, scripted: false, rendered: false, published: false }
+  },
+  {
+    id: 8,
+    topic_idea: "Vagus Nerve Acoustic Calming: Lowering heart rate before high-stakes pitch meetings",
+    target_audience: "Startup Founders & Sales Leads",
+    soundscape: "Theta Creative Wave (6Hz)",
+    video_engine: "Google Gemini App / Veo",
+    cta_type: "Get 3-minute executive reset track",
+    scheduled_date: "In 2 Days (12:00 PM)",
+    slot: "12:00 PM",
+    status: "pending",
+    stages: { ideated: true, scripted: false, rendered: false, published: false }
+  },
+  {
+    id: 9,
     topic_idea: "Autonomous AI Video Creation: How this video was written, rendered & posted by an AI agent",
     target_audience: "AI Creators & SaaS Builders",
     soundscape: "Cyberpunk Hype Beat",
     video_engine: "Google Gemini App / Veo",
     cta_type: "Grab Automation 1 GitHub repo in bio",
-    scheduled_date: "In 4 Days (8:00 AM)",
-    status: "pending"
+    scheduled_date: "In 2 Days (5:00 PM)",
+    slot: "5:00 PM",
+    status: "pending",
+    stages: { ideated: true, scripted: false, rendered: false, published: false }
   }
 ];
 
@@ -186,6 +254,7 @@ export const DailyAutopilotStudio: React.FC<DailyAutopilotStudioProps> = () => {
       setQueueItems(prev => prev.map(item => item.id === pendingItem.id ? {
         ...item,
         status: 'published',
+        stages: { ideated: true, scripted: true, rendered: true, published: true },
         published_channels: ["X.com", "YouTube", "LinkedIn Personal", "LinkedIn Company", "Facebook", "TikTok"]
       } : item));
 
@@ -215,17 +284,54 @@ export const DailyAutopilotStudio: React.FC<DailyAutopilotStudioProps> = () => {
       video_engine: selectedVideoEngine,
       cta_type: newIdeaCta || "Visit wiredvibe.ai",
       scheduled_date: "Pending in Queue",
-      status: "pending"
+      slot: "9:00 AM",
+      status: "pending",
+      stages: { ideated: true, scripted: false, rendered: false, published: false }
     };
 
     setQueueItems(prev => [...prev, newItem]);
     setNewIdeaTopic('');
   };
 
+  const handleRunSpecificItem = (targetItem: VideoQueueItem) => {
+    setIsLoopRunning(true);
+    setLoopStep(1);
+
+    setTimeout(() => setLoopStep(2), 800);
+    setTimeout(() => setLoopStep(3), 1600);
+    setTimeout(() => setLoopStep(4), 2400);
+    setTimeout(() => setLoopStep(5), 3200);
+
+    setTimeout(() => {
+      setIsLoopRunning(false);
+      setLoopStep(0);
+
+      setQueueItems(prev => prev.map(item => item.id === targetItem.id ? {
+        ...item,
+        status: 'published',
+        stages: { ideated: true, scripted: true, rendered: true, published: true },
+        published_channels: ["X.com", "YouTube", "LinkedIn Personal", "LinkedIn Company", "Facebook", "TikTok"]
+      } : item));
+
+      setActiveBundle({
+        todayIdea: targetItem.topic_idea,
+        videoEngine: targetItem.video_engine,
+        aiModel: selectedAiModel,
+        videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+        headline: `🚀 ${targetItem.topic_idea.slice(0, 60)}...`,
+        description: `Experience the future of auditory focus. Wiredvibe (wiredvibe.ai) uses neuroscience soundscapes engineered to eliminate cognitive resistance.\n\nTargeting ${targetItem.target_audience} with our autonomous daily loop engine.`,
+        cta: `👉 ${targetItem.cta_type} - claim your 7-day boost!`,
+        hashtags: ["#voxstar", "#voxstar.ai", "#wiredvibeapp", "#atltrust", "#aitoolboard", "#aiagent", "#viralvideo"],
+        channelsPublished: ["X.com", "YouTube", "LinkedIn (Gene Da Rocha)", "LinkedIn (Wiredvibeapp)", "Facebook (Wiredvibeapp)", "TikTok"]
+      });
+      setActiveSubTab('loop-pipeline');
+    }, 4000);
+  };
+
   const handleExportCsv = () => {
-    const headers = "id,topic_idea,target_audience,soundscape,video_engine,cta_type,scheduled_date,status\n";
+    const headers = "id,slot,topic_idea,target_audience,soundscape,video_engine,cta_type,scheduled_date,status\n";
     const rows = queueItems.map(q => 
-      `${q.id},"${q.topic_idea}","${q.target_audience}","${q.soundscape}","${q.video_engine}","${q.cta_type}","${q.scheduled_date}","${q.status}"`
+      `${q.id},"${q.slot}","${q.topic_idea}","${q.target_audience}","${q.soundscape}","${q.video_engine}","${q.cta_type}","${q.scheduled_date}","${q.status}"`
     ).join("\n");
     const blob = new Blob([headers + rows], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
@@ -627,27 +733,72 @@ export const DailyAutopilotStudio: React.FC<DailyAutopilotStudioProps> = () => {
                   <thead>
                     <tr className="border-b border-slate-800 text-slate-400 bg-slate-950/60">
                       <th className="p-3">#</th>
-                      <th className="p-3">Video Topic Idea</th>
-                      <th className="p-3">Target Audience</th>
+                      <th className="p-3">Daily Slot</th>
+                      <th className="p-3">Video Topic Idea & Capability</th>
+                      <th className="p-3">Target Audience & Audio</th>
                       <th className="p-3">Engine</th>
-                      <th className="p-3">CTA</th>
+                      <th className="p-3">Stage Checklist</th>
                       <th className="p-3">Status</th>
+                      <th className="p-3 text-right">Action</th>
                     </tr>
                   </thead>
                   <tbody>
                     {queueItems.map((item) => (
                       <tr key={item.id} className="border-b border-slate-800/60 hover:bg-slate-900/40">
                         <td className="p-3 font-mono text-slate-500">#{item.id}</td>
-                        <td className="p-3 font-semibold text-slate-200">{item.topic_idea}</td>
-                        <td className="p-3 text-slate-400">{item.target_audience}</td>
+                        <td className="p-3">
+                          <span className={`px-2 py-1 rounded text-[10px] font-bold ${
+                            item.slot === '9:00 AM' 
+                              ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' 
+                              : item.slot === '12:00 PM' 
+                              ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20' 
+                              : 'bg-purple-500/10 text-purple-400 border border-purple-500/20'
+                          }`}>
+                            {item.slot === '9:00 AM' ? '☀️ 9:00 AM' : item.slot === '12:00 PM' ? '🌤️ 12:00 PM' : '🌙 5:00 PM'}
+                          </span>
+                        </td>
+                        <td className="p-3 font-semibold text-slate-200 max-w-xs">
+                          <div>{item.topic_idea}</div>
+                          <div className="text-[11px] text-slate-400 font-normal mt-0.5">CTA: {item.cta_type}</div>
+                        </td>
+                        <td className="p-3 text-slate-400">
+                          <div className="text-slate-300 font-medium">{item.target_audience}</div>
+                          <div className="text-[10px] text-accent mt-0.5">🎵 {item.soundscape}</div>
+                        </td>
                         <td className="p-3">
                           <span className="badge badge-info text-[10px]">{item.video_engine}</span>
                         </td>
-                        <td className="p-3 text-slate-300">{item.cta_type}</td>
+                        <td className="p-3">
+                          <div className="flex flex-col gap-1 text-[11px]">
+                            <span className="flex items-center gap-1.5 text-emerald-400">
+                              <CheckCircle2 size={12} /> 💡 Ingested
+                            </span>
+                            <span className={`flex items-center gap-1.5 ${item.stages.scripted ? 'text-emerald-400' : 'text-slate-600'}`}>
+                              <CheckCircle2 size={12} /> 🤖 AI Scripted
+                            </span>
+                            <span className={`flex items-center gap-1.5 ${item.stages.rendered ? 'text-emerald-400' : 'text-slate-600'}`}>
+                              <CheckCircle2 size={12} /> 🎬 Video Rendered
+                            </span>
+                            <span className={`flex items-center gap-1.5 ${item.stages.published ? 'text-emerald-400' : 'text-slate-600'}`}>
+                              <CheckCircle2 size={12} /> 📡 6-Channel Live
+                            </span>
+                          </div>
+                        </td>
                         <td className="p-3">
                           <span className={`badge ${item.status === 'published' ? 'badge-success' : 'badge-warning'} text-[10px]`}>
-                            {item.status}
+                            {item.status === 'published' ? 'Published' : 'Pending Loop'}
                           </span>
+                        </td>
+                        <td className="p-3 text-right">
+                          <button
+                            onClick={() => handleRunSpecificItem(item)}
+                            disabled={isLoopRunning}
+                            className="btn btn-secondary btn-sm text-[11px] py-1 px-2.5"
+                            title="Run 5-step loop on this topic"
+                          >
+                            <Sparkles size={11} className="text-accent" />
+                            {item.status === 'published' ? 'Re-run Loop' : 'Run Loop'}
+                          </button>
                         </td>
                       </tr>
                     ))}
