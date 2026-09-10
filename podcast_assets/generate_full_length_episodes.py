@@ -49,34 +49,6 @@ Until next time, keep innovating, keep building, and keep automating everything.
 """
     },
     {
-        "number": 96,
-        "title": "#96 Challenging NVIDIA's Reign: The Rise of Custom AI Silicon",
-        "subtitle": "How Hyperscalers, TPUs, and Open Compilers are Breaking the GPU Moat",
-        "script": """
-Welcome to Automating Everything. I'm your host, Gene Da Rocha.
-
-Today, in Episode 96, we are exploring a seismic shift across the artificial intelligence industry: Challenging NVIDIA's Reign and the Rise of Custom AI Silicon.
-
-For the past four years, NVIDIA has held an ironclad grip on the generative AI revolution. From the A100 to the H100 and the new Blackwell architecture, their specialized graphics processing units and proprietary CUDA software ecosystem have dictated the pace, price, and availability of AI compute worldwide.
-
-However, in 2026, the computing landscape is entering a transformative new phase. Rising per-token inference costs, energy constraints, and supply chain vulnerabilities have pushed the world's largest hyperscalers—from Google and Amazon to Meta and Microsoft—to aggressively design and deploy custom silicon.
-
-Let us break down the three fundamental pillars defining this disruption:
-
-First, The Erosion of the Software Moat. Historically, NVIDIA's greatest defense was not just raw silicon performance, but CUDA—the parallel computing platform that millions of developers were trained on. Today, open-source compiler frameworks such as OpenAI Triton, PyTorch 2.0, and Modular Mojo are abstracting hardware away, allowing machine learning models to run seamlessly across heterogeneous chips without rewriting low-level kernel code.
-
-Second, The Economics of Custom Silicon and ASICs. While general-purpose GPUs excel at training massive frontier models, they are often overkill—and financially prohibitive—for production inference at scale. Custom Application-Specific Integrated Circuits (ASICs) like Google's Tensor Processing Units (TPUs), AWS Trainium, and Meta MTIA offer dramatically higher performance-per-watt and up to fifty percent lower cost-per-token.
-
-Third, Sovereign Enterprise Infrastructure. For Chief Information Officers and AI architects, diversifying compute across multiple silicon vendors is no longer optional—it is a critical risk mitigation strategy against single-vendor lock-in.
-
-Thank you for tuning into Episode 96 of Voxstar AI Automation. 
-
-For full research notes, architectural deep dives, and enterprise case studies, visit voxstar.substack.com and explore our publication. Be sure to subscribe on Spotify and Apple Podcasts, and connect with me on LinkedIn and X at Gene Da Rocha.
-
-Until next time, keep innovating, diversify your compute, and keep automating everything. I'm Gene Da Rocha.
-"""
-    },
-    {
         "number": 97,
         "title": "#97 The Sovereign Edge: Why True AI Privacy Demands Local Models",
         "subtitle": "The Architectural Migration from Cloud Data Centers to Native On-Device Intelligence",

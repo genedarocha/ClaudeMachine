@@ -50,26 +50,6 @@ interface ChannelPublishStatus {
 const BRAND_HASHTAGS = "#ArtificialIntelligence #MachineLearning #DeepLearning #NeuralNetworks #ComputerVision #AI #DataScience #NaturalLanguageProcessing #BigData #Robotics #Automation #IntelligentSystems #CognitiveComputing #SmartTechnology #Analytics #Innovation #Industry40 #FutureTech #QuantumComputing #IoT #genedarocha #voxstar #aitoolboard #voxstarai #writerplus #wiredvibeapp #wiredvibe #atltrust #albionlm #elonmusk";
 
 const PRESET_EPISODES: Record<number, EpisodeData> = {
-  96: {
-    number: 96,
-    title: "#96 Challenging NVIDIA's Reign: The Rise of Custom AI Silicon",
-    url: "https://voxstar.substack.com/p/96-challenging-nvidias-reign-the",
-    summary: "In this deep-dive broadcast, Gene Da Rocha analyzes the intensifying battle for AI compute dominance: how hyperscalers and enterprises are challenging NVIDIA's GPU monopoly with custom silicon (TPUs, ASICs, Trainium), open compiler layers like OpenAI Triton, and on-premise sovereign infrastructure.",
-    keyTakeaways: [
-      "The AI Compute Bottleneck: Why skyrocketing GPU cluster costs and supply allocation limits are forcing enterprise leaders to evaluate alternative silicon architectures.",
-      "Challenging the CUDA Moat: How open-source compilers like PyTorch 2.0, OpenAI Triton, and Modular Mojo are breaking proprietary GPU software lock-in.",
-      "Hyperscaler Custom Silicon: Comparing Google TPUs, AWS Trainium/Inferentia, and Meta MTIA against standard NVIDIA H100 and Blackwell clusters.",
-      "Inference vs Training Cost Curves: Slashing operational token bills by migrating production workloads to specialized ASICs and on-device NPUs.",
-      "Enterprise Hardware Sovereignty: Practical deployment playbooks for engineering leaders architecting resilient, multi-vendor AI compute pipelines in 2026."
-    ],
-    audioUrl: "/podcast/Episode_96_Master.mp3",
-    coverUrl: "/podcast/podcast_cover_art.jpg",
-    socialImageUrl: "/podcast/ep96_social_image.jpg",
-    duration: "02:45",
-    durationSecs: 165,
-    status: 'ready',
-    script: `Welcome to Automating Everything. I'm your host, Gene Da Rocha.\n\nToday, in Episode 96, we are exploring a seismic shift across the artificial intelligence industry: Challenging NVIDIA's Reign and the Rise of Custom AI Silicon.\n\nFor the past four years, NVIDIA has held an ironclad grip on the generative AI revolution. From the A100 to the H100 and the new Blackwell architecture, their specialized graphics processing units and proprietary CUDA software ecosystem have dictated the pace, price, and availability of AI compute worldwide.\n\nHowever, in 2026, the computing landscape is entering a transformative new phase. Rising per-token inference costs, energy constraints, and supply chain vulnerabilities have pushed the world's largest hyperscalers—from Google and Amazon to Meta and Microsoft—to aggressively design and deploy custom silicon.\n\nLet us break down the three fundamental pillars defining this disruption:\n\nFirst, The Erosion of the Software Moat. Historically, NVIDIA's greatest defense was not just raw silicon performance, but CUDA—the parallel computing platform that millions of developers were trained on. Today, open-source compiler frameworks such as OpenAI Triton, PyTorch 2.0, and Mojo are abstracting hardware away, allowing machine learning models to run seamlessly across heterogeneous chips without rewriting low-level kernel code.\n\nSecond, The Economics of Custom Silicon and ASICs. While general-purpose GPUs excel at training massive frontier models, they are often overkill—and financially prohibitive—for production inference at scale. Custom Application-Specific Integrated Circuits (ASICs) like Google's Tensor Processing Units (TPUs) and AWS Trainium offer dramatically higher performance-per-watt and up to 50% lower cost-per-token.\n\nThird, Sovereign Enterprise Infrastructure. For Chief Information Officers and AI architects, diversifying compute across multiple silicon vendors is no longer optional—it is a critical risk mitigation strategy against single-vendor lock-in.\n\nThank you for tuning into Episode 96 of Voxstar AI Automation. If you found value in today's broadcast, subscribe to voxstar.substack.com and follow on Spotify.`
-  },
   95: {
     number: 95,
     title: "#95 Microsoft AI Spearheads Innovation with a New Hub in London",
@@ -89,26 +69,6 @@ const PRESET_EPISODES: Record<number, EpisodeData> = {
     durationSecs: 312,
     status: 'ready',
     script: `Welcome to Automating Everything. I'm your host, Gene Da Rocha.\n\nToday, in Episode 95, we are exploring a major milestone in global artificial intelligence: Microsoft AI spearheading innovation with the launch of their brand-new flagship AI Hub in the heart of London.\n\nIn a landmark announcement that signals a massive vote of confidence in the UK technology ecosystem, Microsoft revealed that it is opening a dedicated AI research and engineering hub in London. This new organization is led by one of the most prominent pioneers in modern machine learning, Mustafa Suleyman, co-founder of DeepMind and Inflection AI, who recently stepped into the role of Executive Vice President and CEO of Microsoft AI. Joining him is Jordan Hoffmann, a distinguished AI scientist from Inflection and DeepMind, serving as the research and engineering lead for this ambitious new outpost.\n\nTo truly appreciate the significance of this move, we need to understand the broader context of what is happening across the enterprise technology landscape in 2026. For years, the epicenters of frontier large language model development were heavily clustered in Silicon Valley and Seattle. However, London has quietly maintained an unmatched density of foundational machine learning talent, home to elite research institutions like University College London, Imperial College, Cambridge, and Oxford, as well as the founding grounds of DeepMind itself.\n\nBy establishing this dedicated hub, Microsoft is not just opening an office; they are planting a definitive flag in Europe's most vibrant AI corridor.\n\nLet us break down the core mission of Microsoft AI London into three fundamental pillars:\n\nFirst, Frontier Model Research and State-of-the-Art Tooling. The London team will collaborate directly with Microsoft's global research divisions and partners, including OpenAI, to design next-generation multimodal models, reasoning engines, and foundational architectures. This includes pioneering work on synthetic data generation, reinforcement learning from human and AI feedback, and novel optimization techniques to reduce compute overhead while dramatically increasing inference speed and accuracy.\n\nSecond, the Acceleration of the Enterprise Copilot Ecosystem. Today, Microsoft Copilot has transitioned from an experimental digital assistant into a mission-critical productivity platform across Microsoft 365, Azure, GitHub, and Windows. The engineering talent based in London will be squarely tasked with pushing the boundaries of what these agents can achieve—moving from passive question-answering systems into active, autonomous agents capable of complex multi-step orchestration, code refactoring, enterprise database querying, and autonomous workflow execution.\n\nThird, Trust, Safety, and Regulatory Collaboration. One of the unique advantages of London is its proximity to international governance bodies, including the UK AI Safety Institute. As regulatory frameworks such as the European Union AI Act and international safety standards take effect, enterprise clients demand verifiable proof that their models are resilient against jailbreaks, prompt injection, and hallucination. The London hub is positioned to work side-by-side with researchers and policymakers to develop open benchmarks and deterministic safety guardrails.\n\nFor enterprise decision-makers, this announcement reinforces a critical reality: the pace of AI innovation is accelerating, and the competition between hyperscalers is intensifying. Microsoft's aggressive investment ensures that businesses building on Azure and Copilot will have direct access to cutting-edge model improvements and localized sovereign cloud capabilities.\n\nThank you for tuning into Episode 95 of Voxstar AI Automation. If you found value in today's broadcast, subscribe to voxstar.substack.com and follow on Spotify.`
-  },
-  97: {
-    number: 97,
-    title: "#97 The Sovereign Edge: Why True AI Privacy Demands Local Models",
-    url: "https://voxstar.substack.com/p/196-zero-trust-ai-blog-07-the-sovereign",
-    summary: "The architectural migration from centralized cloud data centers to on-device edge intelligence (Llama, Gemma, Apple ReALM). How enterprises solve perimeter evaporation and enforce hardware-level privacy enclaves.",
-    keyTakeaways: [
-      "The Paradigm Flip: Why generative AI is migrating from hyperscale cloud server farms to on-device NPUs and GPUs.",
-      "Perimeter Evaporation: When the AI model runs locally on an employee laptop, traditional corporate network firewalls vanish.",
-      "Hardware Security Enclaves: Pairing quantized model weights with Apple Silicon & Snapdragon secure hardware memory.",
-      "Hybrid Edge-Cloud Orchestration: Running 3B-8B SLMs on device for 0ms latency and routing only encrypted embeddings to cloud.",
-      "80%+ Cost Reduction: Slashing recurring API token bills while guaranteeing 100% data sovereignty."
-    ],
-    audioUrl: "/podcast/Episode_97_Master.mp3",
-    coverUrl: "/podcast/podcast_cover_art.jpg",
-    socialImageUrl: "/podcast/ep97_social_image.jpg",
-    duration: "03:30",
-    durationSecs: 210,
-    status: 'ready',
-    script: `Welcome to Automating Everything. I'm your host, Gene Da Rocha.\n\nToday, in Episode 97, we are exploring one of the most fundamental shifts in the history of computing: The Sovereign Edge, and why true enterprise AI privacy demands local models and on-device execution.\n\nFor the past three years, the generative AI revolution was defined by massive, centralized cloud data centers. Every prompt, every proprietary business document, and every customer interaction was beamed across the internet to hyperscale server farms.\n\nHowever, with the rapid maturation of highly optimized, quantized models like Meta's Llama series, Google's Gemma, and Apple's ReALM on-device context engines, the computing paradigm has officially flipped. Artificial intelligence is moving to the edge.\n\nOver the next twenty-four months, billions of smartphones, developer workstations, and enterprise laptops will be running native, quantized models directly on neural processing units and local GPUs. The promise is extraordinary: zero latency, complete offline reliability, zero per-token cloud costs, and hyper-personalized context.\n\nYet, for enterprise Chief Information Security Officers and regulatory compliance directors, this architectural shift presents a massive new challenge: The Evaporation of the Corporate Perimeter.\n\nWhen AI lived in the cloud, corporate security teams could safeguard proprietary data by erecting centralized firewalls. But when the AI model lives natively on an employee's personal smartphone or local MacBook, the traditional network perimeter completely vanishes.\n\nIn this episode, we break down how forward-thinking enterprises are navigating this transition using hybrid edge-cloud orchestration, secure hardware enclaves, and localized zero-trust wrappers.\n\nThank you for tuning into Episode 97 of Voxstar AI Automation.`
   },
   94: {
     number: 94,
@@ -134,9 +94,9 @@ const PRESET_EPISODES: Record<number, EpisodeData> = {
 
 const READY_EPISODE: EpisodeData = {
   number: 96,
-  title: "Ready for Substack / Article Ingestion",
+  title: "Ready for Episode #96 Ingestion",
   url: "",
-  summary: "Paste any Substack article URL above and click 'Generate Master Episode' to synthesize your complete broadcast, show notes, and omni-channel distribution package.",
+  summary: "Paste your Substack article URL above and click 'Generate Master Episode #96' to synthesize your complete broadcast, show notes, and omni-channel distribution package.",
   keyTakeaways: [
     "Paste any Substack or tech blog post URL to ingest and analyze.",
     "Auto-extracts episode numbers, topic themes, and keywords.",
@@ -150,14 +110,12 @@ const READY_EPISODE: EpisodeData = {
   duration: "--:--",
   durationSecs: 0,
   status: 'ready',
-  script: "Paste a Substack article URL above and click 'Generate Master Episode' to synthesize your full broadcast host script."
+  script: "Paste a Substack article URL above and click 'Generate Master Episode #96' to synthesize your full broadcast host script."
 };
 
 const BATCH_QUEUE_INITIAL = [
-  { id: 1, ep: 96, title: "#96 Challenging NVIDIA's Reign: The Rise of Custom AI Silicon", url: "https://voxstar.substack.com/p/96-challenging-nvidias-reign-the", status: "ready" },
-  { id: 2, ep: 95, title: "#95 Microsoft AI Spearheads Innovation with a New Hub in London", url: "https://voxstar.substack.com/p/95-microsoft-ai-spearheads-innovation-with-a-new-hub-in-london", status: "ready" },
-  { id: 3, ep: 97, title: "#97 The Sovereign Edge: Why True AI Privacy Demands Local Models", url: "https://voxstar.substack.com/p/196-zero-trust-ai-blog-07-the-sovereign", status: "ready" },
-  { id: 4, ep: 98, title: "#98 Autonomous Multi-Agent Swarms in Enterprise Automation", url: "https://voxstar.substack.com/p/98-autonomous-multi-agent-swarms", status: "queued" }
+  { id: 1, ep: 95, title: "#95 Microsoft AI Spearheads Innovation with a New Hub in London", url: "https://voxstar.substack.com/p/95-microsoft-ai-spearheads-innovation-with-a-new-hub-in-london", status: "ready" },
+  { id: 2, ep: 94, title: "#94 Unveiling the Future: Llama 3's Paradigm Shift in AI", url: "https://voxstar.substack.com/p/94-unveiling-the-future-llama-3s", status: "ready" }
 ];
 
 function parseSubstackUrl(rawUrl: string, defaultNextEp: number): { epNumber: number; title: string; cleanSlug: string } {
@@ -421,7 +379,7 @@ export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
   const [voiceModel, setVoiceModel] = useState("f5-cloned-genedarocha");
   const [introMusicEnabled, setIntroMusicEnabled] = useState(true);
   const [normalizeLoudness, setNormalizeLoudness] = useState(true);
-  const [urlStatusMsg, setUrlStatusMsg] = useState<string | null>("Ready: Paste any Substack article URL above to generate your full podcast master & social pack.");
+  const [urlStatusMsg, setUrlStatusMsg] = useState<string | null>("✨ Ready for Episode #96: Paste your Substack article URL above to begin.");
   
   // Pipeline status
   const [isProcessing, setIsProcessing] = useState(false);
@@ -1080,7 +1038,7 @@ _Share with your engineering and leadership teams!_`;
         screenTitle="Voxstar Podcast & Social Distribution Engine"
         subtitle="Turn any Substack article or URL into a full-length broadcast podcast episode with Gene Da Rocha's authentic voice, signature intro music, -16 LUFS mastering, and omni-channel distribution packages."
         steps={[
-          { number: 1, title: "Select or Ingest Episode", detail: "Pick an episode from the library (#95, #96, #97, #94) or paste any Substack article URL to synthesize." },
+          { number: 1, title: "Select or Ingest Episode", detail: "Pick an episode from the library (#95, #94) or paste any Substack article URL to synthesize new episodes." },
           { number: 2, title: "Select Voice & Mastering", detail: "Use the authentic cloned Gene Da Rocha voice profile with standard -16 LUFS loudness mastering." },
           { number: 3, title: "1-Click Publish to All Channels", detail: "Click individual channel buttons or the Master Blast button to dispatch updates to Spotify, LinkedIn, Gene Da Rocha X, and @rochagenda Instagram." }
         ]}
