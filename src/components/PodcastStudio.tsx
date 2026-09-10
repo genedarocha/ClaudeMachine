@@ -65,8 +65,8 @@ const PRESET_EPISODES: Record<number, EpisodeData> = {
     audioUrl: "/podcast/Episode_96_Master.mp3",
     coverUrl: "/podcast/podcast_cover_art.jpg",
     socialImageUrl: "/podcast/ep96_social_image.jpg",
-    duration: "05:18",
-    durationSecs: 318,
+    duration: "02:45",
+    durationSecs: 165,
     status: 'ready',
     script: `Welcome to Automating Everything. I'm your host, Gene Da Rocha.\n\nToday, in Episode 96, we are exploring a seismic shift across the artificial intelligence industry: Challenging NVIDIA's Reign and the Rise of Custom AI Silicon.\n\nFor the past four years, NVIDIA has held an ironclad grip on the generative AI revolution. From the A100 to the H100 and the new Blackwell architecture, their specialized graphics processing units and proprietary CUDA software ecosystem have dictated the pace, price, and availability of AI compute worldwide.\n\nHowever, in 2026, the computing landscape is entering a transformative new phase. Rising per-token inference costs, energy constraints, and supply chain vulnerabilities have pushed the world's largest hyperscalers—from Google and Amazon to Meta and Microsoft—to aggressively design and deploy custom silicon.\n\nLet us break down the three fundamental pillars defining this disruption:\n\nFirst, The Erosion of the Software Moat. Historically, NVIDIA's greatest defense was not just raw silicon performance, but CUDA—the parallel computing platform that millions of developers were trained on. Today, open-source compiler frameworks such as OpenAI Triton, PyTorch 2.0, and Mojo are abstracting hardware away, allowing machine learning models to run seamlessly across heterogeneous chips without rewriting low-level kernel code.\n\nSecond, The Economics of Custom Silicon and ASICs. While general-purpose GPUs excel at training massive frontier models, they are often overkill—and financially prohibitive—for production inference at scale. Custom Application-Specific Integrated Circuits (ASICs) like Google's Tensor Processing Units (TPUs) and AWS Trainium offer dramatically higher performance-per-watt and up to 50% lower cost-per-token.\n\nThird, Sovereign Enterprise Infrastructure. For Chief Information Officers and AI architects, diversifying compute across multiple silicon vendors is no longer optional—it is a critical risk mitigation strategy against single-vendor lock-in.\n\nThank you for tuning into Episode 96 of Voxstar AI Automation. If you found value in today's broadcast, subscribe to voxstar.substack.com and follow on Spotify.`
   },
@@ -144,13 +144,13 @@ const READY_EPISODE: EpisodeData = {
     "ID3v2 tagged audio mastering with signature 17s theme music.",
     "1-Click dispatch to Spotify, YouTube Shorts, LinkedIn, X, TikTok, Instagram & WhatsApp."
   ],
-  audioUrl: "/podcast/Episode_96_Master.mp3",
+  audioUrl: "",
   coverUrl: "/podcast/podcast_cover_art.jpg",
-  socialImageUrl: "/podcast/ep96_social_image.jpg",
-  duration: "00:00",
+  socialImageUrl: "",
+  duration: "--:--",
   durationSecs: 0,
   status: 'ready',
-  script: "Paste a Substack article URL above to generate your full broadcast host script."
+  script: "Paste a Substack article URL above and click 'Generate Master Episode' to synthesize your full broadcast host script."
 };
 
 const BATCH_QUEUE_INITIAL = [
@@ -715,7 +715,7 @@ export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
   }, [currentEpisode]);
 
   const togglePlay = () => {
-    if (!audioRef.current) return;
+    if (!audioRef.current || !currentEpisode.audioUrl) return;
     if (isPlaying) {
       audioRef.current.pause();
       setIsPlaying(false);
@@ -1298,10 +1298,16 @@ _Share with your engineering and leadership teams!_`;
               <Headphones className="text-accent" size={20} />
               <h2 className="text-lg font-bold text-white">Broadcast Master Player</h2>
             </div>
-            <span className="status-badge live">
-              <span className="pulse-dot"></span>
-              Episode #{currentEpisode.number} Full Master
-            </span>
+            {currentEpisode.audioUrl ? (
+              <span className="status-badge live">
+                <span className="pulse-dot"></span>
+                Episode #{currentEpisode.number} Full Master
+              </span>
+            ) : (
+              <span className="status-badge" style={{ background: 'rgba(56, 189, 248, 0.1)', color: '#38bdf8', border: '1px solid rgba(56, 189, 248, 0.3)' }}>
+                ✨ Ready to Generate
+              </span>
+            )}
           </div>
 
           <div className="player-content-wrapper mt-3">
@@ -1314,7 +1320,9 @@ _Share with your engineering and leadership teams!_`;
             </div>
 
             <div className="player-details">
-              <div className="ep-badge">EPISODE #{currentEpisode.number} • {currentEpisode.duration}</div>
+              <div className="ep-badge">
+                EPISODE #{currentEpisode.number} • {currentEpisode.audioUrl ? currentEpisode.duration : 'Ready for Synthesis'}
+              </div>
               <h3 className="ep-title">{currentEpisode.title}</h3>
               <p className="ep-host">Host: <span className="text-white font-medium">Gene Da Rocha</span> • Voxstar Automation</p>
 
@@ -1329,14 +1337,15 @@ _Share with your engineering and leadership teams!_`;
               <div className="player-timeline mt-3">
                 <div className="timeline-labels">
                   <span>{formatTime(currentTime)}</span>
-                  <span>{formatTime(duration)}</span>
+                  <span>{currentEpisode.audioUrl ? formatTime(duration) : '--:--'}</span>
                 </div>
                 <input
                   type="range"
                   min={0}
-                  max={duration || currentEpisode.durationSecs}
+                  max={duration || currentEpisode.durationSecs || 100}
                   step={0.1}
                   value={currentTime}
+                  disabled={!currentEpisode.audioUrl}
                   onChange={handleSeek}
                   className="timeline-slider"
                 />
@@ -1344,11 +1353,17 @@ _Share with your engineering and leadership teams!_`;
 
               {/* Player Controls */}
               <div className="player-controls-row mt-3">
-                <button className="play-circle-btn" onClick={togglePlay}>
+                <button
+                  className="play-circle-btn"
+                  onClick={togglePlay}
+                  disabled={!currentEpisode.audioUrl}
+                  style={!currentEpisode.audioUrl ? { opacity: 0.5, cursor: 'not-allowed' } : {}}
+                  title={!currentEpisode.audioUrl ? "Paste URL & click Generate to synthesize master audio" : "Play Master Broadcast"}
+                >
                   {isPlaying ? <Pause size={22} /> : <Play size={22} className="translate-x-0.5" />}
                 </button>
 
-                <button className="speed-btn" onClick={changeSpeed}>
+                <button className="speed-btn" onClick={changeSpeed} disabled={!currentEpisode.audioUrl}>
                   {playbackRate}x
                 </button>
 
@@ -1363,14 +1378,20 @@ _Share with your engineering and leadership teams!_`;
                   </span>
                 </div>
 
-                <a
-                  href={currentEpisode.audioUrl}
-                  download={`Episode_${currentEpisode.number}_Voxstar_Master.mp3`}
-                  className="btn btn-secondary btn-sm ml-auto"
-                >
-                  <Download size={14} />
-                  Download MP3
-                </a>
+                {currentEpisode.audioUrl ? (
+                  <a
+                    href={currentEpisode.audioUrl}
+                    download={`Episode_${currentEpisode.number}_Voxstar_Master.mp3`}
+                    className="btn btn-secondary btn-sm ml-auto"
+                  >
+                    <Download size={14} />
+                    Download MP3
+                  </a>
+                ) : (
+                  <span className="text-xs text-gray-500 ml-auto italic">
+                    Audio generated upon ingest
+                  </span>
+                )}
               </div>
             </div>
           </div>
@@ -1380,23 +1401,35 @@ _Share with your engineering and leadership teams!_`;
             <div className="flex items-center justify-between mb-2">
               <span className="text-xs font-semibold text-gray-400 flex items-center gap-1.5">
                 <Share2 size={13} className="text-accent" />
-                Generated 1080x1080 Social Graphic for Episode #{currentEpisode.number}
+                {currentEpisode.socialImageUrl 
+                  ? `Generated 1080x1080 Social Graphic for Episode #${currentEpisode.number}`
+                  : `1080x1080 Social Graphic (Synthesizes on Generation)`}
               </span>
-              <a
-                href={currentEpisode.socialImageUrl}
-                download={`Episode_${currentEpisode.number}_Social_Cover.jpg`}
-                className="text-xs text-accent hover:underline flex items-center gap-1"
-              >
-                <Download size={12} />
-                Download Graphic
-              </a>
+              {currentEpisode.socialImageUrl && (
+                <a
+                  href={currentEpisode.socialImageUrl}
+                  download={`Episode_${currentEpisode.number}_Social_Cover.jpg`}
+                  className="text-xs text-accent hover:underline flex items-center gap-1"
+                >
+                  <Download size={12} />
+                  Download Graphic
+                </a>
+              )}
             </div>
             <div className="social-graphic-thumb">
-              <img
-                src={currentEpisode.socialImageUrl}
-                alt={`Episode ${currentEpisode.number} Social Cover`}
-                className="graphic-img"
-              />
+              {currentEpisode.socialImageUrl ? (
+                <img
+                  src={currentEpisode.socialImageUrl}
+                  alt={`Episode ${currentEpisode.number} Social Cover`}
+                  className="graphic-img"
+                />
+              ) : (
+                <div className="p-8 text-center bg-black/40 border border-white/5 rounded-xl flex flex-col items-center justify-center min-h-[140px]">
+                  <Share2 size={24} className="text-accent/40 mb-2" />
+                  <p className="text-xs text-gray-400 font-medium">1080×1080 Social Distribution Graphic</p>
+                  <p className="text-[11px] text-gray-500 mt-0.5">Click "Generate Master Episode" to synthesize your topic-specific visual card</p>
+                </div>
+              )}
             </div>
           </div>
         </div>
