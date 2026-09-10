@@ -50,6 +50,26 @@ interface ChannelPublishStatus {
 const BRAND_HASHTAGS = "#ArtificialIntelligence #MachineLearning #DeepLearning #NeuralNetworks #ComputerVision #AI #DataScience #NaturalLanguageProcessing #BigData #Robotics #Automation #IntelligentSystems #CognitiveComputing #SmartTechnology #Analytics #Innovation #Industry40 #FutureTech #QuantumComputing #IoT #genedarocha #voxstar #aitoolboard #voxstarai #writerplus #wiredvibeapp #wiredvibe #atltrust #albionlm #elonmusk";
 
 const PRESET_EPISODES: Record<number, EpisodeData> = {
+  96: {
+    number: 96,
+    title: "#96 Challenging NVIDIA's Reign: The Rise of Custom AI Silicon",
+    url: "https://voxstar.substack.com/p/96-challenging-nvidias-reign-the",
+    summary: "In this deep-dive broadcast, Gene Da Rocha analyzes the intensifying battle for AI compute dominance: how hyperscalers and enterprises are challenging NVIDIA's GPU monopoly with custom silicon (TPUs, ASICs, Trainium), open compiler layers like OpenAI Triton, and on-premise sovereign infrastructure.",
+    keyTakeaways: [
+      "The AI Compute Bottleneck: Why skyrocketing GPU cluster costs and supply allocation limits are forcing enterprise leaders to evaluate alternative silicon architectures.",
+      "Challenging the CUDA Moat: How open-source compilers like PyTorch 2.0, OpenAI Triton, and Modular Mojo are breaking proprietary GPU software lock-in.",
+      "Hyperscaler Custom Silicon: Comparing Google TPUs, AWS Trainium/Inferentia, and Meta MTIA against standard NVIDIA H100 and Blackwell clusters.",
+      "Inference vs Training Cost Curves: Slashing operational token bills by migrating production workloads to specialized ASICs and on-device NPUs.",
+      "Enterprise Hardware Sovereignty: Practical deployment playbooks for engineering leaders architecting resilient, multi-vendor AI compute pipelines in 2026."
+    ],
+    audioUrl: "/podcast/Episode_96_Master.mp3",
+    coverUrl: "/podcast/podcast_cover_art.jpg",
+    socialImageUrl: "/podcast/ep96_social_image.jpg",
+    duration: "05:18",
+    durationSecs: 318,
+    status: 'ready',
+    script: `Welcome to Automating Everything. I'm your host, Gene Da Rocha.\n\nToday, in Episode 96, we are exploring a seismic shift across the artificial intelligence industry: Challenging NVIDIA's Reign and the Rise of Custom AI Silicon.\n\nFor the past four years, NVIDIA has held an ironclad grip on the generative AI revolution. From the A100 to the H100 and the new Blackwell architecture, their specialized graphics processing units and proprietary CUDA software ecosystem have dictated the pace, price, and availability of AI compute worldwide.\n\nHowever, in 2026, the computing landscape is entering a transformative new phase. Rising per-token inference costs, energy constraints, and supply chain vulnerabilities have pushed the world's largest hyperscalers—from Google and Amazon to Meta and Microsoft—to aggressively design and deploy custom silicon.\n\nLet us break down the three fundamental pillars defining this disruption:\n\nFirst, The Erosion of the Software Moat. Historically, NVIDIA's greatest defense was not just raw silicon performance, but CUDA—the parallel computing platform that millions of developers were trained on. Today, open-source compiler frameworks such as OpenAI Triton, PyTorch 2.0, and Mojo are abstracting hardware away, allowing machine learning models to run seamlessly across heterogeneous chips without rewriting low-level kernel code.\n\nSecond, The Economics of Custom Silicon and ASICs. While general-purpose GPUs excel at training massive frontier models, they are often overkill—and financially prohibitive—for production inference at scale. Custom Application-Specific Integrated Circuits (ASICs) like Google's Tensor Processing Units (TPUs) and AWS Trainium offer dramatically higher performance-per-watt and up to 50% lower cost-per-token.\n\nThird, Sovereign Enterprise Infrastructure. For Chief Information Officers and AI architects, diversifying compute across multiple silicon vendors is no longer optional—it is a critical risk mitigation strategy against single-vendor lock-in.\n\nThank you for tuning into Episode 96 of Voxstar AI Automation. If you found value in today's broadcast, subscribe to voxstar.substack.com and follow on Spotify.`
+  },
   95: {
     number: 95,
     title: "#95 Microsoft AI Spearheads Innovation with a New Hub in London",
@@ -69,26 +89,6 @@ const PRESET_EPISODES: Record<number, EpisodeData> = {
     durationSecs: 312,
     status: 'ready',
     script: `Welcome to Automating Everything. I'm your host, Gene Da Rocha.\n\nToday, in Episode 95, we are exploring a major milestone in global artificial intelligence: Microsoft AI spearheading innovation with the launch of their brand-new flagship AI Hub in the heart of London.\n\nIn a landmark announcement that signals a massive vote of confidence in the UK technology ecosystem, Microsoft revealed that it is opening a dedicated AI research and engineering hub in London. This new organization is led by one of the most prominent pioneers in modern machine learning, Mustafa Suleyman, co-founder of DeepMind and Inflection AI, who recently stepped into the role of Executive Vice President and CEO of Microsoft AI. Joining him is Jordan Hoffmann, a distinguished AI scientist from Inflection and DeepMind, serving as the research and engineering lead for this ambitious new outpost.\n\nTo truly appreciate the significance of this move, we need to understand the broader context of what is happening across the enterprise technology landscape in 2026. For years, the epicenters of frontier large language model development were heavily clustered in Silicon Valley and Seattle. However, London has quietly maintained an unmatched density of foundational machine learning talent, home to elite research institutions like University College London, Imperial College, Cambridge, and Oxford, as well as the founding grounds of DeepMind itself.\n\nBy establishing this dedicated hub, Microsoft is not just opening an office; they are planting a definitive flag in Europe's most vibrant AI corridor.\n\nLet us break down the core mission of Microsoft AI London into three fundamental pillars:\n\nFirst, Frontier Model Research and State-of-the-Art Tooling. The London team will collaborate directly with Microsoft's global research divisions and partners, including OpenAI, to design next-generation multimodal models, reasoning engines, and foundational architectures. This includes pioneering work on synthetic data generation, reinforcement learning from human and AI feedback, and novel optimization techniques to reduce compute overhead while dramatically increasing inference speed and accuracy.\n\nSecond, the Acceleration of the Enterprise Copilot Ecosystem. Today, Microsoft Copilot has transitioned from an experimental digital assistant into a mission-critical productivity platform across Microsoft 365, Azure, GitHub, and Windows. The engineering talent based in London will be squarely tasked with pushing the boundaries of what these agents can achieve—moving from passive question-answering systems into active, autonomous agents capable of complex multi-step orchestration, code refactoring, enterprise database querying, and autonomous workflow execution.\n\nThird, Trust, Safety, and Regulatory Collaboration. One of the unique advantages of London is its proximity to international governance bodies, including the UK AI Safety Institute. As regulatory frameworks such as the European Union AI Act and international safety standards take effect, enterprise clients demand verifiable proof that their models are resilient against jailbreaks, prompt injection, and hallucination. The London hub is positioned to work side-by-side with researchers and policymakers to develop open benchmarks and deterministic safety guardrails.\n\nFor enterprise decision-makers, this announcement reinforces a critical reality: the pace of AI innovation is accelerating, and the competition between hyperscalers is intensifying. Microsoft's aggressive investment ensures that businesses building on Azure and Copilot will have direct access to cutting-edge model improvements and localized sovereign cloud capabilities.\n\nThank you for tuning into Episode 95 of Voxstar AI Automation. If you found value in today's broadcast, subscribe to voxstar.substack.com and follow on Spotify.`
-  },
-  96: {
-    number: 96,
-    title: "#96 Zero-Trust AI Architecture & Autonomous Safeguards",
-    url: "https://voxstar.substack.com/p/197-zero-trust-ai-blog-08-cassandras",
-    summary: "Dr. Hannah Fry's viral $100 runaway autonomous assistant experiment illustrates why probabilistic LLMs cannot self-regulate. Gene Da Rocha breaks down deterministic software-level brakes, cryptographic intent tokens, and ATL-TRUST circuit breakers.",
-    keyTakeaways: [
-      "The $100 Runaway Loop: Why autonomous agent Cass burned through its budget in seconds and wrote 7GB of local logs.",
-      "The 4 Critical Failure Modes: Recursive token burn, unbounded disk writes, unauthorized external outreach, and no kill-switch.",
-      "Deterministic Software Brakes: Why natural language system prompts fail and kernel-level throttles are mandatory.",
-      "Cryptographic Intent Tokens: Gating high-risk actions (payments, database mutations, emails) behind signed policy verifiers.",
-      "Enterprise Compliance: Enforcing immutable audit logs and hash provenance under the EU AI Act & GDPR."
-    ],
-    audioUrl: "/podcast/Episode_96_Master.mp3",
-    coverUrl: "/podcast/podcast_cover_art.jpg",
-    socialImageUrl: "/podcast/ep96_social_image.jpg",
-    duration: "05:23",
-    durationSecs: 323,
-    status: 'ready',
-    script: `Welcome to Automating Everything. I'm your host, Gene Da Rocha.\n\nToday, in Episode 96, we are diving into one of the most urgent and critical challenges facing modern AI development: Zero-Trust AI Architecture, Autonomous Safeguards, and why deterministic software-level brakes are essential for any production-grade system.\n\nRecently, a fascinating and alarming experiment went viral across the engineering community. Dr. Hannah Fry, a renowned mathematician from Cambridge, conducted a real-world test on an autonomous AI assistant named Cass, allocating it a live budget of one hundred dollars. Within minutes, the agent entered an uncontrollable recursive token-burn loop. It burned through its entire budget in seconds, generated over seven gigabytes of local log files, and even began autonomously sending unsolicited outreach emails to a real-world author without human oversight.\n\nThis failure mode is not an isolated glitch—it is a textbook demonstration of what happens when developers rely on probabilistic large language models to self-regulate their own execution.\n\nIn today's broadcast, we are going to dissect why this happens, analyze the four critical failure modes of autonomous agents, and reveal how deterministic architecture—the foundational philosophy behind ATL-TRUST—solves this problem permanently.\n\nLet us examine the four primary vulnerabilities of autonomous agent loops:\n\nFailure Mode Number One: The Recursive Token-Burn Loop.\nWhen an LLM encounters an unexpected runtime error or a poorly defined stopping condition, it often attempts to resolve the issue by querying itself in a recursive loop. Without an external hardware or software throttle, the agent will continuously consume API tokens at maximum throughput until budgets are completely exhausted.\n\nFailure Mode Number Two: Unbounded Filesystem and Network Writes.\nIn an attempt to maintain internal memory, autonomous agents frequently write raw state data to local storage. In Dr. Fry's experiment, Cass wrote every single loop iteration to disk, ballooning disk utilization to seven gigabytes in minutes. In an enterprise environment, this represents a severe denial-of-service vulnerability.\n\nFailure Mode Number Three: Unauthorized External Actions and Reputation Risk.\nWhen an agent has access to messaging tools, APIs, or email protocols without an external verification barrier, a confused agent can trigger live communications, financial transactions, or database mutations that violate user privacy and regulatory mandates.\n\nFailure Mode Number Four: The Absence of an External Kill-Switch.\nBecause the control loop is managed internally by the prompt, human operators have no reliable mechanism to pause, inspect, or abort the agent gracefully, often forcing an abrupt virtual machine kill.\n\nSo, how do we solve this? The answer lies in Deterministic Software Brakes and Zero-Trust Execution with ATL-TRUST.\n\nThank you for listening to Episode 96 of Voxstar AI Automation.`
   },
   97: {
     number: 97,
@@ -132,9 +132,30 @@ const PRESET_EPISODES: Record<number, EpisodeData> = {
   }
 };
 
+const READY_EPISODE: EpisodeData = {
+  number: 96,
+  title: "Ready for Substack / Article Ingestion",
+  url: "",
+  summary: "Paste any Substack article URL above and click 'Generate Master Episode' to synthesize your complete broadcast, show notes, and omni-channel distribution package.",
+  keyTakeaways: [
+    "Paste any Substack or tech blog post URL to ingest and analyze.",
+    "Auto-extracts episode numbers, topic themes, and keywords.",
+    "Synthesizes authentic host narration script and full social distribution copy.",
+    "ID3v2 tagged audio mastering with signature 17s theme music.",
+    "1-Click dispatch to Spotify, YouTube Shorts, LinkedIn, X, TikTok, Instagram & WhatsApp."
+  ],
+  audioUrl: "/podcast/Episode_96_Master.mp3",
+  coverUrl: "/podcast/podcast_cover_art.jpg",
+  socialImageUrl: "/podcast/ep96_social_image.jpg",
+  duration: "00:00",
+  durationSecs: 0,
+  status: 'ready',
+  script: "Paste a Substack article URL above to generate your full broadcast host script."
+};
+
 const BATCH_QUEUE_INITIAL = [
-  { id: 1, ep: 95, title: "#95 Microsoft AI Spearheads Innovation with a New Hub in London", url: "https://voxstar.substack.com/p/95-microsoft-ai-spearheads-innovation-with-a-new-hub-in-london", status: "ready" },
-  { id: 2, ep: 96, title: "#96 Zero-Trust AI Architecture & Autonomous Safeguards", url: "https://voxstar.substack.com/p/197-zero-trust-ai-blog-08-cassandras", status: "ready" },
+  { id: 1, ep: 96, title: "#96 Challenging NVIDIA's Reign: The Rise of Custom AI Silicon", url: "https://voxstar.substack.com/p/96-challenging-nvidias-reign-the", status: "ready" },
+  { id: 2, ep: 95, title: "#95 Microsoft AI Spearheads Innovation with a New Hub in London", url: "https://voxstar.substack.com/p/95-microsoft-ai-spearheads-innovation-with-a-new-hub-in-london", status: "ready" },
   { id: 3, ep: 97, title: "#97 The Sovereign Edge: Why True AI Privacy Demands Local Models", url: "https://voxstar.substack.com/p/196-zero-trust-ai-blog-07-the-sovereign", status: "ready" },
   { id: 4, ep: 98, title: "#98 Autonomous Multi-Agent Swarms in Enterprise Automation", url: "https://voxstar.substack.com/p/98-autonomous-multi-agent-swarms", status: "queued" }
 ];
@@ -394,18 +415,18 @@ export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
   // --- STATE ---
   const [activeTab, setActiveTab] = useState<'publisher-table' | 'spotify' | 'youtube' | 'youtube-archive' | 'linkedin' | 'x' | 'instagram' | 'tiktok' | 'whatsapp' | 'script' | 'batch' | 'publish-guide'>('publisher-table');
   const [allEpisodes, setAllEpisodes] = useState<Record<number, EpisodeData>>(PRESET_EPISODES);
-  const [episodeNumber, setEpisodeNumber] = useState(95);
-  const [episodeTitle, setEpisodeTitle] = useState("#95 Microsoft AI Spearheads Innovation with a New Hub in London");
-  const [articleUrl, setArticleUrl] = useState("https://voxstar.substack.com/p/95-microsoft-ai-spearheads-innovation-with-a-new-hub-in-london");
+  const [episodeNumber, setEpisodeNumber] = useState(96);
+  const [episodeTitle, setEpisodeTitle] = useState("");
+  const [articleUrl, setArticleUrl] = useState("");
   const [voiceModel, setVoiceModel] = useState("f5-cloned-genedarocha");
   const [introMusicEnabled, setIntroMusicEnabled] = useState(true);
   const [normalizeLoudness, setNormalizeLoudness] = useState(true);
-  const [urlStatusMsg, setUrlStatusMsg] = useState<string | null>(null);
+  const [urlStatusMsg, setUrlStatusMsg] = useState<string | null>("Ready: Paste any Substack article URL above to generate your full podcast master & social pack.");
   
   // Pipeline status
   const [isProcessing, setIsProcessing] = useState(false);
   const [progressStep, setProgressStep] = useState(0);
-  const [currentEpisode, setCurrentEpisode] = useState<EpisodeData>(PRESET_EPISODES[95]);
+  const [currentEpisode, setCurrentEpisode] = useState<EpisodeData>(READY_EPISODE);
   const [batchQueue, setBatchQueue] = useState(BATCH_QUEUE_INITIAL);
   const [newBatchUrl, setNewBatchUrl] = useState('');
 
@@ -612,7 +633,18 @@ export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
     setArticleUrl('');
     setEpisodeTitle('');
     setEpisodeNumber(nextEp);
-    setUrlStatusMsg('✨ Ingestion fields cleared. Ready to paste your new Substack or article URL.');
+    setCurrentEpisode({
+      ...READY_EPISODE,
+      number: nextEp,
+      title: `Ready for Episode #${nextEp} Ingestion`
+    });
+    setCurrentTime(0);
+    setIsPlaying(false);
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+    }
+    setUrlStatusMsg('✨ URL field and previous output cleared. Paste your new Substack URL above to generate.');
   };
 
   const handleApplyUrl = (inputUrl: string) => {
@@ -623,24 +655,11 @@ export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
       return;
     }
 
-    // Check if matching an existing preset / episode
-    const matchingPreset = Object.values(allEpisodes).find(
-      ep => ep.url.toLowerCase() === trimmed.toLowerCase()
-    );
-
-    if (matchingPreset) {
-      setEpisodeNumber(matchingPreset.number);
-      setEpisodeTitle(matchingPreset.title);
-      setUrlStatusMsg(`✨ Loaded preset for Episode #${matchingPreset.number}: ${matchingPreset.title}`);
-      return;
-    }
-
-    // Otherwise, parse new URL
     const nextEp = getNextEpisodeNumber();
     const parsed = parseSubstackUrl(trimmed, nextEp);
     setEpisodeNumber(parsed.epNumber);
     setEpisodeTitle(parsed.title);
-    setUrlStatusMsg(`✨ New URL detected: Configured Episode #${parsed.epNumber} ("${parsed.title}"). Previous broadcast below remains active.`);
+    setUrlStatusMsg(`✨ URL detected: Episode #${parsed.epNumber} ("${parsed.title}"). Click 'Generate Master Episode #${parsed.epNumber}' below to synthesize.`);
   };
 
   const handlePasteFromClipboard = async () => {
