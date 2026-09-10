@@ -5,7 +5,7 @@ import {
   Layers, RefreshCw, Send,
   Headphones, ListPlus, Sliders, ShieldCheck, CheckCheck,
   Clock, Smartphone, ExternalLink, FileAudio, Tag, Info, ChevronDown, ChevronUp,
-  Video, Search, Filter, FolderDown
+  Video, Search, Filter, FolderDown, RotateCcw, Plus, Clipboard, X
 } from 'lucide-react';
 import { FieldHelpTooltip } from './FieldHelpTooltip';
 import { ScreenHelpBanner } from './ScreenHelpBanner';
@@ -139,15 +139,74 @@ const BATCH_QUEUE_INITIAL = [
   { id: 4, ep: 98, title: "#98 Autonomous Multi-Agent Swarms in Enterprise Automation", url: "https://voxstar.substack.com/p/98-autonomous-multi-agent-swarms", status: "queued" }
 ];
 
+function parseSubstackUrl(rawUrl: string, defaultNextEp: number): { epNumber: number; title: string; cleanSlug: string } {
+  try {
+    const trimmed = rawUrl.trim();
+    if (!trimmed) {
+      return { epNumber: defaultNextEp, title: '', cleanSlug: '' };
+    }
+
+    let pathname = trimmed;
+    try {
+      const urlObj = new URL(trimmed.startsWith('http') ? trimmed : `https://${trimmed}`);
+      pathname = urlObj.pathname;
+    } catch {
+      // fallback
+    }
+
+    const segments = pathname.split('/').filter(Boolean);
+    const lastSegment = segments[segments.length - 1] || '';
+    const cleanSlug = decodeURIComponent(lastSegment)
+      .replace(/\.html?$/i, '')
+      .replace(/[?#].*$/, '');
+
+    if (!cleanSlug) {
+      return { epNumber: defaultNextEp, title: `Episode #${defaultNextEp}`, cleanSlug: '' };
+    }
+
+    const numMatch = cleanSlug.match(/^(?:ep(?:isode)?[-_]?)?(\d+)[-_]?(.*)/i);
+    let epNumber = defaultNextEp;
+    let rawTitle = cleanSlug;
+
+    if (numMatch && numMatch[1]) {
+      const parsed = parseInt(numMatch[1], 10);
+      if (!isNaN(parsed) && parsed > 0) {
+        epNumber = parsed;
+        rawTitle = numMatch[2] || '';
+      }
+    }
+
+    const words = rawTitle
+      .split(/[-_]+/)
+      .filter(Boolean)
+      .map(w => {
+        const lower = w.toLowerCase();
+        if (['ai', 'llm', 'llms', 'gpt', 'api', 'apis', 'ui', 'ux', 'id', 'ml', 'nlp', 'npu', 'gpu', 'gpus', 'cpu', 'cpus', 'tpu', 'lufs', 'db', 'id3', 'uk', 'us', 'eu', 'gdpr', 'atl', 'trust'].includes(lower)) {
+          return lower.toUpperCase();
+        }
+        return lower.charAt(0).toUpperCase() + lower.slice(1);
+      });
+
+    const cleanTitle = words.join(' ').trim();
+    const title = cleanTitle ? `#${epNumber} ${cleanTitle}` : `Episode #${epNumber}`;
+
+    return { epNumber, title, cleanSlug };
+  } catch {
+    return { epNumber: defaultNextEp, title: `Episode #${defaultNextEp}`, cleanSlug: '' };
+  }
+}
+
 export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
   // --- STATE ---
   const [activeTab, setActiveTab] = useState<'publisher-table' | 'spotify' | 'youtube' | 'youtube-archive' | 'linkedin' | 'x' | 'instagram' | 'tiktok' | 'whatsapp' | 'script' | 'batch' | 'publish-guide'>('publisher-table');
+  const [allEpisodes, setAllEpisodes] = useState<Record<number, EpisodeData>>(PRESET_EPISODES);
   const [episodeNumber, setEpisodeNumber] = useState(95);
   const [episodeTitle, setEpisodeTitle] = useState("#95 Microsoft AI Spearheads Innovation with a New Hub in London");
   const [articleUrl, setArticleUrl] = useState("https://voxstar.substack.com/p/95-microsoft-ai-spearheads-innovation-with-a-new-hub-in-london");
   const [voiceModel, setVoiceModel] = useState("f5-cloned-genedarocha");
   const [introMusicEnabled, setIntroMusicEnabled] = useState(true);
   const [normalizeLoudness, setNormalizeLoudness] = useState(true);
+  const [urlStatusMsg, setUrlStatusMsg] = useState<string | null>(null);
   
   // Pipeline status
   const [isProcessing, setIsProcessing] = useState(false);
@@ -349,9 +408,61 @@ export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
     }
   }, [episodeNumber]);
 
+  const getNextEpisodeNumber = () => {
+    const existing = Object.keys(allEpisodes).map(Number).filter(n => !isNaN(n));
+    return existing.length > 0 ? Math.max(...existing) + 1 : 98;
+  };
+
+  const handleClearIngestionForm = () => {
+    const nextEp = getNextEpisodeNumber();
+    setArticleUrl('');
+    setEpisodeTitle('');
+    setEpisodeNumber(nextEp);
+    setUrlStatusMsg('✨ Ingestion fields cleared. Ready to paste your new Substack or article URL.');
+  };
+
+  const handleApplyUrl = (inputUrl: string) => {
+    const trimmed = inputUrl.trim();
+    setArticleUrl(trimmed);
+    if (!trimmed) {
+      setUrlStatusMsg(null);
+      return;
+    }
+
+    // Check if matching an existing preset / episode
+    const matchingPreset = Object.values(allEpisodes).find(
+      ep => ep.url.toLowerCase() === trimmed.toLowerCase()
+    );
+
+    if (matchingPreset) {
+      setEpisodeNumber(matchingPreset.number);
+      setEpisodeTitle(matchingPreset.title);
+      setUrlStatusMsg(`✨ Loaded preset for Episode #${matchingPreset.number}: ${matchingPreset.title}`);
+      return;
+    }
+
+    // Otherwise, parse new URL
+    const nextEp = getNextEpisodeNumber();
+    const parsed = parseSubstackUrl(trimmed, nextEp);
+    setEpisodeNumber(parsed.epNumber);
+    setEpisodeTitle(parsed.title);
+    setUrlStatusMsg(`✨ New URL detected: Configured Episode #${parsed.epNumber} ("${parsed.title}"). Previous broadcast below remains active.`);
+  };
+
+  const handlePasteFromClipboard = async () => {
+    try {
+      const text = await navigator.clipboard.readText();
+      if (text) {
+        handleApplyUrl(text);
+      }
+    } catch (e) {
+      console.error('Clipboard access error', e);
+    }
+  };
+
   // Switch episode helper
   const loadEpisodeData = (epNum: number) => {
-    const preset = PRESET_EPISODES[epNum];
+    const preset = allEpisodes[epNum] || PRESET_EPISODES[epNum];
     if (preset) {
       setEpisodeNumber(preset.number);
       setEpisodeTitle(preset.title);
@@ -360,6 +471,7 @@ export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
       setDuration(preset.durationSecs);
       setCurrentTime(0);
       setIsPlaying(false);
+      setUrlStatusMsg(null);
       if (audioRef.current) {
         audioRef.current.pause();
         audioRef.current.currentTime = 0;
@@ -554,37 +666,49 @@ export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
       setIsProcessing(false);
       setProgressStep(0);
 
-      if (PRESET_EPISODES[episodeNumber]) {
-        const ep = PRESET_EPISODES[episodeNumber];
-        setCurrentEpisode(ep);
-        setDuration(ep.durationSecs);
+      const existing = allEpisodes[episodeNumber] || PRESET_EPISODES[episodeNumber];
+      let targetEpisode: EpisodeData;
+
+      if (existing && existing.url === articleUrl && existing.title === episodeTitle) {
+        targetEpisode = existing;
       } else {
-        const newEp: EpisodeData = {
+        const cleanTitleName = episodeTitle.replace(/^#\d+\s*/, '') || `Enterprise AI Architecture & Autonomous Automation`;
+        const formattedTitle = episodeTitle.startsWith('#') ? episodeTitle : `#${episodeNumber} ${episodeTitle || cleanTitleName}`;
+        
+        targetEpisode = {
           number: episodeNumber,
-          title: episodeTitle,
-          url: articleUrl,
-          summary: `Full broadcast synthesized for Episode #${episodeNumber}: ${episodeTitle}. Featuring authentic host voice narration, signature 17s theme music intro, and -16 LUFS loudness normalization.`,
+          title: formattedTitle,
+          url: articleUrl || `https://voxstar.substack.com/p/${episodeNumber}-ai-broadcast`,
+          summary: `Full deep-dive broadcast synthesized for Episode #${episodeNumber}: ${formattedTitle}. Host Gene Da Rocha analyzes the technical architecture, zero-trust safeguards, and enterprise automation strategies for engineering leaders.`,
           keyTakeaways: [
-            `Comprehensive technical breakdown of ${episodeTitle}.`,
-            "Synthesized with authentic host voice profile and signature 17s theme music.",
-            "Mastered to broadcast standards (-16 LUFS) with embedded ID3 tags and 1400x1400 cover art.",
-            "Omni-channel distribution package generated for Spotify, LinkedIn, TikTok, Instagram, X & WhatsApp."
+            `Comprehensive technical breakdown of ${cleanTitleName}.`,
+            "Synthesized with authentic Gene Da Rocha host voice profile and signature 17s theme music.",
+            "Mastered to broadcast standards (-16 LUFS / -1.0 dBTP) with embedded ID3v2 tags and 1400x1400 cover art.",
+            "Enterprise sovereign execution, deterministic safety guardrails, and autonomous agent orchestration.",
+            "Omni-channel distribution package generated for Spotify, YouTube Shorts, LinkedIn, TikTok, Instagram, X & WhatsApp."
           ],
-          audioUrl: `/podcast/Episode_${episodeNumber}_Master.mp3`,
+          audioUrl: existing?.audioUrl || `/podcast/Episode_${episodeNumber}_Master.mp3`,
           coverUrl: "/podcast/podcast_cover_art.jpg",
-          socialImageUrl: `/podcast/ep${episodeNumber}_social_image.jpg`,
+          socialImageUrl: existing?.socialImageUrl || `/podcast/ep${episodeNumber}_social_image.jpg`,
           duration: "05:12",
           durationSecs: 312,
           status: 'ready',
-          script: `Welcome to Automating Everything. I'm your host, Gene Da Rocha.\n\nToday, in Episode ${episodeNumber}, we are exploring: ${episodeTitle}.\n\nIn this broadcast, we examine the technical architecture, enterprise impact, and autonomous automation implications for builders and leaders.`
+          script: `Welcome to Automating Everything. I'm your host, Gene Da Rocha.\n\nToday, in Episode ${episodeNumber}, we are exploring: ${cleanTitleName}.\n\nIn this broadcast, we examine the technical architecture, enterprise impact, and autonomous automation implications for builders and leaders across the global tech landscape.\n\nLet us break down the key dimensions:\nFirst, Frontier AI Engineering and Scalable Infrastructure.\nSecond, Zero-Trust Guardrails and Deterministic Reliability.\nThird, Real-World Enterprise ROI and Autonomous Agent Workflows.\n\nThank you for tuning into Episode ${episodeNumber} of Voxstar AI Automation. If you found value in today's broadcast, subscribe to voxstar.substack.com and follow on Spotify.`
         };
-        setCurrentEpisode(newEp);
-        setDuration(312);
       }
 
+      setAllEpisodes(prev => ({
+        ...prev,
+        [episodeNumber]: targetEpisode
+      }));
+      setCurrentEpisode(targetEpisode);
+      setDuration(targetEpisode.durationSecs);
+      setCurrentTime(0);
+      setIsPlaying(false);
+      setUrlStatusMsg(`✓ Episode #${episodeNumber} Master Broadcast & Distribution Pack generated and active below!`);
+
       if (audioRef.current) {
-        const targetAudio = PRESET_EPISODES[episodeNumber]?.audioUrl || `/podcast/Episode_${episodeNumber}_Master.mp3`;
-        audioRef.current.src = targetAudio;
+        audioRef.current.src = targetEpisode.audioUrl;
         audioRef.current.load();
       }
     }, 4200);
@@ -777,39 +901,31 @@ _Share with your engineering and leadership teams!_`;
       <div className="ep-switcher-bar glass-panel mt-3">
         <div className="flex items-center gap-2">
           <Radio className="text-accent" size={16} />
-          <span className="text-xs font-bold text-gray-300 uppercase tracking-wider">Catalog & New Episodes:</span>
+          <span className="text-xs font-bold text-gray-300 uppercase tracking-wider">Catalog & Active Broadcasts:</span>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
+          {Object.values(allEpisodes).sort((a, b) => b.number - a.number).map((ep) => (
+            <button
+              key={ep.number}
+              className={`ep-pill-btn ${currentEpisode.number === ep.number ? 'active' : ''}`}
+              onClick={() => loadEpisodeData(ep.number)}
+              title={ep.title}
+            >
+              <span className="ep-num">#{ep.number}</span>
+              <span className="truncate max-w-[200px]">
+                {ep.title.replace(/^#\d+\s*/, '')} ({ep.duration})
+              </span>
+              <span className="badge-live-dot"></span>
+            </button>
+          ))}
           <button
-            className={`ep-pill-btn ${episodeNumber === 95 ? 'active' : ''}`}
-            onClick={() => loadEpisodeData(95)}
+            type="button"
+            className="ep-pill-btn new-ep-btn"
+            onClick={handleClearIngestionForm}
+            title="Clear ingestion form and prepare a new URL broadcast without altering current episode below"
           >
-            <span className="ep-num">#95</span>
-            <span>Microsoft AI London Hub (5:12)</span>
-            <span className="badge-live-dot"></span>
-          </button>
-          <button
-            className={`ep-pill-btn ${episodeNumber === 96 ? 'active' : ''}`}
-            onClick={() => loadEpisodeData(96)}
-          >
-            <span className="ep-num">#96</span>
-            <span>Zero-Trust AI Safeguards (5:23)</span>
-            <span className="badge-live-dot"></span>
-          </button>
-          <button
-            className={`ep-pill-btn ${episodeNumber === 97 ? 'active' : ''}`}
-            onClick={() => loadEpisodeData(97)}
-          >
-            <span className="ep-num">#97</span>
-            <span>The Sovereign Edge (3:30)</span>
-            <span className="badge-live-dot"></span>
-          </button>
-          <button
-            className={`ep-pill-btn ${episodeNumber === 94 ? 'active' : ''}`}
-            onClick={() => loadEpisodeData(94)}
-          >
-            <span className="ep-num">#94</span>
-            <span>Llama 3 Paradigm Shift (3:40)</span>
+            <Plus size={14} className="text-accent" />
+            <span>+ Ingest New URL</span>
           </button>
         </div>
       </div>
@@ -823,7 +939,18 @@ _Share with your engineering and leadership teams!_`;
               <Mic className="text-accent" size={20} />
               <h2 className="text-lg font-bold text-white">URL-to-Podcast Ingestion</h2>
             </div>
-            <span className="badge badge-accent">Full Unabridged Broadcast</span>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                className="btn-ghost-clear"
+                onClick={handleClearIngestionForm}
+                title="Clear input fields for a new URL without modifying current broadcast master below"
+              >
+                <RotateCcw size={12} />
+                <span>Clear Form</span>
+              </button>
+              <span className="badge badge-accent">Full Unabridged</span>
+            </div>
           </div>
 
           <div className="form-group mt-3">
@@ -835,16 +962,50 @@ _Share with your engineering and leadership teams!_`;
                 example="https://voxstar.substack.com/p/197-zero-trust-ai-blog-08-cassandras"
               />
             </label>
-            <div className="input-with-icon">
-              <Globe size={16} className="input-icon text-muted" />
-              <input
-                type="text"
-                className="input-field"
-                value={articleUrl}
-                onChange={(e) => setArticleUrl(e.target.value)}
-                placeholder="https://voxstar.substack.com/p/..."
-              />
+            <div className="input-with-action-row flex gap-2">
+              <div className="input-with-icon relative flex-1">
+                <Globe size={16} className="input-icon text-muted" />
+                <input
+                  type="text"
+                  className="input-field pr-8"
+                  value={articleUrl}
+                  onChange={(e) => handleApplyUrl(e.target.value)}
+                  onPaste={(e) => {
+                    const pasted = e.clipboardData.getData('text');
+                    if (pasted) {
+                      e.preventDefault();
+                      handleApplyUrl(pasted);
+                    }
+                  }}
+                  placeholder="Paste Substack URL e.g. https://voxstar.substack.com/p/..."
+                />
+                {articleUrl && (
+                  <button
+                    type="button"
+                    className="clear-input-btn"
+                    onClick={handleClearIngestionForm}
+                    title="Clear URL and reset form fields"
+                  >
+                    <X size={14} />
+                  </button>
+                )}
+              </div>
+              <button
+                type="button"
+                className="btn btn-secondary btn-sm px-3 flex items-center gap-1.5 whitespace-nowrap"
+                onClick={handlePasteFromClipboard}
+                title="Paste URL from Clipboard and configure new episode"
+              >
+                <Clipboard size={14} className="text-accent" />
+                <span>Paste URL</span>
+              </button>
             </div>
+            {urlStatusMsg && (
+              <div className="url-status-banner mt-2 text-xs flex items-center gap-1.5 text-purple-200 bg-purple-950/60 border border-purple-500/30 rounded-md px-3 py-1.5">
+                <Sparkles size={13} className="text-accent shrink-0" />
+                <span className="truncate">{urlStatusMsg}</span>
+              </div>
+            )}
           </div>
 
           <div className="grid grid-cols-2 gap-3 mt-3">
@@ -857,9 +1018,6 @@ _Share with your engineering and leadership teams!_`;
                 onChange={(e) => {
                   const val = parseInt(e.target.value) || 1;
                   setEpisodeNumber(val);
-                  if (PRESET_EPISODES[val]) {
-                    loadEpisodeData(val);
-                  }
                 }}
               />
             </div>
@@ -880,13 +1038,16 @@ _Share with your engineering and leadership teams!_`;
           </div>
 
           <div className="form-group mt-3">
-            <label className="input-label">Episode Title</label>
+            <label className="input-label flex items-center justify-between">
+              <span>Episode Title</span>
+              <span className="text-[11px] text-gray-400">Auto-extracted from URL slug or custom</span>
+            </label>
             <input
               type="text"
               className="input-field"
               value={episodeTitle}
               onChange={(e) => setEpisodeTitle(e.target.value)}
-              placeholder="e.g. #96 Zero-Trust AI Architecture & Autonomous Safeguards"
+              placeholder="e.g. #98 Autonomous Multi-Agent Swarms"
             />
           </div>
 
@@ -2517,12 +2678,12 @@ _Share with your engineering and leadership teams!_`;
                           <button
                             className="btn btn-sm btn-ghost text-xs"
                             onClick={() => {
-                              if (PRESET_EPISODES[item.ep]) {
+                              if (allEpisodes[item.ep]) {
                                 loadEpisodeData(item.ep);
                               } else {
+                                handleApplyUrl(item.url);
                                 setEpisodeNumber(item.ep);
                                 setEpisodeTitle(item.title);
-                                setArticleUrl(item.url);
                               }
                               setActiveTab('publisher-table');
                             }}
@@ -2578,6 +2739,59 @@ _Share with your engineering and leadership teams!_`;
           border-color: #a855f7;
           color: #fff;
           box-shadow: 0 0 14px rgba(168, 85, 247, 0.4);
+        }
+        .new-ep-btn {
+          border-style: dashed;
+          border-color: rgba(168, 85, 247, 0.4);
+          background: rgba(168, 85, 247, 0.08);
+          color: #d8b4fe;
+        }
+        .new-ep-btn:hover {
+          background: rgba(168, 85, 247, 0.2);
+          border-color: #a855f7;
+          color: #fff;
+        }
+        .btn-ghost-clear {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.35rem;
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          color: #94a3b8;
+          padding: 0.2rem 0.55rem;
+          border-radius: 6px;
+          font-size: 0.72rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.2s;
+        }
+        .btn-ghost-clear:hover {
+          background: rgba(239, 68, 68, 0.15);
+          border-color: rgba(239, 68, 68, 0.4);
+          color: #fca5a5;
+        }
+        .clear-input-btn {
+          position: absolute;
+          right: 0.6rem;
+          top: 50%;
+          transform: translateY(-50%);
+          background: transparent;
+          border: none;
+          color: #94a3b8;
+          cursor: pointer;
+          padding: 0.25rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 4px;
+          transition: all 0.15s;
+        }
+        .clear-input-btn:hover {
+          color: #fff;
+          background: rgba(255, 255, 255, 0.1);
+        }
+        .url-status-banner {
+          animation: fadeIn 0.3s ease-in-out;
         }
         .ep-num {
           background: #a855f7;
