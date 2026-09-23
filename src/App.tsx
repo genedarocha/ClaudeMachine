@@ -17,6 +17,7 @@ import { SystemGuideModal } from './components/SystemGuideModal';
 import { WiredvibeStudio } from './components/WiredvibeStudio';
 import { DailyIdeaStudio } from './components/DailyIdeaStudio';
 import { DailyAutopilotStudio } from './components/DailyAutopilotStudio';
+import { UniversalVideoStudio } from './components/UniversalVideoStudio';
 import { type ApiKeys, type ModelSettings } from './utils/ai';
 
 interface RunHistoryItem {
@@ -44,9 +45,8 @@ function App() {
   const [specialists, setSpecialists] = useState<Specialist[]>(PREBUILT_SPECIALISTS);
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState<string>('');
-  
   const [activeSpecialist, setActiveSpecialist] = useState<Specialist | null>(null);
-  const [currentView, setCurrentView] = useState<'dashboard' | 'runner' | 'generator' | 'history' | 'voxstar' | 'podcast-studio' | 'creation-wiredvibe' | 'creation-idea' | 'daily-autopilot'>('podcast-studio');
+  const [currentView, setCurrentView] = useState<'dashboard' | 'runner' | 'generator' | 'history' | 'voxstar' | 'podcast-studio' | 'creation-wiredvibe' | 'creation-idea' | 'daily-autopilot' | 'video-factory'>('podcast-studio');
   const [activeSoundscape, setActiveSoundscape] = useState<string>('Gamma Retention Pulse');
   const [activeAutopilotServiceId, setActiveAutopilotServiceId] = useState<string>('srv-1');
   
@@ -208,6 +208,15 @@ function App() {
                 <Radio size={14} />
                 <span>Podcast Studio</span>
                 <span className="nav-badge-hot">Ep #94 Ready</span>
+              </button>
+
+              <button 
+                className={`nav-sub-item ${currentView === 'video-factory' ? 'active' : ''}`}
+                onClick={() => { setCurrentView('video-factory'); setActiveSpecialist(null); }}
+              >
+                <Sparkles size={14} />
+                <span>Video Factory</span>
+                <span className="nav-badge-hot">30s AI</span>
               </button>
             </div>
           </div>
@@ -615,6 +624,11 @@ function App() {
             <DailyAutopilotStudio
               initialServiceId={activeAutopilotServiceId}
             />
+          )}
+
+          {/* I. UNIVERSAL 30-SECOND VIDEO FACTORY (AITOOLBOARD & ALL COMPANIES) */}
+          {currentView === 'video-factory' && (
+            <UniversalVideoStudio />
           )}
         </div>
       </main>

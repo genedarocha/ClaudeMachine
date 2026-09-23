@@ -22,3 +22,10 @@ dist-ssr
 *.sqlite3
 
 .vercel
+
+# Python & Environment
+.venv/
+output_videos/
+__pycache__/
+*.env
+config.env

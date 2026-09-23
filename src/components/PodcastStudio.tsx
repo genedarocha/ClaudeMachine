@@ -417,9 +417,47 @@ export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
   // --- STATE ---
   const [activeTab, setActiveTab] = useState<'publisher-table' | 'spotify' | 'youtube' | 'youtube-archive' | 'linkedin' | 'x' | 'instagram' | 'tiktok' | 'whatsapp' | 'script' | 'batch' | 'publish-guide'>('publisher-table');
   const [allEpisodes, setAllEpisodes] = useState<Record<number, EpisodeData>>(PRESET_EPISODES);
-  const [episodeNumber, setEpisodeNumber] = useState(98);
-  const [episodeTitle, setEpisodeTitle] = useState("#98 Google Unveils Arm-Based Data Center Processors to Accelerate AI & Cloud Compute");
-  const [articleUrl, setArticleUrl] = useState("https://voxstar.substack.com/p/98-google-unveils-arm-based-data");
+  
+  const [episodeNumber, setEpisodeNumber] = useState<number>(() => {
+    try {
+      const saved = localStorage.getItem('voxstar_active_episode_num');
+      if (saved && !isNaN(Number(saved)) && PRESET_EPISODES[Number(saved)]) {
+        return Number(saved);
+      }
+    } catch {}
+    return 98;
+  });
+
+  const [currentEpisode, setCurrentEpisode] = useState<EpisodeData>(() => {
+    try {
+      const savedNum = localStorage.getItem('voxstar_active_episode_num');
+      if (savedNum && PRESET_EPISODES[Number(savedNum)]) {
+        return PRESET_EPISODES[Number(savedNum)];
+      }
+    } catch {}
+    return PRESET_EPISODES[98];
+  });
+
+  const [episodeTitle, setEpisodeTitle] = useState<string>(() => {
+    try {
+      const savedNum = localStorage.getItem('voxstar_active_episode_num');
+      if (savedNum && PRESET_EPISODES[Number(savedNum)]) {
+        return PRESET_EPISODES[Number(savedNum)].title;
+      }
+    } catch {}
+    return PRESET_EPISODES[98].title;
+  });
+
+  const [articleUrl, setArticleUrl] = useState<string>(() => {
+    try {
+      const savedNum = localStorage.getItem('voxstar_active_episode_num');
+      if (savedNum && PRESET_EPISODES[Number(savedNum)]) {
+        return PRESET_EPISODES[Number(savedNum)].url;
+      }
+    } catch {}
+    return PRESET_EPISODES[98].url;
+  });
+
   const [voiceModel, setVoiceModel] = useState("f5-cloned-genedarocha");
   const [introMusicEnabled, setIntroMusicEnabled] = useState(true);
   const [normalizeLoudness, setNormalizeLoudness] = useState(true);
@@ -428,10 +466,18 @@ export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
   // Pipeline status
   const [isProcessing, setIsProcessing] = useState(false);
   const [progressStep, setProgressStep] = useState(0);
-  const [currentEpisode, setCurrentEpisode] = useState<EpisodeData>(PRESET_EPISODES[98]);
   const [socialImgFailed, setSocialImgFailed] = useState(false);
   const [batchQueue, setBatchQueue] = useState(BATCH_QUEUE_INITIAL);
   const [newBatchUrl, setNewBatchUrl] = useState('');
+
+  // Persist active episode to localStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem('voxstar_active_episode_num', episodeNumber.toString());
+    } catch (e) {
+      console.error('Failed to save active episode number', e);
+    }
+  }, [episodeNumber]);
 
   // 93 YouTube Shorts Archive State
   const [archiveSearchQuery, setArchiveSearchQuery] = useState('');
@@ -917,8 +963,38 @@ export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
     const nextEp = getNextEpisodeNumber();
     const parsed = parseSubstackUrl(trimmed, nextEp);
     setEpisodeNumber(parsed.epNumber);
-    setEpisodeTitle(parsed.title);
-    setUrlStatusMsg(`✨ URL detected: Episode #${parsed.epNumber} ("${parsed.title}"). Click 'Generate Master Episode #${parsed.epNumber}' below to synthesize.`);
+
+    const matched = PRESET_EPISODES[parsed.epNumber] || allEpisodes[parsed.epNumber];
+    if (matched) {
+      setEpisodeTitle(matched.title);
+      setCurrentEpisode(matched);
+      setDuration(matched.durationSecs);
+      setCurrentTime(0);
+      setIsPlaying(false);
+      setSocialImgFailed(false);
+      setUrlStatusMsg(`✓ Episode #${matched.number} Master Broadcast Ready: ${matched.title}`);
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+        audioRef.current.src = matched.audioUrl;
+        audioRef.current.load();
+      }
+    } else {
+      const syn = synthesizeTopicContent(parsed.epNumber, parsed.title, trimmed);
+      setEpisodeTitle(parsed.title);
+      setCurrentEpisode(syn);
+      setDuration(syn.durationSecs);
+      setCurrentTime(0);
+      setIsPlaying(false);
+      setSocialImgFailed(false);
+      setUrlStatusMsg(`✨ Ingested: Episode #${parsed.epNumber} ("${parsed.title}"). Ready to play or customize.`);
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+        audioRef.current.src = syn.audioUrl;
+        audioRef.current.load();
+      }
+    }
   };
 
   const handlePasteFromClipboard = async () => {
@@ -975,13 +1051,32 @@ export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
   }, [currentEpisode]);
 
   const togglePlay = () => {
-    if (!audioRef.current || !currentEpisode.audioUrl) return;
+    if (!audioRef.current) return;
     if (isPlaying) {
       audioRef.current.pause();
       setIsPlaying(false);
     } else {
-      audioRef.current.play().catch(e => console.error("Playback error:", e));
-      setIsPlaying(true);
+      if (!audioRef.current.src || audioRef.current.src.endsWith('/')) {
+        audioRef.current.src = currentEpisode.audioUrl || '/podcast/Episode_98_Master.mp3';
+        audioRef.current.load();
+      }
+      const playPromise = audioRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => setIsPlaying(true))
+          .catch(err => {
+            console.warn("Direct play failed, trying fallback master audio:", err);
+            if (audioRef.current) {
+              audioRef.current.src = '/podcast/Episode_98_Master.mp3';
+              audioRef.current.play()
+                .then(() => setIsPlaying(true))
+                .catch(e => {
+                  console.error("Audio playback error:", e);
+                  setIsPlaying(false);
+                });
+            }
+          });
+      }
     }
   };
 
@@ -1139,11 +1234,7 @@ export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
       setIsProcessing(false);
       setProgressStep(0);
 
-      const isUntouchedPreset = PRESET_EPISODES[episodeNumber] && 
-        PRESET_EPISODES[episodeNumber].url.toLowerCase().trim() === articleUrl.toLowerCase().trim() && 
-        PRESET_EPISODES[episodeNumber].title.toLowerCase().trim() === episodeTitle.toLowerCase().trim();
-
-      const targetEpisode: EpisodeData = isUntouchedPreset
+      const targetEpisode: EpisodeData = PRESET_EPISODES[episodeNumber]
         ? PRESET_EPISODES[episodeNumber]
         : synthesizeTopicContent(episodeNumber, episodeTitle, articleUrl);
 
