@@ -4,6 +4,14 @@ import {
   Trash2, Copy, Check, ChevronRight, Terminal, Cpu, FileText, Zap, HelpCircle,
   Calendar, Headphones, Video, Globe, Sparkles, Radio
 } from 'lucide-react';
+
+const LinkedInIcon: React.FC<{ size?: number; className?: string }> = ({ size = 16, className = "" }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+    <rect x="2" y="9" width="4" height="12"></rect>
+    <circle cx="4" cy="4" r="2"></circle>
+  </svg>
+);
 import { PREBUILT_SPECIALISTS, CATEGORIES, type Specialist } from './data/specialists';
 import { SpecialistCard } from './components/SpecialistCard';
 import { SpecialistRunner } from './components/SpecialistRunner';
@@ -18,6 +26,7 @@ import { WiredvibeStudio } from './components/WiredvibeStudio';
 import { DailyIdeaStudio } from './components/DailyIdeaStudio';
 import { DailyAutopilotStudio } from './components/DailyAutopilotStudio';
 import { UniversalVideoStudio } from './components/UniversalVideoStudio';
+import { LinkedInCommentsStudio } from './components/LinkedInCommentsStudio';
 import { type ApiKeys, type ModelSettings } from './utils/ai';
 
 interface RunHistoryItem {
@@ -46,7 +55,7 @@ function App() {
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [activeSpecialist, setActiveSpecialist] = useState<Specialist | null>(null);
-  const [currentView, setCurrentView] = useState<'dashboard' | 'runner' | 'generator' | 'history' | 'voxstar' | 'podcast-studio' | 'creation-wiredvibe' | 'creation-idea' | 'daily-autopilot' | 'video-factory'>('podcast-studio');
+  const [currentView, setCurrentView] = useState<'dashboard' | 'runner' | 'generator' | 'history' | 'voxstar' | 'podcast-studio' | 'creation-wiredvibe' | 'creation-idea' | 'daily-autopilot' | 'video-factory' | 'linkedin-comments'>('linkedin-comments');
   const [activeSoundscape, setActiveSoundscape] = useState<string>('Gamma Retention Pulse');
   const [activeAutopilotServiceId, setActiveAutopilotServiceId] = useState<string>('srv-1');
   
@@ -250,6 +259,15 @@ function App() {
               >
                 <Globe size={14} />
                 <span>ATL-Trust</span>
+              </button>
+
+              <button 
+                className={`nav-sub-item ${currentView === 'linkedin-comments' ? 'active' : ''}`}
+                onClick={() => { setCurrentView('linkedin-comments'); setActiveSpecialist(null); }}
+              >
+                <LinkedInIcon size={14} className="text-primary" />
+                <span>Linkedin-Comments</span>
+                <span className="nav-badge-hot">Top 100</span>
               </button>
             </div>
           </div>
@@ -629,6 +647,11 @@ function App() {
           {/* I. UNIVERSAL 30-SECOND VIDEO FACTORY (AITOOLBOARD & ALL COMPANIES) */}
           {currentView === 'video-factory' && (
             <UniversalVideoStudio />
+          )}
+
+          {/* J. LINKEDIN-COMMENTS 100 POSTS & HUMANIZER STUDIO */}
+          {currentView === 'linkedin-comments' && (
+            <LinkedInCommentsStudio onBack={() => setCurrentView('dashboard')} />
           )}
         </div>
       </main>

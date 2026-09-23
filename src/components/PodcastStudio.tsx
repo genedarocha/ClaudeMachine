@@ -294,7 +294,31 @@ function synthesizeTopicContent(epNumber: number, rawTitle: string, rawUrl: stri
   const formattedTitle = rawTitle.startsWith('#') ? rawTitle : `#${epNumber} ${cleanTitleName}`;
   const lowerText = `${rawTitle} ${rawUrl}`.toLowerCase();
 
-  // 1. HARDWARE / SILICON / NVIDIA / CHIPS / COMPUTE / ASICS
+  // 1. GOOGLE AXION / ARM DATA CENTER PROCESSORS (EPISODE 98)
+  if (/axion|arm-based|arm based|data center processor|server processor|armv9|neoverse/.test(lowerText) || epNumber === 98) {
+    return {
+      number: epNumber,
+      title: formattedTitle.includes("Arm") || formattedTitle.includes("Axion") ? formattedTitle : `#${epNumber} Google Unveils Arm-Based Data Center Processors to Accelerate AI & Cloud Compute`,
+      url: rawUrl || `https://voxstar.substack.com/p/${epNumber}-google-unveils-arm-based-data`,
+      summary: `Google unveils Axion, its first custom Arm-based CPU designed for cloud data centers and AI workloads. Delivering 50% better performance and 60% better energy efficiency than x86 chips, Axion enables hyperscale efficiency while powering next-generation TPU and AI pipelines.`,
+      keyTakeaways: [
+        "50% Performance Leap: Axion delivers up to 50% better performance and 60% higher energy efficiency than comparable x86 servers.",
+        "Custom Armv9 Silicon: Built on Neoverse V2 cores for seamless, zero-code migration of Linux enterprise workloads.",
+        "Full-Stack Integration: Unifying Google TPUs for matrix AI acceleration and Axion for high-throughput preprocessing.",
+        "Slashing Cloud Compute Costs: Lowering power consumption and operational bills for enterprise AI inference at scale.",
+        "Hosted by Gene Da Rocha: Full architectural breakdown available on Spotify, Substack, and Apple Podcasts."
+      ],
+      audioUrl: `/podcast/Episode_${epNumber}_Master.mp3`,
+      coverUrl: "/podcast/podcast_cover_art.jpg",
+      socialImageUrl: `/podcast/ep${epNumber}_social_image.jpg`,
+      duration: "03:10",
+      durationSecs: 190,
+      status: 'ready',
+      script: `Welcome to Automating Everything. I'm your host, Gene Da Rocha.\n\nToday, in Episode ${epNumber}, we are exploring a landmark development in hyperscale infrastructure: Google unveiling its brand-new Arm-based data center processor, known as Google Axion.\n\nIn an aggressive push to cut energy consumption and reduce reliance on traditional x86 server chips from Intel and AMD, Google announced Axion—its first custom Arm-based central processing unit designed specifically for modern cloud data centers and high-throughput AI workloads.\n\nAccording to Google's engineering benchmarks, Axion delivers up to 30% better performance than existing general-purpose Arm instances in the cloud, and an astounding 50% better performance and up to 60% better energy efficiency than comparable current-generation x86-based compute instances.\n\nTo understand why this is a pivotal moment in enterprise technology, let us look at the three major driving forces behind this move:\n\nFirst, The Skyrocketing Energy Demands of Modern AI. The generative AI explosion has created an unprecedented power crunch across global data centers. Training and serving trillion-parameter models requires gigawatts of electricity. By transitioning foundational cloud services, databases, and microservices to highly efficient Arm architecture, Google can free up massive power and cooling capacity for its specialized TPU and GPU clusters.\n\nSecond, Full-Stack Silicon Vertical Integration. Following Apple's triumph with Apple Silicon on the consumer front and Amazon's success with Graviton in AWS, Google is completing its vertical silicon stack. With TPUs handling matrix acceleration and Axion handling general-purpose compute and data preprocessing, Google can optimize every layer of its infrastructure from the silicon die all the way to Kubernetes and Android.\n\nThird, Frictionless Enterprise Migration. Axion is built on the standard Armv9 architecture and Neoverse V2 cores, meaning enterprise workloads running on Linux, open-source databases, and containerized microservices can migrate seamlessly without rewriting code.\n\nFor enterprise decision-makers and CTOs, the implications are clear: the cost curve of cloud computing and AI inference is shifting rapidly. Organizations deploying on Google Cloud can look forward to lower operational costs, reduced carbon footprints, and superior performance per dollar.\n\nThank you for tuning into Episode ${epNumber} of Voxstar AI Automation. To read the complete research article and access full architectural notes, visit voxstar.substack.com. Subscribe to our podcast on Spotify and Apple Podcasts, and connect with me on LinkedIn and X at Gene Da Rocha.\n\nUntil next time, optimize your compute, keep innovating, and keep automating everything. I'm Gene Da Rocha.`
+    };
+  }
+
+  // 1B. HARDWARE / SILICON / NVIDIA / CHIPS / COMPUTE / ASICS
   if (/nvidia|gpu|chip|silicon|hardware|cuda|tpu|asic|accelerator|blackwell|h100|b200|compute/.test(lowerText)) {
     return {
       number: epNumber,
