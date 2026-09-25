@@ -797,6 +797,7 @@ export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
       // Fallback: Check standard deployed master audio files
       console.warn(`Direct audio ${url} returned HTML fallback. Using available master audio stream.`);
       const fallbackUrls = [
+        '/podcast/Episode_99_Master.mp3',
         '/podcast/Episode_98_Master.mp3',
         '/podcast/Episode_97_Master.mp3',
         '/podcast/Episode_96_Master.mp3',
@@ -1098,10 +1099,22 @@ export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
     }
   };
 
-  // Audio events
+  // Audio events & strict URL synchronization
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
+
+    if (currentEpisode?.audioUrl) {
+      if (audio.src !== currentEpisode.audioUrl && !audio.src.endsWith(currentEpisode.audioUrl)) {
+        audio.pause();
+        audio.currentTime = 0;
+        audio.src = currentEpisode.audioUrl;
+        audio.load();
+        setIsPlaying(false);
+        setCurrentTime(0);
+        setDuration(currentEpisode.durationSecs || 159);
+      }
+    }
 
     const handleTimeUpdate = () => setCurrentTime(audio.currentTime);
     const handleLoadedMetadata = () => setDuration(audio.duration || currentEpisode.durationSecs);
@@ -1116,7 +1129,7 @@ export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
       audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
       audio.removeEventListener('ended', handleEnded);
     };
-  }, [currentEpisode]);
+  }, [currentEpisode.audioUrl, currentEpisode.number]);
 
   const togglePlay = () => {
     if (!audioRef.current) return;
@@ -1124,8 +1137,9 @@ export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
       audioRef.current.pause();
       setIsPlaying(false);
     } else {
-      if (!audioRef.current.src || audioRef.current.src.endsWith('/')) {
-        audioRef.current.src = currentEpisode.audioUrl || '/podcast/Episode_98_Master.mp3';
+      const targetSrc = currentEpisode.audioUrl || `/podcast/Episode_${currentEpisode.number}_Master.mp3`;
+      if (!audioRef.current.src || !audioRef.current.src.endsWith(targetSrc)) {
+        audioRef.current.src = targetSrc;
         audioRef.current.load();
       }
       const playPromise = audioRef.current.play();
@@ -1133,9 +1147,10 @@ export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
         playPromise
           .then(() => setIsPlaying(true))
           .catch(err => {
-            console.warn("Direct play failed, trying fallback master audio:", err);
+            console.warn("Direct play failed, retrying target audio:", err);
             if (audioRef.current) {
-              audioRef.current.src = '/podcast/Episode_98_Master.mp3';
+              audioRef.current.src = targetSrc;
+              audioRef.current.load();
               audioRef.current.play()
                 .then(() => setIsPlaying(true))
                 .catch(e => {
@@ -1748,6 +1763,7 @@ _Share with your engineering and leadership teams!_`;
 
               {/* HTML5 Audio Element */}
               <audio
+                key={`${currentEpisode.number}-${currentEpisode.audioUrl}`}
                 ref={audioRef}
                 src={currentEpisode.audioUrl}
                 preload="auto"
