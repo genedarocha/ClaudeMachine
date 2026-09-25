@@ -1003,6 +1003,12 @@ export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
 
   const handleClearIngestionForm = () => {
     const nextEp = getNextEpisodeNumber();
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+      audioRef.current.removeAttribute('src');
+      audioRef.current.load();
+    }
     setArticleUrl('');
     setEpisodeTitle('');
     setEpisodeNumber(nextEp);
@@ -1014,11 +1020,7 @@ export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
     });
     setCurrentTime(0);
     setIsPlaying(false);
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
-    }
-    setUrlStatusMsg('✨ URL field and previous output cleared. Paste your new Substack URL above to generate.');
+    setUrlStatusMsg('✨ All buffers and previous outputs cleared. Paste your new Substack URL above to generate.');
   };
 
   const handleApplyUrl = (inputUrl: string) => {
@@ -1029,6 +1031,16 @@ export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
       return;
     }
 
+    // Clear previous audio buffer immediately on URL change
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+      audioRef.current.removeAttribute('src');
+      audioRef.current.load();
+    }
+    setCurrentTime(0);
+    setIsPlaying(false);
+
     const nextEp = getNextEpisodeNumber();
     const parsed = parseSubstackUrl(trimmed, nextEp);
     setEpisodeNumber(parsed.epNumber);
@@ -1038,31 +1050,15 @@ export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
       setEpisodeTitle(matched.title);
       setCurrentEpisode(matched);
       setDuration(matched.durationSecs);
-      setCurrentTime(0);
-      setIsPlaying(false);
       setSocialImgFailed(false);
       setUrlStatusMsg(`✓ Episode #${matched.number} Master Broadcast Ready: ${matched.title}`);
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.currentTime = 0;
-        audioRef.current.src = matched.audioUrl;
-        audioRef.current.load();
-      }
     } else {
       const syn = synthesizeTopicContent(parsed.epNumber, parsed.title, trimmed);
       setEpisodeTitle(parsed.title);
       setCurrentEpisode(syn);
       setDuration(syn.durationSecs);
-      setCurrentTime(0);
-      setIsPlaying(false);
       setSocialImgFailed(false);
       setUrlStatusMsg(`✨ Ingested: Episode #${parsed.epNumber} ("${parsed.title}"). Ready to play or customize.`);
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.currentTime = 0;
-        audioRef.current.src = syn.audioUrl;
-        audioRef.current.load();
-      }
     }
   };
 
@@ -1077,10 +1073,16 @@ export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
     }
   };
 
-  // Switch episode helper
+  // Switch episode helper with explicit buffer clearing
   const loadEpisodeData = (epNum: number) => {
     const preset = allEpisodes[epNum] || PRESET_EPISODES[epNum];
     if (preset) {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+        audioRef.current.removeAttribute('src');
+        audioRef.current.load();
+      }
       setEpisodeNumber(preset.number);
       setEpisodeTitle(preset.title);
       setArticleUrl(preset.url);
@@ -1090,12 +1092,6 @@ export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
       setCurrentTime(0);
       setIsPlaying(false);
       setUrlStatusMsg(null);
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.currentTime = 0;
-        audioRef.current.src = preset.audioUrl;
-        audioRef.current.load();
-      }
     }
   };
 
@@ -1305,8 +1301,18 @@ export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
     });
   };
 
-  // Generate / Run pipeline
+  // Generate / Run pipeline with explicit buffer flush
   const handleGenerateEpisode = () => {
+    // Clear audio buffer immediately
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+      audioRef.current.removeAttribute('src');
+      audioRef.current.load();
+    }
+    setCurrentTime(0);
+    setIsPlaying(false);
+
     setIsProcessing(true);
     setProgressStep(1);
 
@@ -1331,11 +1337,6 @@ export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
       setCurrentTime(0);
       setIsPlaying(false);
       setUrlStatusMsg(`✓ Episode #${episodeNumber} Master Broadcast & Distribution Pack synthesized from new URL!`);
-
-      if (audioRef.current) {
-        audioRef.current.src = targetEpisode.audioUrl;
-        audioRef.current.load();
-      }
     }, 4200);
   };
 
