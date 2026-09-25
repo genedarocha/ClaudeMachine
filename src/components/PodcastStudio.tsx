@@ -50,6 +50,26 @@ interface ChannelPublishStatus {
 const BRAND_HASHTAGS = "#ArtificialIntelligence #MachineLearning #DeepLearning #NeuralNetworks #ComputerVision #AI #DataScience #NaturalLanguageProcessing #BigData #Robotics #Automation #IntelligentSystems #CognitiveComputing #SmartTechnology #Analytics #Innovation #Industry40 #FutureTech #QuantumComputing #IoT #genedarocha #voxstar #aitoolboard #voxstarai #writerplus #wiredvibeapp #wiredvibe #atltrust #albionlm #elonmusk";
 
 const PRESET_EPISODES: Record<number, EpisodeData> = {
+  100: {
+    number: 100,
+    title: "#100 The Century Milestone: Autonomous AI Systems, Reasoning Frontier Models & Enterprise Transformation",
+    url: "https://voxstar.substack.com/p/100-the-century-milestone-autonomous",
+    summary: "Episode 100 Milestone Special: Gene Da Rocha breaks down the monumental shift from probabilistic chat prompts to autonomous reasoning multi-agent swarms, test-time compute, and sovereign enterprise execution.",
+    keyTakeaways: [
+      "100th Milestone Edition: A special retrospective and future roadmap for enterprise builders.",
+      "From Prompting to Reasoning: Test-time compute scaling, synthetic self-correction, and verification.",
+      "Deterministic Multi-Agent Swarms: Hierarchical orchestration, software throttles, and ATL-Trust gates.",
+      "Diversified Compute Revolution: Slashing inference overhead by 80% on local NPUs and sovereign cloud.",
+      "Available Everywhere: Full master broadcast on Spotify, Substack, YouTube Shorts, and Apple Podcasts."
+    ],
+    audioUrl: "/podcast/Episode_100_Master.mp3?v=100",
+    coverUrl: "/podcast/podcast_cover_art.jpg",
+    socialImageUrl: "/podcast/ep100_social_image.jpg",
+    duration: "02:32",
+    durationSecs: 152,
+    status: 'ready',
+    script: `Welcome to Automating Everything. I'm your host, Gene Da Rocha.\n\nToday marks a monumental milestone for our broadcast: Episode 100 of the Voxstar AI Automation Podcast.\n\nWhen we launched this show, generative artificial intelligence was primarily defined by simple, single-turn chat prompts. Today, as we hit Episode 100 in 2026, the entire technological landscape has undergone a profound paradigm shift: from passive chatbots to autonomous, reasoning multi-agent systems and sovereign cloud infrastructure.\n\nIn this special 100th episode broadcast, we are examining the three core pillars that will define the next decade of enterprise artificial intelligence:\n\nFirst, The Rise of Test-Time Compute and Reasoning Engines. Frontier models are no longer judged solely by pretraining token counts or raw parameter scale. Instead, modern reasoning models perform dynamic chain-of-thought verification, self-correction, and synthetic simulation before returning a final deterministic output. This fundamentally shifts AI from probabilistic guesswork into dependable operational software.\n\nSecond, Autonomous Multi-Agent Swarms and Deterministic Brakes. Enterprise engineering teams are moving away from fragile monolithic prompts toward modular, role-specialized agent swarms. These swarms are orchestrated by supervisor controllers and protected by deterministic software brakes, preventing runaway token burn and enforcing strict policy compliance under frameworks like ATL-TRUST.\n\nThird, Hardware Diversification and Sovereign Edge Execution. With custom silicon like Google Axion, Microsoft Azure Maia and Cobalt, Intel Gaudi 3, and Apple Silicon NPUs, computing power is democratizing. Forward-thinking enterprises are deploying quantized Small Language Models directly on-premise and on-device, cutting cloud inference bills by over eighty percent while guaranteeing absolute data privacy.\n\nTo our global listeners, CTOs, engineers, founders, and automation leaders across 100 episodes: thank you for being on this journey with us.\n\nTo read the complete research article and access full architectural notes, visit voxstar.substack.com. Subscribe to our podcast on Spotify and Apple Podcasts, and connect with me on LinkedIn and X at Gene Da Rocha.\n\nHere is to the next 100 episodes of pushing boundaries. Until next time, innovate with intent, keep building, and keep automating everything. I'm Gene Da Rocha.`
+  },
   99: {
     number: 99,
     title: "#99 Microsoft Is Finally Making Custom AI Chips to Power Azure & OpenAI",
@@ -172,15 +192,16 @@ const PRESET_EPISODES: Record<number, EpisodeData> = {
   }
 };
 
-const READY_EPISODE: EpisodeData = PRESET_EPISODES[99];
+const READY_EPISODE: EpisodeData = PRESET_EPISODES[100];
 
 const BATCH_QUEUE_INITIAL = [
-  { id: 1, ep: 99, title: "#99 Microsoft Is Finally Making Custom AI Chips to Power Azure & OpenAI", url: "https://voxstar.substack.com/p/99-microsoft-is-finally-making-custom", status: "ready" },
-  { id: 2, ep: 98, title: "#98 Google Unveils Arm-Based Data Center Processors to Accelerate AI & Cloud Compute", url: "https://voxstar.substack.com/p/98-google-unveils-arm-based-data", status: "ready" },
-  { id: 3, ep: 97, title: "#97 The Sovereign Edge: Why True AI Privacy Demands Local Models", url: "https://voxstar.substack.com/p/97-the-sovereign-edge-why-true-ai", status: "ready" },
-  { id: 4, ep: 96, title: "#96 Challenging Nvidia's Reign: The Rise of Diversified AI Chip Innovation", url: "https://voxstar.substack.com/p/96-challenging-nvidias-reign-the", status: "ready" },
-  { id: 5, ep: 95, title: "#95 Microsoft AI Spearheads Innovation with a New Hub in London", url: "https://voxstar.substack.com/p/95-microsoft-ai-spearheads-innovation-with-a-new-hub-in-london", status: "ready" },
-  { id: 6, ep: 94, title: "#94 Unveiling the Future: Llama 3's Paradigm Shift in AI", url: "https://voxstar.substack.com/p/94-unveiling-the-future-llama-3s", status: "ready" }
+  { id: 1, ep: 100, title: "#100 The Century Milestone: Autonomous AI Systems, Reasoning Frontier Models & Enterprise Transformation", url: "https://voxstar.substack.com/p/100-the-century-milestone-autonomous", status: "ready" },
+  { id: 2, ep: 99, title: "#99 Microsoft Is Finally Making Custom AI Chips to Power Azure & OpenAI", url: "https://voxstar.substack.com/p/99-microsoft-is-finally-making-custom", status: "ready" },
+  { id: 3, ep: 98, title: "#98 Google Unveils Arm-Based Data Center Processors to Accelerate AI & Cloud Compute", url: "https://voxstar.substack.com/p/98-google-unveils-arm-based-data", status: "ready" },
+  { id: 4, ep: 97, title: "#97 The Sovereign Edge: Why True AI Privacy Demands Local Models", url: "https://voxstar.substack.com/p/97-the-sovereign-edge-why-true-ai", status: "ready" },
+  { id: 5, ep: 96, title: "#96 Challenging Nvidia's Reign: The Rise of Diversified AI Chip Innovation", url: "https://voxstar.substack.com/p/96-challenging-nvidias-reign-the", status: "ready" },
+  { id: 6, ep: 95, title: "#95 Microsoft AI Spearheads Innovation with a New Hub in London", url: "https://voxstar.substack.com/p/95-microsoft-ai-spearheads-innovation-with-a-new-hub-in-london", status: "ready" },
+  { id: 7, ep: 94, title: "#94 Unveiling the Future: Llama 3's Paradigm Shift in AI", url: "https://voxstar.substack.com/p/94-unveiling-the-future-llama-3s", status: "ready" }
 ];
 
 function parseSubstackUrl(rawUrl: string, defaultNextEp: number): { epNumber: number; title: string; cleanSlug: string } {
@@ -315,7 +336,31 @@ function synthesizeTopicContent(epNumber: number, rawTitle: string, rawUrl: stri
   const formattedTitle = rawTitle.startsWith('#') ? rawTitle : `#${epNumber} ${cleanTitleName}`;
   const lowerText = `${rawTitle} ${rawUrl}`.toLowerCase();
 
-  // 1A. MICROSOFT CUSTOM AI CHIPS / MAIA 100 & COBALT 100 (EPISODE 99)
+  // 1A. CENTURY MILESTONE / EPISODE 100
+  if (/century|milestone|100th|next decade|autonomous ai system/.test(lowerText) || epNumber === 100) {
+    return {
+      number: epNumber,
+      title: formattedTitle.includes("Century") || formattedTitle.includes("Milestone") ? formattedTitle : `#${epNumber} The Century Milestone: Autonomous AI Systems, Reasoning Frontier Models & Enterprise Transformation`,
+      url: rawUrl || `https://voxstar.substack.com/p/${epNumber}-the-century-milestone-autonomous`,
+      summary: `Episode 100 Milestone Special: Gene Da Rocha breaks down the monumental shift from probabilistic chat prompts to autonomous reasoning multi-agent swarms, test-time compute, and sovereign enterprise execution.`,
+      keyTakeaways: [
+        "100th Milestone Edition: A special retrospective and future roadmap for enterprise builders.",
+        "From Prompting to Reasoning: Test-time compute scaling, synthetic self-correction, and verification.",
+        "Deterministic Multi-Agent Swarms: Hierarchical orchestration, software throttles, and ATL-Trust gates.",
+        "Diversified Compute Revolution: Slashing inference overhead by 80% on local NPUs and sovereign cloud.",
+        "Available Everywhere: Full master broadcast on Spotify, Substack, YouTube Shorts, and Apple Podcasts."
+      ],
+      audioUrl: `/podcast/Episode_${epNumber}_Master.mp3`,
+      coverUrl: "/podcast/podcast_cover_art.jpg",
+      socialImageUrl: `/podcast/ep${epNumber}_social_image.jpg`,
+      duration: "02:32",
+      durationSecs: 152,
+      status: 'ready',
+      script: `Welcome to Automating Everything. I'm your host, Gene Da Rocha.\n\nToday marks a monumental milestone for our broadcast: Episode 100 of the Voxstar AI Automation Podcast.\n\nWhen we launched this show, generative artificial intelligence was primarily defined by simple, single-turn chat prompts. Today, as we hit Episode 100 in 2026, the entire technological landscape has undergone a profound paradigm shift: from passive chatbots to autonomous, reasoning multi-agent systems and sovereign cloud infrastructure.\n\nIn this special 100th episode broadcast, we are examining the three core pillars that will define the next decade of enterprise artificial intelligence:\n\nFirst, The Rise of Test-Time Compute and Reasoning Engines. Frontier models are no longer judged solely by pretraining token counts or raw parameter scale. Instead, modern reasoning models perform dynamic chain-of-thought verification, self-correction, and synthetic simulation before returning a final deterministic output. This fundamentally shifts AI from probabilistic guesswork into dependable operational software.\n\nSecond, Autonomous Multi-Agent Swarms and Deterministic Brakes. Enterprise engineering teams are moving away from fragile monolithic prompts toward modular, role-specialized agent swarms. These swarms are orchestrated by supervisor controllers and protected by deterministic software brakes, preventing runaway token burn and enforcing strict policy compliance under frameworks like ATL-TRUST.\n\nThird, Hardware Diversification and Sovereign Edge Execution. With custom silicon like Google Axion, Microsoft Azure Maia and Cobalt, Intel Gaudi 3, and Apple Silicon NPUs, computing power is democratizing. Forward-thinking enterprises are deploying quantized Small Language Models directly on-premise and on-device, cutting cloud inference bills by over eighty percent while guaranteeing absolute data privacy.\n\nTo our global listeners, CTOs, engineers, founders, and automation leaders across 100 episodes: thank you for being on this journey with us.\n\nTo read the complete research article and access full architectural notes, visit voxstar.substack.com. Subscribe to our podcast on Spotify and Apple Podcasts, and connect with me on LinkedIn and X at Gene Da Rocha.\n\nHere is to the next 100 episodes of pushing boundaries. Until next time, innovate with intent, keep building, and keep automating everything. I'm Gene Da Rocha.`
+    };
+  }
+
+  // 1B. MICROSOFT CUSTOM AI CHIPS / MAIA 100 & COBALT 100 (EPISODE 99)
   if (/maia|cobalt|microsoft.*custom.*chip|microsoft.*making.*custom|azure.*chip|azure.*silicon/.test(lowerText) || epNumber === 99) {
     return {
       number: epNumber,
@@ -494,7 +539,7 @@ export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
         return Number(saved);
       }
     } catch {}
-    return 99;
+    return 100;
   });
 
   const [currentEpisode, setCurrentEpisode] = useState<EpisodeData>(() => {
@@ -504,7 +549,7 @@ export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
         return PRESET_EPISODES[Number(savedNum)];
       }
     } catch {}
-    return PRESET_EPISODES[99];
+    return PRESET_EPISODES[100];
   });
 
   const [episodeTitle, setEpisodeTitle] = useState<string>(() => {
@@ -514,7 +559,7 @@ export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
         return PRESET_EPISODES[Number(savedNum)].title;
       }
     } catch {}
-    return PRESET_EPISODES[99].title;
+    return PRESET_EPISODES[100].title;
   });
 
   const [articleUrl, setArticleUrl] = useState<string>(() => {
@@ -524,13 +569,13 @@ export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
         return PRESET_EPISODES[Number(savedNum)].url;
       }
     } catch {}
-    return PRESET_EPISODES[99].url;
+    return PRESET_EPISODES[100].url;
   });
 
   const [voiceModel, setVoiceModel] = useState("f5-cloned-genedarocha");
   const [introMusicEnabled, setIntroMusicEnabled] = useState(true);
   const [normalizeLoudness, setNormalizeLoudness] = useState(true);
-  const [urlStatusMsg, setUrlStatusMsg] = useState<string | null>("✓ Episode #99 Master Broadcast & Distribution Pack Ready (Microsoft Maia 100 AI Accelerator & Cobalt 100 CPU)");
+  const [urlStatusMsg, setUrlStatusMsg] = useState<string | null>("✓ Episode #100 Century Milestone Broadcast & Distribution Pack Ready (Autonomous AI Systems & Reasoning Engines)");
   
   // Buffer & Cache Ticket Box State
   const [autoFlushBuffers, setAutoFlushBuffers] = useState(true);
@@ -780,7 +825,10 @@ export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
     if (!url) return;
     setDownloadingAudio(true);
     try {
-      const res = await fetch(url);
+      // 1. Direct fetch target with fresh cache buster
+      const cleanUrl = url.split('?')[0];
+      const fetchTarget = `${cleanUrl}?t=${Date.now()}`;
+      const res = await fetch(fetchTarget);
       const contentType = res.headers.get('content-type') || '';
       
       // If direct audio exists
@@ -799,51 +847,34 @@ export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
         return;
       }
 
-      // Fallback: Check standard deployed master audio files
-      console.warn(`Direct audio ${url} returned HTML fallback. Using available master audio stream.`);
-      const fallbackUrls = [
-        '/podcast/Episode_99_Master.mp3',
-        '/podcast/Episode_98_Master.mp3',
-        '/podcast/Episode_97_Master.mp3',
-        '/podcast/Episode_96_Master.mp3',
-        '/podcast/voxstar_intro_standard_17s.mp3'
-      ];
-      let fallbackBlob: Blob | null = null;
-      for (const fbUrl of fallbackUrls) {
-        try {
-          const fbRes = await fetch(fbUrl);
-          const fbType = fbRes.headers.get('content-type') || '';
-          if (fbRes.ok && !fbType.includes('text/html')) {
-            fallbackBlob = await fbRes.blob();
-            break;
-          }
-        } catch {}
+      // 2. Exact Episode Fallback: Attempt exact episode numbered master URL
+      const exactEpisodeUrl = `/podcast/Episode_${currentEpisode.number}_Master.mp3?t=${Date.now()}`;
+      try {
+        const exactRes = await fetch(exactEpisodeUrl);
+        const exactType = exactRes.headers.get('content-type') || '';
+        if (exactRes.ok && !exactType.includes('text/html')) {
+          const blob = await exactRes.blob();
+          const audioBlob = new Blob([blob], { type: 'audio/mpeg' });
+          const blobUrl = window.URL.createObjectURL(audioBlob);
+          const link = document.createElement('a');
+          link.href = blobUrl;
+          link.download = filename;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          setTimeout(() => window.URL.revokeObjectURL(blobUrl), 2000);
+          setUrlStatusMsg(`✓ Master broadcast MP3 (${filename}) downloaded successfully.`);
+          return;
+        }
+      } catch (e) {
+        console.warn('Exact episode fetch attempt:', e);
       }
 
-      if (fallbackBlob) {
-        const audioBlob = new Blob([fallbackBlob], { type: 'audio/mpeg' });
-        const blobUrl = window.URL.createObjectURL(audioBlob);
-        const link = document.createElement('a');
-        link.href = blobUrl;
-        link.download = filename;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        setTimeout(() => window.URL.revokeObjectURL(blobUrl), 2000);
-        setUrlStatusMsg(`✓ Master broadcast MP3 (${filename}) downloaded.`);
-        return;
-      }
-
-      setUrlStatusMsg(`✓ Script and distribution pack ready for Episode #${currentEpisode.number}.`);
+      // 3. Fallback: NEVER download wrong episode!
+      setUrlStatusMsg(`⚠️ Audio master for Episode #${currentEpisode.number} is ready in production. Refresh or click Flush Buffer if stream was cached.`);
     } catch (err) {
-      console.error('Download audio error, fallback to direct window link:', err);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = filename;
-      link.target = '_blank';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      console.error('Download audio error:', err);
+      setUrlStatusMsg(`⚠️ Download error: ${(err as Error).message}`);
     } finally {
       setDownloadingAudio(false);
     }
@@ -1036,28 +1067,28 @@ export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
       console.error('Failed to clear localStorage keys', e);
     }
 
-    // 3. Fresh instance of Episode 99 with forced live timestamp
-    const freshAudioUrl = `/podcast/Episode_99_Master.mp3?t=${Date.now()}`;
-    const freshEp99: EpisodeData = {
-      ...PRESET_EPISODES[99],
+    // 3. Fresh instance of Episode 100 with forced live timestamp
+    const freshAudioUrl = `/podcast/Episode_100_Master.mp3?t=${Date.now()}`;
+    const freshEp100: EpisodeData = {
+      ...PRESET_EPISODES[100],
       audioUrl: freshAudioUrl
     };
 
     const freshCatalog: Record<number, EpisodeData> = {
       ...PRESET_EPISODES,
-      99: freshEp99
+      100: freshEp100
     };
 
     setAllEpisodes(freshCatalog);
-    setEpisodeNumber(99);
-    setEpisodeTitle(freshEp99.title);
-    setArticleUrl(freshEp99.url);
-    setCurrentEpisode(freshEp99);
-    setDuration(freshEp99.durationSecs);
+    setEpisodeNumber(100);
+    setEpisodeTitle(freshEp100.title);
+    setArticleUrl(freshEp100.url);
+    setCurrentEpisode(freshEp100);
+    setDuration(freshEp100.durationSecs);
     setCurrentTime(0);
     setIsPlaying(false);
     setSocialImgFailed(false);
-    setUrlStatusMsg('🗑️ Stored podcasts deleted & audio buffer flushed. Episode #99 (Microsoft Custom AI Chips Maia 100 & Cobalt 100) fresh master loaded.');
+    setUrlStatusMsg('🗑️ Stored podcasts deleted & audio buffer flushed. Episode #100 (The Century Milestone: Autonomous AI Systems & Reasoning Engines) fresh master loaded.');
   };
 
   const handleClearIngestionForm = () => {
@@ -1601,7 +1632,7 @@ _Share with your engineering and leadership teams!_`;
                 <span className="badge badge-accent text-[10px] py-0 px-2">Fresh Ingest & Playback</span>
               </div>
               <p className="text-xs text-gray-400 mt-0.5">
-                Delete previous generated podcasts, clear cached HTML5 audio buffers, and force instant playback of Episode #99.
+                Delete previous generated podcasts, clear cached HTML5 audio buffers, and force instant playback of Episode #100.
               </p>
             </div>
           </div>
@@ -1612,10 +1643,10 @@ _Share with your engineering and leadership teams!_`;
               onClick={handleHardDeletePreviousPodcastsAndFlushBuffer}
               className="btn btn-secondary btn-sm flex items-center gap-1.5"
               style={{ borderColor: 'rgba(239, 68, 68, 0.6)', background: 'rgba(239, 68, 68, 0.2)', color: '#fca5a5' }}
-              title="Delete previous generated podcasts from localStorage, flush audio buffers, and reload clean Episode #99"
+              title="Delete previous generated podcasts from localStorage, flush audio buffers, and reload clean Episode #100"
             >
               <Trash2 size={13} />
-              <span>🗑️ Delete Previous Podcasts & Flush Buffer (Reset #99)</span>
+              <span>🗑️ Delete Previous Podcasts & Flush Buffer (Reset #100)</span>
             </button>
           </div>
         </div>
