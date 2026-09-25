@@ -5,7 +5,7 @@ import {
   Layers, RefreshCw, Send,
   Headphones, ListPlus, Sliders, ShieldCheck, CheckCheck,
   Clock, Smartphone, ExternalLink, FileAudio, Tag, Info, ChevronDown, ChevronUp,
-  Video, Search, Filter, FolderDown, RotateCcw, Plus, Clipboard, X
+  Video, Search, Filter, FolderDown, RotateCcw, Plus, Clipboard, X, Trash2
 } from 'lucide-react';
 import { FieldHelpTooltip } from './FieldHelpTooltip';
 import { ScreenHelpBanner } from './ScreenHelpBanner';
@@ -62,7 +62,7 @@ const PRESET_EPISODES: Record<number, EpisodeData> = {
       "Vertical Cloud Integration: Reducing reliance on external GPU vendors while optimizing Azure OpenAI token costs.",
       "Hosted by Gene Da Rocha: Complete architectural analysis available on Spotify, Substack, and Apple Podcasts."
     ],
-    audioUrl: "/podcast/Episode_99_Master.mp3",
+    audioUrl: "/podcast/Episode_99_Master.mp3?v=99",
     coverUrl: "/podcast/podcast_cover_art.jpg",
     socialImageUrl: "/podcast/ep99_social_image.jpg",
     duration: "02:39",
@@ -82,7 +82,7 @@ const PRESET_EPISODES: Record<number, EpisodeData> = {
       "Slashing Cloud Compute Costs: Lowering power consumption and operational bills for enterprise AI inference at scale.",
       "Hosted by Gene Da Rocha: Full architectural breakdown available on Spotify, Substack, and Apple Podcasts."
     ],
-    audioUrl: "/podcast/Episode_98_Master.mp3",
+    audioUrl: "/podcast/Episode_98_Master.mp3?v=98",
     coverUrl: "/podcast/podcast_cover_art.jpg",
     socialImageUrl: "/podcast/ep98_social_image.jpg",
     duration: "03:10",
@@ -102,7 +102,7 @@ const PRESET_EPISODES: Record<number, EpisodeData> = {
       "Zero-Trust Policy Proxies: Enforcing deterministic access control directly on the edge.",
       "80% Cost Reduction: Slashing recurring cloud inference bills while guaranteeing absolute customer data privacy."
     ],
-    audioUrl: "/podcast/Episode_97_Master.mp3",
+    audioUrl: "/podcast/Episode_97_Master.mp3?v=97",
     coverUrl: "/podcast/podcast_cover_art.jpg",
     socialImageUrl: "/podcast/ep97_social_image.jpg",
     duration: "03:45",
@@ -122,64 +122,65 @@ const PRESET_EPISODES: Record<number, EpisodeData> = {
       "Meta's Hardware Autonomy: Custom MTIA (Meta Training and Inference Accelerator) silicon tailored for Instagram, Facebook, and WhatsApp AI workloads.",
       "The Diversification Ripple Effect: Slashing inference token costs, expanding hardware accessibility, and building multi-vendor AI infrastructure in 2026."
     ],
-    audioUrl: "/podcast/Episode_96_Master.mp3",
+    audioUrl: "/podcast/Episode_96_Master.mp3?v=96",
     coverUrl: "/podcast/podcast_cover_art.jpg",
     socialImageUrl: "/podcast/ep96_social_image.jpg",
     duration: "02:35",
     durationSecs: 155,
     status: 'ready',
-    script: `Welcome to Automating Everything. I'm your host, Gene Da Rocha.\n\nToday, in Episode 96, we are exploring a major turning point across the artificial intelligence industry: Challenging Nvidia's Reign and the Rise of Diversified AI Chip Innovation.\n\nIn the ever-evolving landscape of artificial intelligence, the competition for supremacy in specialized chips has reached a fever pitch. For years, Nvidia has stood as the undisputed leader in this crucial domain, with its powerful GPU-based solutions powering the latest advancements in machine learning and deep learning. However, the tides are now turning as industry giants like Intel and Meta make bold strides to break Nvidia's hold and pave the way for a more diversified AI chip ecosystem.\n\nAt the forefront of this charge is Intel's latest offering: the Gaudi 3 AI chip. Designed to revolutionize the efficiency of AI model training, the Gaudi 3 is poised to shake up the status quo. Compared to Nvidia's cutting-edge H100 GPU, the Gaudi 3 delivers up to 50% faster training performance and up to 1.7 times the throughput on large language models.\n\nCrucially, the Gaudi 3's true significance lies in its software versatility. Unlike Nvidia's proprietary CUDA platform, the Gaudi 3 operates across a wide range of open software frameworks, opening new doors for enterprises and startups to scale AI without single-vendor pricing lock-in.\n\nAt the same time, Meta is asserting its independence with its custom-designed Meta Training and Inference Accelerator, known as MTIA. Tailored specifically to power Meta's AI workloads across Instagram, Facebook, and WhatsApp, MTIA signals a massive strategic shift toward custom in-house silicon and hardware autonomy.\n\nThe ripple effect of this diversification is profound. By democratizing access to high-performance AI chips and breaking proprietary moats, organizations worldwide can now build faster, reduce compute overhead, and future-proof their AI infrastructure.\n\nThank you for tuning into Episode 96 of Voxstar AI Automation. To read the complete research article and access full architectural notes, visit voxstar.substack.com. Subscribe to our podcast on Spotify and Apple Podcasts, and connect with me on LinkedIn and X at Gene Da Rocha.\n\nUntil next time, diversify your compute, keep innovating, and keep automating everything. I'm Gene Da Rocha.`
+    script: `Welcome to Automating Everything. I'm your host, Gene Da Rocha.\n\nToday, in Episode 96, we are exploring: Challenging Nvidia's Reign: The Rise of Diversified AI Chip Innovation.\n\nIn this broadcast, we examine the intensifying battle for AI compute dominance, Intel's Gaudi 3 architecture, Meta's custom MTIA silicon, and the strategic diversification of enterprise AI hardware.\n\nThank you for tuning into Episode 96 of Voxstar AI Automation.`
   },
   95: {
     number: 95,
     title: "#95 Microsoft AI Spearheads Innovation with a New Hub in London",
-    url: "https://voxstar.substack.com/p/95-microsoft-ai-spearheads-innovation-with-a-new-hub-in-london",
-    summary: "Microsoft opens its flagship AI Hub in London led by Mustafa Suleyman (DeepMind co-founder and Microsoft AI CEO). In this broadcast, Gene Da Rocha breaks down what this means for UK AI talent, Copilot enterprise acceleration, and autonomous agent infrastructure.",
+    url: "https://voxstar.substack.com/p/95-microsoft-ai-spearheads-innovation",
+    summary: "Microsoft AI establishes a brand new engineering and research hub in London led by Mustafa Suleyman. Gene Da Rocha breaks down the talent war for frontier AI researchers, sovereign European compute infrastructure, and enterprise deployment.",
     keyTakeaways: [
-      "Microsoft AI establishes central London hub led by Mustafa Suleyman to pioneer frontier language models.",
-      "Direct collaboration with the UK AI Safety Institute, world-class universities, and European enterprise partners.",
-      "Rapid acceleration of the enterprise Copilot ecosystem and autonomous agent workflows.",
-      "High-impact recruitment drive for AI scientists, research engineers, and systems architects in London.",
-      "Strategic shift toward sovereign, secure, and production-grade enterprise AI infrastructure."
+      "London AI Hub: Microsoft expands European engineering footprint under Mustafa Suleyman.",
+      "Frontier Model Development: Accelerating enterprise Copilot and foundation model research.",
+      "Sovereign European Compute: Meeting local data sovereignty and EU AI Act regulatory requirements.",
+      "Enterprise Co-Innovation: Partnering with UK technology hubs to scale production generative AI.",
+      "Hosted by Gene Da Rocha: Broadcast on Spotify and Apple Podcasts."
     ],
-    audioUrl: "/podcast/Episode_95_Master.mp3",
+    audioUrl: "/podcast/Episode_95_Master.mp3?v=95",
     coverUrl: "/podcast/podcast_cover_art.jpg",
     socialImageUrl: "/podcast/ep95_social_image.jpg",
     duration: "05:12",
     durationSecs: 312,
     status: 'ready',
-    script: `Welcome to Automating Everything. I'm your host, Gene Da Rocha.\n\nToday, in Episode 95, we are exploring a major milestone in global artificial intelligence: Microsoft AI spearheading innovation with the launch of their brand-new flagship AI Hub in the heart of London.\n\nIn a landmark announcement that signals a massive vote of confidence in the UK technology ecosystem, Microsoft revealed that it is opening a dedicated AI research and engineering hub in London. This new organization is led by one of the most prominent pioneers in modern machine learning, Mustafa Suleyman, co-founder of DeepMind and Inflection AI, who recently stepped into the role of Executive Vice President and CEO of Microsoft AI. Joining him is Jordan Hoffmann, a distinguished AI scientist from Inflection and DeepMind, serving as the research and engineering lead for this ambitious new outpost.\n\nTo truly appreciate the significance of this move, we need to understand the broader context of what is happening across the enterprise technology landscape in 2026. For years, the epicenters of frontier large language model development were heavily clustered in Silicon Valley and Seattle. However, London has quietly maintained an unmatched density of foundational machine learning talent, home to elite research institutions like University College London, Imperial College, Cambridge, and Oxford, as well as the founding grounds of DeepMind itself.\n\nBy establishing this dedicated hub, Microsoft is not just opening an office; they are planting a definitive flag in Europe's most vibrant AI corridor.\n\nLet us break down the core mission of Microsoft AI London into three fundamental pillars:\n\nFirst, Frontier Model Research and State-of-the-Art Tooling. The London team will collaborate directly with Microsoft's global research divisions and partners, including OpenAI, to design next-generation multimodal models, reasoning engines, and foundational architectures. This includes pioneering work on synthetic data generation, reinforcement learning from human and AI feedback, and novel optimization techniques to reduce compute overhead while dramatically increasing inference speed and accuracy.\n\nSecond, the Acceleration of the Enterprise Copilot Ecosystem. Today, Microsoft Copilot has transitioned from an experimental digital assistant into a mission-critical productivity platform across Microsoft 365, Azure, GitHub, and Windows. The engineering talent based in London will be squarely tasked with pushing the boundaries of what these agents can achieve—moving from passive question-answering systems into active, autonomous agents capable of complex multi-step orchestration, code refactoring, enterprise database querying, and autonomous workflow execution.\n\nThird, Trust, Safety, and Regulatory Collaboration. One of the unique advantages of London is its proximity to international governance bodies, including the UK AI Safety Institute. As regulatory frameworks such as the European Union AI Act and international safety standards take effect, enterprise clients demand verifiable proof that their models are resilient against jailbreaks, prompt injection, and hallucination. The London hub is positioned to work side-by-side with researchers and policymakers to develop open benchmarks and deterministic safety guardrails.\n\nFor enterprise decision-makers, this announcement reinforces a critical reality: the pace of AI innovation is accelerating, and the competition between hyperscalers is intensifying. Microsoft's aggressive investment ensures that businesses building on Azure and Copilot will have direct access to cutting-edge model improvements and localized sovereign cloud capabilities.\n\nThank you for tuning into Episode 95 of Voxstar AI Automation. If you found value in today's broadcast, subscribe to voxstar.substack.com and follow on Spotify.`
+    script: `Welcome to Automating Everything. I'm your host, Gene Da Rocha.\n\nToday, in Episode 95, we are exploring: Microsoft AI Spearheads Innovation with a New Hub in London.\n\nIn this broadcast, we examine Microsoft AI's strategic expansion in the UK, European AI talent consolidation, and sovereign infrastructure.\n\nThank you for listening to Episode 95 of Voxstar AI Automation.`
   },
   94: {
     number: 94,
     title: "#94 Unveiling the Future: Llama 3's Paradigm Shift in AI",
     url: "https://voxstar.substack.com/p/94-unveiling-the-future-llama-3s",
-    summary: "Meta introduces Llama 3 (8B and 70B models), examining how open-weights AI is reshaping enterprise development, cost-efficiency, and on-premise sovereign deployments.",
+    summary: "Meta releases Llama 3 with 8B and 70B parameter models, redefining open-weights artificial intelligence and establishing state-of-the-art benchmarks in reasoning, coding, and instruction following.",
     keyTakeaways: [
-      "Meta introduces 8B and 70B parameter models trained on over 15 trillion tokens.",
-      "Benchmark domination across MMLU, GSM8K, HumanEval, and Math evaluations.",
-      "Native 8k context window with Grouped Query Attention (GQA) across both sizes.",
-      "Enterprise sovereignty: Hosting state-of-the-art models without third-party API dependencies.",
-      "Llama-Guard 2 & CyberSec safety guardrails for production-grade agentic workflows."
+      "Open-Weights Supremacy: Llama 3 70B outperforms rival closed commercial models on MMLU and HumanEval benchmarks.",
+      "15 Trillion Token Pretraining: Trained on high-quality synthetic and curated datasets with 8K context windows.",
+      "Enterprise Sovereignty: Hosting fine-tuned Llama 3 instances privately without cloud API lock-in.",
+      "Zero Data Leakage: Complete regulatory compliance under GDPR and corporate privacy guidelines.",
+      "Hosted by Gene Da Rocha: Available on Spotify, Substack, and YouTube."
     ],
-    audioUrl: "/podcast/Episode_94_Llama3_Guy_Master.mp3",
+    audioUrl: "/podcast/Episode_94_Llama3_Guy_Master.mp3?v=94",
     coverUrl: "/podcast/podcast_cover_art.jpg",
     socialImageUrl: "/podcast/llama3_social_image.jpg",
     duration: "03:40",
     durationSecs: 220,
     status: 'ready',
-    script: `Welcome to Automating Everything. I'm your host, Gene Da Rocha.\n\nToday, we are diving into episode 94, exploring a massive milestone in open-source AI: Meta's unveiling of Llama 3.\n\nIn a move that has sent shockwaves through the entire tech industry, Meta announced the rollout of Llama 3 during their recent event in London. Building directly on the momentum of Llama 1 and Llama 2, this next-generation open-source large language model represents a dramatic leap forward in both scale and capability.\n\nLlama 3 is designed to scale up to an astounding 140 billion parameters—more than doubling the capacity of Llama 2's 70 billion parameter model. But the story here is much bigger than just parameter counts. It is about how open-source architecture is poised to challenge proprietary giants like OpenAI's ChatGPT, and what this means for developers, enterprises, and everyday users.`
+    script: `Welcome to Automating Everything. I'm your host, Gene Da Rocha.\n\nToday, in Episode 94, we are exploring: Unveiling the Future: Llama 3's Paradigm Shift in AI.\n\nMeta's release of Llama 3 marks a pivotal milestone for open-weights machine learning. Today, we break down model capabilities, enterprise hosting advantages, and long-term implications.\n\nThank you for tuning into Episode 94 of Voxstar AI Automation.`
   }
 };
 
-const READY_EPISODE: EpisodeData = PRESET_EPISODES[98];
+const READY_EPISODE: EpisodeData = PRESET_EPISODES[99];
 
 const BATCH_QUEUE_INITIAL = [
-  { id: 1, ep: 98, title: "#98 Google Unveils Arm-Based Data Center Processors to Accelerate AI & Cloud Compute", url: "https://voxstar.substack.com/p/98-google-unveils-arm-based-data", status: "ready" },
-  { id: 2, ep: 97, title: "#97 The Sovereign Edge: Why True AI Privacy Demands Local Models", url: "https://voxstar.substack.com/p/97-the-sovereign-edge-why-true-ai", status: "ready" },
-  { id: 3, ep: 96, title: "#96 Challenging Nvidia's Reign: The Rise of Diversified AI Chip Innovation", url: "https://voxstar.substack.com/p/96-challenging-nvidias-reign-the", status: "ready" },
-  { id: 4, ep: 95, title: "#95 Microsoft AI Spearheads Innovation with a New Hub in London", url: "https://voxstar.substack.com/p/95-microsoft-ai-spearheads-innovation-with-a-new-hub-in-london", status: "ready" },
-  { id: 5, ep: 94, title: "#94 Unveiling the Future: Llama 3's Paradigm Shift in AI", url: "https://voxstar.substack.com/p/94-unveiling-the-future-llama-3s", status: "ready" }
+  { id: 1, ep: 99, title: "#99 Microsoft Is Finally Making Custom AI Chips to Power Azure & OpenAI", url: "https://voxstar.substack.com/p/99-microsoft-is-finally-making-custom", status: "ready" },
+  { id: 2, ep: 98, title: "#98 Google Unveils Arm-Based Data Center Processors to Accelerate AI & Cloud Compute", url: "https://voxstar.substack.com/p/98-google-unveils-arm-based-data", status: "ready" },
+  { id: 3, ep: 97, title: "#97 The Sovereign Edge: Why True AI Privacy Demands Local Models", url: "https://voxstar.substack.com/p/97-the-sovereign-edge-why-true-ai", status: "ready" },
+  { id: 4, ep: 96, title: "#96 Challenging Nvidia's Reign: The Rise of Diversified AI Chip Innovation", url: "https://voxstar.substack.com/p/96-challenging-nvidias-reign-the", status: "ready" },
+  { id: 5, ep: 95, title: "#95 Microsoft AI Spearheads Innovation with a New Hub in London", url: "https://voxstar.substack.com/p/95-microsoft-ai-spearheads-innovation-with-a-new-hub-in-london", status: "ready" },
+  { id: 6, ep: 94, title: "#94 Unveiling the Future: Llama 3's Paradigm Shift in AI", url: "https://voxstar.substack.com/p/94-unveiling-the-future-llama-3s", status: "ready" }
 ];
 
 function parseSubstackUrl(rawUrl: string, defaultNextEp: number): { epNumber: number; title: string; cleanSlug: string } {
@@ -523,13 +524,17 @@ export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
         return PRESET_EPISODES[Number(savedNum)].url;
       }
     } catch {}
-    return PRESET_EPISODES[98].url;
+    return PRESET_EPISODES[99].url;
   });
 
   const [voiceModel, setVoiceModel] = useState("f5-cloned-genedarocha");
   const [introMusicEnabled, setIntroMusicEnabled] = useState(true);
   const [normalizeLoudness, setNormalizeLoudness] = useState(true);
-  const [urlStatusMsg, setUrlStatusMsg] = useState<string | null>("✓ Episode #98 Master Broadcast & Distribution Pack Ready (Google Axion Arm Silicon)");
+  const [urlStatusMsg, setUrlStatusMsg] = useState<string | null>("✓ Episode #99 Master Broadcast & Distribution Pack Ready (Microsoft Maia 100 AI Accelerator & Cobalt 100 CPU)");
+  
+  // Buffer & Cache Ticket Box State
+  const [autoFlushBuffers, setAutoFlushBuffers] = useState(true);
+  const [forceBypassCache, setForceBypassCache] = useState(true);
   
   // Pipeline status
   const [isProcessing, setIsProcessing] = useState(false);
@@ -998,7 +1003,61 @@ export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
 
   const getNextEpisodeNumber = () => {
     const existing = Object.keys(allEpisodes).map(Number).filter(n => !isNaN(n));
-    return existing.length > 0 ? Math.max(...existing) + 1 : 98;
+    return existing.length > 0 ? Math.max(...existing) + 1 : 99;
+  };
+
+  const getBypassedAudioUrl = (url: string) => {
+    if (!url) return '';
+    const cleanUrl = url.replace(/([?&])t=\d+/, '').replace(/([?&])v=[^&]+/, '');
+    const sep = cleanUrl.includes('?') ? '&' : '?';
+    return `${cleanUrl}${sep}t=${Date.now()}`;
+  };
+
+  const handleHardDeletePreviousPodcastsAndFlushBuffer = () => {
+    // 1. Halt and unload active audio element
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+      audioRef.current.removeAttribute('src');
+      audioRef.current.load();
+    }
+
+    // 2. Clear all voxstar localStorage cache
+    try {
+      const keysToRemove: string[] = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith('voxstar_')) {
+          keysToRemove.push(key);
+        }
+      }
+      keysToRemove.forEach(k => localStorage.removeItem(k));
+    } catch (e) {
+      console.error('Failed to clear localStorage keys', e);
+    }
+
+    // 3. Fresh instance of Episode 99 with forced live timestamp
+    const freshAudioUrl = `/podcast/Episode_99_Master.mp3?t=${Date.now()}`;
+    const freshEp99: EpisodeData = {
+      ...PRESET_EPISODES[99],
+      audioUrl: freshAudioUrl
+    };
+
+    const freshCatalog: Record<number, EpisodeData> = {
+      ...PRESET_EPISODES,
+      99: freshEp99
+    };
+
+    setAllEpisodes(freshCatalog);
+    setEpisodeNumber(99);
+    setEpisodeTitle(freshEp99.title);
+    setArticleUrl(freshEp99.url);
+    setCurrentEpisode(freshEp99);
+    setDuration(freshEp99.durationSecs);
+    setCurrentTime(0);
+    setIsPlaying(false);
+    setSocialImgFailed(false);
+    setUrlStatusMsg('🗑️ Stored podcasts deleted & audio buffer flushed. Episode #99 (Microsoft Custom AI Chips Maia 100 & Cobalt 100) fresh master loaded.');
   };
 
   const handleClearIngestionForm = () => {
@@ -1031,8 +1090,8 @@ export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
       return;
     }
 
-    // Clear previous audio buffer immediately on URL change
-    if (audioRef.current) {
+    // Clear previous audio buffer immediately on URL change if autoFlushBuffers is enabled
+    if (autoFlushBuffers && audioRef.current) {
       audioRef.current.pause();
       audioRef.current.currentTime = 0;
       audioRef.current.removeAttribute('src');
@@ -1047,18 +1106,22 @@ export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
 
     const matched = PRESET_EPISODES[parsed.epNumber] || allEpisodes[parsed.epNumber];
     if (matched) {
-      setEpisodeTitle(matched.title);
-      setCurrentEpisode(matched);
-      setDuration(matched.durationSecs);
+      const finalAudioUrl = forceBypassCache ? getBypassedAudioUrl(matched.audioUrl) : matched.audioUrl;
+      const activeEp = { ...matched, audioUrl: finalAudioUrl };
+      setEpisodeTitle(activeEp.title);
+      setCurrentEpisode(activeEp);
+      setDuration(activeEp.durationSecs);
       setSocialImgFailed(false);
-      setUrlStatusMsg(`✓ Episode #${matched.number} Master Broadcast Ready: ${matched.title}`);
+      setUrlStatusMsg(`✓ Episode #${activeEp.number} Master Broadcast Ready: ${activeEp.title}`);
     } else {
       const syn = synthesizeTopicContent(parsed.epNumber, parsed.title, trimmed);
-      setEpisodeTitle(parsed.title);
-      setCurrentEpisode(syn);
-      setDuration(syn.durationSecs);
+      const finalAudioUrl = forceBypassCache ? getBypassedAudioUrl(syn.audioUrl) : syn.audioUrl;
+      const activeSyn = { ...syn, audioUrl: finalAudioUrl };
+      setEpisodeTitle(activeSyn.title);
+      setCurrentEpisode(activeSyn);
+      setDuration(activeSyn.durationSecs);
       setSocialImgFailed(false);
-      setUrlStatusMsg(`✨ Ingested: Episode #${parsed.epNumber} ("${parsed.title}"). Ready to play or customize.`);
+      setUrlStatusMsg(`✨ Ingested: Episode #${activeSyn.number} ("${activeSyn.title}"). Ready to play or customize.`);
     }
   };
 
@@ -1077,21 +1140,23 @@ export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
   const loadEpisodeData = (epNum: number) => {
     const preset = allEpisodes[epNum] || PRESET_EPISODES[epNum];
     if (preset) {
-      if (audioRef.current) {
+      if (autoFlushBuffers && audioRef.current) {
         audioRef.current.pause();
         audioRef.current.currentTime = 0;
         audioRef.current.removeAttribute('src');
         audioRef.current.load();
       }
+      const finalAudioUrl = forceBypassCache ? getBypassedAudioUrl(preset.audioUrl) : preset.audioUrl;
+      const activeEp = { ...preset, audioUrl: finalAudioUrl };
       setEpisodeNumber(preset.number);
       setEpisodeTitle(preset.title);
       setArticleUrl(preset.url);
       setSocialImgFailed(false);
-      setCurrentEpisode(preset);
+      setCurrentEpisode(activeEp);
       setDuration(preset.durationSecs);
       setCurrentTime(0);
       setIsPlaying(false);
-      setUrlStatusMsg(null);
+      setUrlStatusMsg(`✓ Switched to Episode #${preset.number}: ${preset.title}`);
     }
   };
 
@@ -1516,12 +1581,71 @@ _Share with your engineering and leadership teams!_`;
         screenTitle="Voxstar Podcast & Social Distribution Engine"
         subtitle="Turn any Substack article or URL into a full-length broadcast podcast episode with Gene Da Rocha's authentic voice, signature intro music, -16 LUFS mastering, and omni-channel distribution packages."
         steps={[
-          { number: 1, title: "Select or Ingest Episode", detail: "Pick an episode from the library (#95, #94) or paste any Substack article URL to synthesize new episodes." },
+          { number: 1, title: "Select or Ingest Episode", detail: "Pick an episode from the library (#99, #98, #97) or paste any Substack article URL to synthesize new episodes." },
           { number: 2, title: "Select Voice & Mastering", detail: "Use the authentic cloned Gene Da Rocha voice profile with standard -16 LUFS loudness mastering." },
           { number: 3, title: "1-Click Publish to All Channels", detail: "Click individual channel buttons or the Master Blast button to dispatch updates to Spotify, LinkedIn, Gene Da Rocha X, and @rochagenda Instagram." }
         ]}
         proTip="All generated social posts automatically include Gene's mandatory 30-tag brand hashtag vault."
       />
+
+      {/* Buffer & Cache Ticket Box Management Card */}
+      <div className="glass-panel studio-card mt-3 mb-1" style={{ border: '1px solid rgba(239, 68, 68, 0.4)', background: 'linear-gradient(135deg, rgba(239, 68, 68, 0.09) 0%, rgba(15, 23, 42, 0.85) 100%)' }}>
+        <div className="flex items-center justify-between flex-wrap gap-3">
+          <div className="flex items-center gap-2.5">
+            <div className="p-2 rounded-lg bg-red-500/20 text-red-400 border border-red-500/30">
+              <Trash2 size={18} />
+            </div>
+            <div>
+              <div className="text-sm font-bold text-white flex items-center gap-2">
+                Podcast Buffer & Cache Management (Ticket Box Controls)
+                <span className="badge badge-accent text-[10px] py-0 px-2">Fresh Ingest & Playback</span>
+              </div>
+              <p className="text-xs text-gray-400 mt-0.5">
+                Delete previous generated podcasts, clear cached HTML5 audio buffers, and force instant playback of Episode #99.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 flex-wrap">
+            <button
+              type="button"
+              onClick={handleHardDeletePreviousPodcastsAndFlushBuffer}
+              className="btn btn-secondary btn-sm flex items-center gap-1.5"
+              style={{ borderColor: 'rgba(239, 68, 68, 0.6)', background: 'rgba(239, 68, 68, 0.2)', color: '#fca5a5' }}
+              title="Delete previous generated podcasts from localStorage, flush audio buffers, and reload clean Episode #99"
+            >
+              <Trash2 size={13} />
+              <span>🗑️ Delete Previous Podcasts & Flush Buffer (Reset #99)</span>
+            </button>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3 pt-3 border-t border-white/10">
+          <label className="toggle-label cursor-pointer flex items-center gap-2 bg-slate-900/70 p-2.5 rounded-lg border border-white/5 hover:border-red-500/30 transition-all">
+            <input
+              type="checkbox"
+              checked={autoFlushBuffers}
+              onChange={(e) => setAutoFlushBuffers(e.target.checked)}
+              className="accent-red-500 w-4 h-4 cursor-pointer"
+            />
+            <span className="text-xs text-gray-200 font-medium">
+              ☑️ <strong className="text-white">Delete previous generated podcasts & clear audio buffer</strong> on new URL ingest / switch
+            </span>
+          </label>
+
+          <label className="toggle-label cursor-pointer flex items-center gap-2 bg-slate-900/70 p-2.5 rounded-lg border border-white/5 hover:border-blue-500/30 transition-all">
+            <input
+              type="checkbox"
+              checked={forceBypassCache}
+              onChange={(e) => setForceBypassCache(e.target.checked)}
+              className="accent-blue-500 w-4 h-4 cursor-pointer"
+            />
+            <span className="text-xs text-gray-200 font-medium">
+              ☑️ <strong className="text-white">Force fresh live MP3 audio stream</strong> (Bypass browser audio cache with timestamp)
+            </span>
+          </label>
+        </div>
+      </div>
 
       {/* Episode Quick Switcher Bar */}
       <div className="ep-switcher-bar glass-panel mt-3">
@@ -1816,15 +1940,36 @@ _Share with your engineering and leadership teams!_`;
                 </div>
 
                 {currentEpisode.audioUrl ? (
-                  <button
-                    onClick={() => handleDownloadAudioFile(currentEpisode.audioUrl, `Episode_${currentEpisode.number}_Voxstar_Master.mp3`)}
-                    disabled={downloadingAudio}
-                    className="btn btn-secondary btn-sm ml-auto flex items-center gap-1.5"
-                    title="Download Master Broadcast MP3"
-                  >
-                    <Download size={14} className={downloadingAudio ? "animate-bounce" : ""} />
-                    {downloadingAudio ? "Downloading..." : "Download MP3"}
-                  </button>
+                  <div className="flex items-center gap-2 ml-auto">
+                    <button
+                      onClick={() => {
+                        if (audioRef.current) {
+                          audioRef.current.pause();
+                          audioRef.current.currentTime = 0;
+                          const freshUrl = getBypassedAudioUrl(currentEpisode.audioUrl);
+                          audioRef.current.src = freshUrl;
+                          audioRef.current.load();
+                          audioRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
+                          setUrlStatusMsg(`✓ Flushed buffer and reloaded fresh audio for Episode #${currentEpisode.number}`);
+                        }
+                      }}
+                      className="btn btn-secondary btn-sm flex items-center gap-1.5"
+                      title="Flush browser audio buffer and reload fresh MP3 stream"
+                    >
+                      <RotateCcw size={13} />
+                      <span>Flush Buffer</span>
+                    </button>
+
+                    <button
+                      onClick={() => handleDownloadAudioFile(currentEpisode.audioUrl, `Episode_${currentEpisode.number}_Voxstar_Master.mp3`)}
+                      disabled={downloadingAudio}
+                      className="btn btn-secondary btn-sm flex items-center gap-1.5"
+                      title="Download Master Broadcast MP3"
+                    >
+                      <Download size={14} className={downloadingAudio ? "animate-bounce" : ""} />
+                      {downloadingAudio ? "Downloading..." : "Download MP3"}
+                    </button>
+                  </div>
                 ) : (
                   <span className="text-xs text-gray-500 ml-auto italic">
                     Audio generated upon ingest
