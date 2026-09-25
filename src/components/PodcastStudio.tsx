@@ -50,6 +50,26 @@ interface ChannelPublishStatus {
 const BRAND_HASHTAGS = "#ArtificialIntelligence #MachineLearning #DeepLearning #NeuralNetworks #ComputerVision #AI #DataScience #NaturalLanguageProcessing #BigData #Robotics #Automation #IntelligentSystems #CognitiveComputing #SmartTechnology #Analytics #Innovation #Industry40 #FutureTech #QuantumComputing #IoT #genedarocha #voxstar #aitoolboard #voxstarai #writerplus #wiredvibeapp #wiredvibe #atltrust #albionlm #elonmusk";
 
 const PRESET_EPISODES: Record<number, EpisodeData> = {
+  99: {
+    number: 99,
+    title: "#99 Microsoft Is Finally Making Custom AI Chips to Power Azure & OpenAI",
+    url: "https://voxstar.substack.com/p/99-microsoft-is-finally-making-custom",
+    summary: "Microsoft officially unveils Azure Maia 100 and Azure Cobalt 100—its first custom silicon processors designed for AI models, GPT-4, and cloud compute. Gene Da Rocha breaks down the 105-billion transistor accelerator, 128-core Armv9 CPU, and custom liquid-cooled Sidekick racks.",
+    keyTakeaways: [
+      "Azure Maia 100 AI Accelerator: 105 billion transistors on a 5nm process, co-designed with OpenAI for GPT-4 training and inference.",
+      "Azure Cobalt 100 CPU: 128-core 64-bit Armv9 architecture delivering up to 40% better performance-per-watt for cloud microservices.",
+      "Custom 'Sidekick' Liquid Cooling: Chilled fluid circulating directly over silicon dies for extreme datacenter density.",
+      "Vertical Cloud Integration: Reducing reliance on external GPU vendors while optimizing Azure OpenAI token costs.",
+      "Hosted by Gene Da Rocha: Complete architectural analysis available on Spotify, Substack, and Apple Podcasts."
+    ],
+    audioUrl: "/podcast/Episode_99_Master.mp3",
+    coverUrl: "/podcast/podcast_cover_art.jpg",
+    socialImageUrl: "/podcast/ep99_social_image.jpg",
+    duration: "02:39",
+    durationSecs: 159,
+    status: 'ready',
+    script: `Welcome to Automating Everything. I'm your host, Gene Da Rocha.\n\nToday, in Episode 99, we are diving into a major technological turning point for cloud computing and generative artificial intelligence: Microsoft is finally making its own custom AI chips.\n\nAt its Ignite conference, Microsoft officially unveiled two groundbreaking custom processors designed from the silicon up for its Azure cloud datacenters: the Azure Maia 100 AI Accelerator and the Azure Cobalt 100 CPU.\n\nFor years, Microsoft relied almost exclusively on NVIDIA GPUs to power its massive OpenAI workloads, ChatGPT, and Copilot. But with skyrocketing AI compute costs, power constraints, and soaring enterprise demand, Microsoft decided to take control of its own silicon destiny.\n\nLet us break down the key innovations behind this monumental announcement:\n\nFirst, The Azure Maia 100 AI Accelerator. This chip is built on a 5-nanometer process with 105 billion transistors. It is customized specifically for deep learning, large language model training, and low-latency inference. Microsoft partnered closely with OpenAI to optimize Maia for models like GPT-4, testing and refining the silicon architecture to maximize throughput and minimize cost per token.\n\nSecond, The Azure Cobalt 100 CPU. Built on standard Armv9 architecture with 128 computing cores, Cobalt delivers up to 40% better energy efficiency than existing commercial server processors. It is designed to handle high-density microservices, databases, and enterprise applications across Microsoft Teams and Azure services.\n\nThird, Revolutionary Liquid-Cooled "Sidekick" Datacenter Racks. Because AI chips generate intense heat, Microsoft custom-designed liquid-cooling racks called Sidekicks. These racks circulate chilled fluid directly across the Maia silicon, allowing massive compute density without blowing datacenter thermal envelopes.\n\nFor enterprise leaders, CTOs, and developers, this vertical integration means faster inference, higher reliability, and more cost-effective AI solutions across Azure OpenAI Service.\n\nThank you for tuning into Episode 99 of Voxstar AI Automation.\n\nTo read the complete research article and access full architectural notes, visit voxstar.substack.com. Subscribe to our podcast on Spotify and Apple Podcasts, and connect with me on LinkedIn and X at Gene Da Rocha.\n\nUntil next time, optimize your compute, keep innovating, and keep automating everything. I'm Gene Da Rocha.`
+  },
   98: {
     number: 98,
     title: "#98 Google Unveils Arm-Based Data Center Processors to Accelerate AI & Cloud Compute",
@@ -294,7 +314,31 @@ function synthesizeTopicContent(epNumber: number, rawTitle: string, rawUrl: stri
   const formattedTitle = rawTitle.startsWith('#') ? rawTitle : `#${epNumber} ${cleanTitleName}`;
   const lowerText = `${rawTitle} ${rawUrl}`.toLowerCase();
 
-  // 1. GOOGLE AXION / ARM DATA CENTER PROCESSORS (EPISODE 98)
+  // 1A. MICROSOFT CUSTOM AI CHIPS / MAIA 100 & COBALT 100 (EPISODE 99)
+  if (/maia|cobalt|microsoft.*custom.*chip|microsoft.*making.*custom|azure.*chip|azure.*silicon/.test(lowerText) || epNumber === 99) {
+    return {
+      number: epNumber,
+      title: formattedTitle.includes("Microsoft") ? formattedTitle : `#${epNumber} Microsoft Is Finally Making Custom AI Chips to Power Azure & OpenAI`,
+      url: rawUrl || `https://voxstar.substack.com/p/${epNumber}-microsoft-is-finally-making-custom`,
+      summary: `Microsoft officially unveils Azure Maia 100 and Azure Cobalt 100—its first custom silicon processors designed for AI models, GPT-4, and cloud compute. Gene Da Rocha breaks down the 105-billion transistor accelerator, 128-core Armv9 CPU, and custom liquid-cooled Sidekick racks.`,
+      keyTakeaways: [
+        "Azure Maia 100 AI Accelerator: 105 billion transistors on a 5nm process, co-designed with OpenAI for GPT-4 training and inference.",
+        "Azure Cobalt 100 CPU: 128-core 64-bit Armv9 architecture delivering up to 40% better performance-per-watt for cloud microservices.",
+        "Custom 'Sidekick' Liquid Cooling: Chilled fluid circulating directly over silicon dies for extreme datacenter density.",
+        "Vertical Cloud Integration: Reducing reliance on external GPU vendors while optimizing Azure OpenAI token costs.",
+        "Hosted by Gene Da Rocha: Complete architectural analysis available on Spotify, Substack, and Apple Podcasts."
+      ],
+      audioUrl: `/podcast/Episode_${epNumber}_Master.mp3`,
+      coverUrl: "/podcast/podcast_cover_art.jpg",
+      socialImageUrl: `/podcast/ep${epNumber}_social_image.jpg`,
+      duration: "02:39",
+      durationSecs: 159,
+      status: 'ready',
+      script: `Welcome to Automating Everything. I'm your host, Gene Da Rocha.\n\nToday, in Episode 99, we are diving into a major technological turning point for cloud computing and generative artificial intelligence: Microsoft is finally making its own custom AI chips.\n\nAt its Ignite conference, Microsoft officially unveiled two groundbreaking custom processors designed from the silicon up for its Azure cloud datacenters: the Azure Maia 100 AI Accelerator and the Azure Cobalt 100 CPU.\n\nFor years, Microsoft relied almost exclusively on NVIDIA GPUs to power its massive OpenAI workloads, ChatGPT, and Copilot. But with skyrocketing AI compute costs, power constraints, and soaring enterprise demand, Microsoft decided to take control of its own silicon destiny.\n\nLet us break down the key innovations behind this monumental announcement:\n\nFirst, The Azure Maia 100 AI Accelerator. This chip is built on a 5-nanometer process with 105 billion transistors. It is customized specifically for deep learning, large language model training, and low-latency inference. Microsoft partnered closely with OpenAI to optimize Maia for models like GPT-4, testing and refining the silicon architecture to maximize throughput and minimize cost per token.\n\nSecond, The Azure Cobalt 100 CPU. Built on standard Armv9 architecture with 128 computing cores, Cobalt delivers up to 40% better energy efficiency than existing commercial server processors. It is designed to handle high-density microservices, databases, and enterprise applications across Microsoft Teams and Azure services.\n\nThird, Revolutionary Liquid-Cooled "Sidekick" Datacenter Racks. Because AI chips generate intense heat, Microsoft custom-designed liquid-cooling racks called Sidekicks. These racks circulate chilled fluid directly across the Maia silicon, allowing massive compute density without blowing datacenter thermal envelopes.\n\nFor enterprise leaders, CTOs, and developers, this vertical integration means faster inference, higher reliability, and more cost-effective AI solutions across Azure OpenAI Service.\n\nThank you for tuning into Episode 99 of Voxstar AI Automation.\n\nTo read the complete research article and access full architectural notes, visit voxstar.substack.com. Subscribe to our podcast on Spotify and Apple Podcasts, and connect with me on LinkedIn and X at Gene Da Rocha.\n\nUntil next time, optimize your compute, keep innovating, and keep automating everything. I'm Gene Da Rocha.`
+    };
+  }
+
+  // 1B. GOOGLE AXION / ARM DATA CENTER PROCESSORS (EPISODE 98)
   if (/axion|arm-based|arm based|data center processor|server processor|armv9|neoverse/.test(lowerText) || epNumber === 98) {
     return {
       number: epNumber,
@@ -449,7 +493,7 @@ export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
         return Number(saved);
       }
     } catch {}
-    return 98;
+    return 99;
   });
 
   const [currentEpisode, setCurrentEpisode] = useState<EpisodeData>(() => {
@@ -459,7 +503,7 @@ export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
         return PRESET_EPISODES[Number(savedNum)];
       }
     } catch {}
-    return PRESET_EPISODES[98];
+    return PRESET_EPISODES[99];
   });
 
   const [episodeTitle, setEpisodeTitle] = useState<string>(() => {
@@ -469,7 +513,7 @@ export const PodcastStudio: React.FC<{ onBack?: () => void }> = () => {
         return PRESET_EPISODES[Number(savedNum)].title;
       }
     } catch {}
-    return PRESET_EPISODES[98].title;
+    return PRESET_EPISODES[99].title;
   });
 
   const [articleUrl, setArticleUrl] = useState<string>(() => {
