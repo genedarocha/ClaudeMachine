@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { 
   Plus, Search, Settings, History, LayoutDashboard, 
   Trash2, Copy, Check, ChevronRight, Terminal, Cpu, FileText, Zap, HelpCircle,
-  Calendar, Headphones, Video, Globe, Sparkles, Radio
+  Calendar, Headphones, Video, Globe, Sparkles, Radio, Share2
 } from 'lucide-react';
 
 const LinkedInIcon: React.FC<{ size?: number; className?: string }> = ({ size = 16, className = "" }) => (
@@ -27,6 +27,7 @@ import { DailyIdeaStudio } from './components/DailyIdeaStudio';
 import { DailyAutopilotStudio } from './components/DailyAutopilotStudio';
 import { UniversalVideoStudio } from './components/UniversalVideoStudio';
 import { LinkedInCommentsStudio } from './components/LinkedInCommentsStudio';
+import { ContentMultiplierStudio } from './components/ContentMultiplierStudio';
 import { type ApiKeys, type ModelSettings } from './utils/ai';
 
 interface RunHistoryItem {
@@ -55,7 +56,7 @@ function App() {
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [activeSpecialist, setActiveSpecialist] = useState<Specialist | null>(null);
-  const [currentView, setCurrentView] = useState<'dashboard' | 'runner' | 'generator' | 'history' | 'voxstar' | 'podcast-studio' | 'creation-wiredvibe' | 'creation-idea' | 'daily-autopilot' | 'video-factory' | 'linkedin-comments'>('linkedin-comments');
+  const [currentView, setCurrentView] = useState<'dashboard' | 'runner' | 'generator' | 'history' | 'voxstar' | 'podcast-studio' | 'creation-wiredvibe' | 'creation-idea' | 'daily-autopilot' | 'video-factory' | 'linkedin-comments' | 'content-multiplier'>('content-multiplier');
   const [activeSoundscape, setActiveSoundscape] = useState<string>('Gamma Retention Pulse');
   const [activeAutopilotServiceId, setActiveAutopilotServiceId] = useState<string>('srv-1');
   
@@ -194,11 +195,30 @@ function App() {
             </div>
             <div className="nav-sub-items">
               <button 
-                className={`nav-sub-item ${currentView === 'creation-wiredvibe' ? 'active' : ''}`}
-                onClick={() => { setCurrentView('creation-wiredvibe'); setActiveSpecialist(null); }}
+                className={`nav-sub-item ${currentView === 'content-multiplier' ? 'active' : ''}`}
+                onClick={() => { setCurrentView('content-multiplier'); setActiveSpecialist(null); }}
               >
-                <Headphones size={14} />
-                <span>Wiredvibe app</span>
+                <Share2 size={14} />
+                <span>Content Multiplier</span>
+                <span className="nav-badge-hot">Blotato $0</span>
+              </button>
+
+              <button 
+                className={`nav-sub-item ${currentView === 'podcast-studio' ? 'active' : ''}`}
+                onClick={() => { setCurrentView('podcast-studio'); setActiveSpecialist(null); }}
+              >
+                <Radio size={14} />
+                <span>Podcast Studio</span>
+                <span className="nav-badge-hot">Ep #100 Ready</span>
+              </button>
+
+              <button 
+                className={`nav-sub-item ${currentView === 'video-factory' ? 'active' : ''}`}
+                onClick={() => { setCurrentView('video-factory'); setActiveSpecialist(null); }}
+              >
+                <Sparkles size={14} />
+                <span>Video Factory</span>
+                <span className="nav-badge-hot">30s AI</span>
               </button>
 
               <button 
@@ -211,21 +231,11 @@ function App() {
               </button>
 
               <button 
-                className={`nav-sub-item ${currentView === 'podcast-studio' ? 'active' : ''}`}
-                onClick={() => { setCurrentView('podcast-studio'); setActiveSpecialist(null); }}
+                className={`nav-sub-item ${currentView === 'creation-wiredvibe' ? 'active' : ''}`}
+                onClick={() => { setCurrentView('creation-wiredvibe'); setActiveSpecialist(null); }}
               >
-                <Radio size={14} />
-                <span>Podcast Studio</span>
-                <span className="nav-badge-hot">Ep #94 Ready</span>
-              </button>
-
-              <button 
-                className={`nav-sub-item ${currentView === 'video-factory' ? 'active' : ''}`}
-                onClick={() => { setCurrentView('video-factory'); setActiveSpecialist(null); }}
-              >
-                <Sparkles size={14} />
-                <span>Video Factory</span>
-                <span className="nav-badge-hot">30s AI</span>
+                <Headphones size={14} />
+                <span>Wiredvibe app</span>
               </button>
             </div>
           </div>
@@ -652,6 +662,11 @@ function App() {
           {/* J. LINKEDIN-COMMENTS 100 POSTS & HUMANIZER STUDIO */}
           {currentView === 'linkedin-comments' && (
             <LinkedInCommentsStudio onBack={() => setCurrentView('dashboard')} />
+          )}
+
+          {/* K. CONTENT MULTIPLIER STUDIO (1 IDEA -> ALL PLATFORMS & 9:16 VIDEO ENGINE) */}
+          {currentView === 'content-multiplier' && (
+            <ContentMultiplierStudio />
           )}
         </div>
       </main>
