@@ -1,8 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { 
   Sparkles, Copy, Check, Share2, Layers, Film, 
-  Play, Pause, ChevronLeft, ChevronRight, Image as ImageIcon, 
-  Radio, Zap, Flame, Globe, Wand2
+  Play, Pause, Radio, Zap, Flame, Globe, Wand2, MessageCircle
 } from 'lucide-react';
 import { ScreenHelpBanner } from './ScreenHelpBanner';
 
@@ -31,29 +30,46 @@ const TikTokIcon: React.FC<{ size?: number; className?: string }> = ({ size = 16
   </svg>
 );
 
-export interface CarouselSlide {
-  slideNumber: number;
-  type: 'hook' | 'insight' | 'cta';
-  headline: string;
-  body: string;
-  bulletPoints?: string[];
-  visualPrompt: string;
-}
+const InstagramIcon: React.FC<{ size?: number; className?: string }> = ({ size = 16, className = '' }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className}>
+    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+  </svg>
+);
 
-export interface MultipliedContent {
-  linkedinPost: string;
-  xPost: string;
-  facebookPost: string;
-  tiktokScript: {
-    hook: string;
-    bodyNarration: string;
-    visualCues: string[];
-    onScreenCaptions: string[];
-    cta: string;
-  };
-  carouselSlides: CarouselSlide[];
-  ltxVideoPrompt: string;
-  ffmpegCommand: string;
+const YoutubeIcon: React.FC<{ size?: number; className?: string }> = ({ size = 16, className = '' }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className}>
+    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+  </svg>
+);
+
+const ThreadsIcon: React.FC<{ size?: number; className?: string }> = ({ size = 16, className = '' }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className}>
+    <path d="M12.186 24C5.467 24 0 18.533 0 11.814 0 5.094 5.467 0 12.186 0c6.72 0 12.186 5.094 12.186 11.814 0 2.766-.96 5.4-2.705 7.42-1.745 2.02-4.185 3.166-6.87 3.166-3.882 0-6.75-2.22-6.75-5.46 0-3.328 2.92-5.46 7.21-5.46.72 0 1.48.06 2.22.18v-.68c0-1.88-1.32-3.08-3.48-3.08-1.54 0-2.88.62-3.48 1.62l-2.02-1.42C9.445 6.064 11.585 5.1 14.045 5.1c3.6 0 6.08 2.12 6.08 5.62v7.1c0 1.84.82 2.68 2.06 2.68.86 0 1.54-.42 2.02-1.04l1.62 1.68C24.845 22.42 23.325 24 20.825 24c-2.42 0-4.14-1.32-4.52-3.44-1.16 2.18-3.3 3.44-5.96 3.44zm.82-7.14c-2.6 0-4.22 1.18-4.22 2.92 0 1.62 1.44 2.74 3.76 2.74 2.5 0 4.26-1.54 4.26-3.76v-.66c-.92-.16-1.88-.24-2.8-.24z"/>
+  </svg>
+);
+
+const BlueskyIcon: React.FC<{ size?: number; className?: string }> = ({ size = 16, className = '' }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className}>
+    <path d="M12 10.8c-1.087-2.114-4.046-6.053-6.798-7.995C2.566 1.01 0 1.9 0 5.4c0 1.042.52 7.083.86 8.35.98 3.65 4.54 4.6 7.74 3.95-4.5 1.5-5.7 4.5-2.2 7.8 4.2 3.9 5.6-2.5 5.6-2.5s1.4 6.4 5.6 2.5c3.5-3.3 2.3-6.3-2.2-7.8 3.2.65 6.76-.3 7.74-3.95.34-1.267.86-7.308.86-8.35 0-3.5-2.566-4.39-5.202-2.595C16.046 4.747 13.087 8.686 12 10.8z"/>
+  </svg>
+);
+
+const SubstackIcon: React.FC<{ size?: number; className?: string }> = ({ size = 16, className = '' }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className}>
+    <path d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"/>
+  </svg>
+);
+
+export interface DestinationPiece {
+  id: string;
+  category: 'newsletter' | 'video-long' | 'shorts' | 'stories' | 'written';
+  destination: string;
+  title: string;
+  countLabel: string;
+  content: string;
+  dmAutomationTrigger?: string;
+  backlinkUrl?: string;
+  icon: React.ReactNode;
 }
 
 const PRESET_IDEAS = [
@@ -83,9 +99,9 @@ const PRESET_IDEAS = [
 export const ContentMultiplierStudio: React.FC = () => {
   const [sourceIdea, setSourceIdea] = useState(PRESET_IDEAS[0].sourceText);
   const [sourceTitle, setSourceTitle] = useState(PRESET_IDEAS[0].title);
-  const [activeTab, setActiveTab] = useState<'multiplier' | 'carousel' | 'video-916' | 'prompts'>('multiplier');
+  const [activeTab, setActiveTab] = useState<'architecture' | 'all-26' | 'video-916' | 'prompts'>('architecture');
+  const [filterCategory, setFilterCategory] = useState<string>('all');
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
-  const [selectedSlide, setSelectedSlide] = useState<number>(1);
   const [isPlayingVideo, setIsPlayingVideo] = useState(false);
   const [videoTimer, setVideoTimer] = useState(0);
 
@@ -97,171 +113,296 @@ export const ContentMultiplierStudio: React.FC = () => {
     setTimeout(() => setCopiedKey(null), 2500);
   };
 
-  // Generate Multiplied Content dynamically from Source Text
-  const generateMultiplication = (_text: string, title: string): MultipliedContent => {
-    const cleanTopic = title.replace(/^Episode #\d+:\s*/i, '') || 'Enterprise AI Automation';
+  // Generate All 26 Finished Pieces across 13 Destinations
+  const generate26Pieces = (_text: string, title: string): DestinationPiece[] => {
+    const cleanTopic = title.replace(/^Episode #\d+:\s*/i, '') || 'Autonomous AI Systems & Zero-Trust Safeguards';
+    const mainBacklink = `https://voxstar.substack.com/p/100-the-century-milestone-autonomous`;
 
-    const linkedinPost = `Most leaders still think AI is about asking ChatGPT to write an email.
-
-They are completely missing the shift.
-
-Here is what is actually happening with ${cleanTopic}:
-
-1. Single-prompt chatbots are dying. Coordinated multi-agent swarms are taking over operations.
-2. Probabilistic LLMs cannot self-regulate. Deterministic software brakes and circuit breakers are now mandatory.
-3. The real ROI isn't drafting text—it's autonomous multi-system execution with human-in-the-loop verification gates.
-
-The companies winning in 2026 aren't using more prompts.
-They are building resilient automation architectures.
-
-Are you still using AI as an assistant, or have you deployed your first autonomous swarm?
-
-#AIAutomation #EnterpriseAI #AutonomousAgents #TechLeadership #Productivity`;
-
-    const xPost = `Single chatbots are dead. Coordinated agent swarms are running real operations.
-
-If you don't have deterministic software brakes, you're one loop away from burning your budget.
-
-Here's how we build resilient AI in 2026 🧵👇`;
-
-    const facebookPost = `A quick reality check for anyone running a business right now:
-
-If you are still only using AI for copywriting, you are leaving 90% of the value on the table.
-
-We just broke down how leading teams are building autonomous AI systems with strict safeguards to handle complex multi-step workflows.
-
-The biggest takeaway? You can't rely on natural language prompts to stop runaway errors—you need real software brakes.
-
-What is the single most repetitive task in your business you wish an AI swarm could handle right now? Drop it below and let's discuss! 👇`;
-
-    const tiktokScript = {
-      hook: `Stop using ChatGPT like a search engine. Here is the AI breakthrough nobody is telling you about.`,
-      bodyNarration: `In 2026, single chatbots are officially obsolete. Today's top engineers are deploying autonomous agent swarms that plan, code, and execute entire business operations. But here is the catch: without deterministic circuit breakers, an agent can burn your entire API budget in seconds. That's why the future belongs to zero-trust AI architectures.`,
-      visualCues: [
-        '[0-3s] Fast zoom-in on host with animated neon text: "CHATBOTS ARE DEAD"',
-        '[3-8s] Screen recording showing 5 AI agents executing parallel tasks simultaneously',
-        '[8-15s] Red alert warning graphic illustrating runaway token loops and software brakes',
-        '[15-22s] Sleek dashboard visual showing 10x ROI and 100% automated workflows'
-      ],
-      onScreenCaptions: [
-        'Chatbots are dead 💀',
-        'Autonomous Agent Swarms 🤖⚡',
-        'The $100 Runaway Loop 🛑',
-        'Zero-Trust Automation 🛡️'
-      ],
-      cta: `Hit follow and comment 'AGENT' to get our free autonomous swarm blueprint!`
-    };
-
-    const carouselSlides: CarouselSlide[] = [
+    return [
+      // 1. NEWSLETTER (1 Complete Guide)
       {
-        slideNumber: 1,
-        type: 'hook',
-        headline: `Why Single AI Chatbots Are Dead In 2026.`,
-        body: `And the 1 autonomous shift separating amateurs from 10x market leaders.`,
-        visualPrompt: `Minimalist dark-mode typography on deep obsidian gradient, bold electric amber accent text, sleek glowing circuit outlines, 3D abstract sphere, high resolution, 8k UI design style.`
+        id: 'dest-newsletter',
+        category: 'newsletter',
+        destination: 'Newsletter',
+        title: '1 Complete In-Depth Guide & Architecture Breakdown',
+        countLabel: '1 complete guide',
+        icon: <SubstackIcon size={16} />,
+        backlinkUrl: mainBacklink,
+        content: `# ${title}\nBy Gene Da Rocha — Voxstar AI Automation\n\n## The Core Thesis\nSingle-prompt chatbots are dead. In 2026, leading organizations are deploying coordinated swarms of autonomous agents with deterministic state controllers.\n\n### 3 Key Pillars Covered in This Guide:\n1. **Supervisor-Worker Swarms**: Decoupling planning from execution.\n2. **Deterministic Software Brakes**: Preventing runaway recursive token loops and unbounded disk writes.\n3. **Cryptographic Intent Tokens**: Gating sensitive actions (payments, database mutations) behind verified policy verifiers.\n\nRead the full interactive breakdown and download the code pack: ${mainBacklink}`
+      },
+
+      // 2. YOUTUBE (1 Edited Long Video)
+      {
+        id: 'dest-youtube-long',
+        category: 'video-long',
+        destination: 'YouTube',
+        title: '1 Edited Long-Form Video Script & Chapters',
+        countLabel: '1 edited long video',
+        icon: <YoutubeIcon size={16} />,
+        backlinkUrl: mainBacklink,
+        content: `TITLE: ${title} | Full Blueprint & Production Architecture\n\nTIMESTAMPS:\n00:00 - The Death of Simple Chatbots\n02:15 - Why Probabilistic LLMs Fail Under Production Load\n05:40 - The $100 Runaway Loop Case Study\n09:10 - Deterministic Software Brakes & Circuit Breakers\n14:30 - How to Deploy Supervisor Swarms with 10x ROI\n\nDESCRIPTION & RESOURCES:\nDownload the free code templates and subscribe to the Voxstar Newsletter at: ${mainBacklink}`
+      },
+
+      // 3. TIKTOK (Short Video #1)
+      {
+        id: 'dest-tiktok',
+        category: 'shorts',
+        destination: 'TikTok',
+        title: 'Short Video: Chatbots are Dead (Hook 1)',
+        countLabel: 'Short video',
+        icon: <TikTokIcon size={16} />,
+        content: `[0-3s HOOK]: Stop using ChatGPT like a search engine. Here is the AI breakthrough nobody is talking about.\n\n[NARRATION]: Single chatbots are officially obsolete. Today's top engineers are deploying autonomous agent swarms that plan, code, and execute multi-step operations. But without deterministic circuit breakers, an agent can burn your budget in seconds.\n\n[CTA]: Hit follow and check the bio link for the complete blueprint!`
+      },
+
+      // 4. YOUTUBE SHORTS (Short Video #2)
+      {
+        id: 'dest-yt-shorts',
+        category: 'shorts',
+        destination: 'YouTube Shorts',
+        title: 'Short Video: The $100 Runaway Loop (Hook 2)',
+        countLabel: 'Short video',
+        icon: <YoutubeIcon size={16} />,
+        content: `[0-3s HOOK]: An AI agent just burned $100 in tokens in 45 seconds. Here is why.\n\n[NARRATION]: Natural language system prompts fail when errors cascade. To build real AI automation in 2026, you need hard software brakes that kill runaway loops before they drain your bank account.\n\n[CTA]: Full master guide linked in comments!`
+      },
+
+      // 5. THREADS VIDEO (Short Video #3)
+      {
+        id: 'dest-threads-video',
+        category: 'shorts',
+        destination: 'Threads Video',
+        title: 'Short Video: Autonomous Swarms vs Prompts (Hook 3)',
+        countLabel: 'Short video',
+        icon: <ThreadsIcon size={16} />,
+        content: `[0-3s HOOK]: The difference between amateur AI users and 10x teams.\n\n[NARRATION]: Amateurs type prompts into a chat window. 10x teams orchestrate supervisor-worker agent swarms with human-in-the-loop verification gates.\n\n[CTA]: Comment 'AGENT' and I'll send you the full breakdown!`
+      },
+
+      // 6. INSTAGRAM REELS (Short Video #4 + DM Automation)
+      {
+        id: 'dest-ig-reels',
+        category: 'shorts',
+        destination: 'Instagram Reels',
+        title: 'Short Video: Zero-Trust AI Architecture (DM Automation)',
+        countLabel: 'Short video • DM drives to original',
+        icon: <InstagramIcon size={16} />,
+        dmAutomationTrigger: 'Comment "SWARM" to receive the instant link in DM',
+        backlinkUrl: mainBacklink,
+        content: `[0-3s HOOK]: If your AI agents don't have circuit breakers, stop running them right now.\n\n[NARRATION]: In this video, we break down why probabilistic LLMs cannot self-regulate and how cryptographic intent tokens protect your production databases.\n\n[CAPTION & DM TRIGGER]:\nWant our complete autonomous agent safeguard checklist?\n👉 Comment 'SWARM' below and my automated assistant will DM you the direct link right now!`
+      },
+
+      // 7. FACEBOOK REELS (Short Video #5 + DM Automation)
+      {
+        id: 'dest-fb-reels',
+        category: 'shorts',
+        destination: 'Facebook Reels',
+        title: 'Short Video: Enterprise AI ROI Blueprint (DM Automation)',
+        countLabel: 'Short video • DM drives to original',
+        icon: <FacebookIcon size={16} />,
+        dmAutomationTrigger: 'Comment "GUIDE" to receive the instant link in DM',
+        backlinkUrl: mainBacklink,
+        content: `[0-3s HOOK]: The single biggest mistake founders make when automating with AI.\n\n[NARRATION]: You don't need more prompt templates. You need deterministic state controllers that manage agent memory, tool calls, and automated rollbacks.\n\n[CAPTION & DM TRIGGER]:\nDrop the word 'GUIDE' in the comments to get our full breakdown sent to your inbox!`
+      },
+
+      // 8. INSTAGRAM / FACEBOOK STORY 1
+      {
+        id: 'dest-story-1',
+        category: 'stories',
+        destination: 'Instagram / Facebook Stories (1/2)',
+        title: 'Story 1: Behind-the-Scenes & Poll Sticker',
+        countLabel: 'Story post • DM drives to original',
+        icon: <InstagramIcon size={16} />,
+        dmAutomationTrigger: 'Reply "100" to get the link',
+        backlinkUrl: mainBacklink,
+        content: `STORY 1 GRAPHIC:\nDark luxury background with bold text: "Just dropped Episode #100: The Century Milestone of AI Automation 🚀"\n\nINTERACTIVE STICKER POLL:\n"Are you running autonomous AI swarms yet?"\n🔘 Yes, in production\n🔘 Not yet, still exploring\n\nSTICKER CTA: Reply "100" for the VIP link!`
+      },
+
+      // 9. INSTAGRAM / FACEBOOK STORY 2
+      {
+        id: 'dest-story-2',
+        category: 'stories',
+        destination: 'Instagram / Facebook Stories (2/2)',
+        title: 'Story 2: Key Takeaway Teaser + Link Sticker',
+        countLabel: 'Story post • DM drives to original',
+        icon: <FacebookIcon size={16} />,
+        dmAutomationTrigger: 'Direct Link Sticker',
+        backlinkUrl: mainBacklink,
+        content: `STORY 2 GRAPHIC:\nHighlight card showcasing: "Rule #1 of 2026 AI: Never trust a prompt to stop a runaway loop. Use software brakes."\n\nDIRECT LINK STICKER: [Read Full Episode #100 ➔]\nURL: ${mainBacklink}`
+      },
+
+      // 10. LINKEDIN (1 Written Post)
+      {
+        id: 'dest-linkedin',
+        category: 'written',
+        destination: 'LinkedIn',
+        title: '1 Written Thought Leadership Post',
+        countLabel: '1 written post • Links back',
+        icon: <LinkedInIcon size={16} />,
+        backlinkUrl: mainBacklink,
+        content: `Most leaders still think AI is about asking ChatGPT to write an email.\n\nThey are completely missing the shift.\n\nHere is what is actually happening with ${cleanTopic}:\n\n1. Single-prompt chatbots are dying. Coordinated multi-agent swarms are taking over operations.\n2. Probabilistic LLMs cannot self-regulate. Deterministic software brakes and circuit breakers are now mandatory.\n3. The real ROI isn't drafting text—it's autonomous multi-system execution with human-in-the-loop verification gates.\n\nThe companies winning in 2026 aren't using more prompts.\nThey are building resilient automation architectures.\n\nRead the full guide: ${mainBacklink}\n\n#AIAutomation #EnterpriseAI #AutonomousAgents #Leadership`
+      },
+
+      // 11-14. X / TWITTER (4 Short Tweets / Thread)
+      {
+        id: 'dest-x-1',
+        category: 'written',
+        destination: 'X (Twitter)',
+        title: 'X Post 1/4: The Hook & Paradigm Shift',
+        countLabel: '4 short tweets (1/4)',
+        icon: <XTwitterIcon size={16} />,
+        content: `Single chatbots are dead. Coordinated agent swarms are running real enterprise operations.\n\nIf you don't have deterministic software brakes, you're one error loop away from burning your budget.\n\nHere is how to build resilient AI in 2026 🧵👇`
       },
       {
-        slideNumber: 2,
-        type: 'insight',
-        headline: `1. From Prompts to Autonomous Swarms`,
-        body: `Instead of 1 human prompting 1 model, supervisor agents now orchestrate specialized worker agents in parallel.`,
-        bulletPoints: [
-          'Supervisor breaks down complex goals',
-          'Workers execute code, research & ops',
-          'Quality reviewer validates before output'
-        ],
-        visualPrompt: `Futuristic node graph network showing 1 central supervisor node connecting to 4 specialized worker nodes, neon cyan and violet glow, dark glassmorphism card.`
+        id: 'dest-x-2',
+        category: 'written',
+        destination: 'X (Twitter)',
+        title: 'X Post 2/4: The Supervisor-Worker Swarm',
+        countLabel: '4 short tweets (2/4)',
+        icon: <XTwitterIcon size={16} />,
+        content: `Supervisor agents break complex goals into structured sub-tasks.\n\nWorker agents execute code, APIs, and data synthesis in parallel.\n\nA dedicated QA inspector verifies output before anything touches production.`
       },
       {
-        slideNumber: 3,
-        type: 'insight',
-        headline: `2. The Fatal Runaway Loop Flaw`,
-        body: `LLMs are probabilistic. If an agent hits an error, it can loop infinitely and burn thousands in tokens within minutes.`,
-        bulletPoints: [
-          'Unbounded recursive retry loops',
-          'Massive disk logging bloat',
-          'Zero self-regulation ability'
-        ],
-        visualPrompt: `A sleek 3D digital hourglass burning glowing energy tokens, cinematic warning red and gold highlights, futuristic cybernetic design.`
+        id: 'dest-x-3',
+        category: 'written',
+        destination: 'X (Twitter)',
+        title: 'X Post 3/4: Cryptographic Intent Tokens',
+        countLabel: '4 short tweets (3/4)',
+        icon: <XTwitterIcon size={16} />,
+        content: `Never allow an LLM to directly trigger database mutations or financial transactions.\n\nGate high-risk actions behind cryptographically signed intent tokens with immutable audit provenance.`
       },
       {
-        slideNumber: 4,
-        type: 'insight',
-        headline: `3. Deterministic Software Brakes`,
-        body: `Never rely on "system prompts" to stop errors. Real protection requires hard kernel-level execution limits.`,
-        bulletPoints: [
-          'Strict token velocity rate limiters',
-          'Max execution step ceilings',
-          'Automatic circuit breaker trips'
-        ],
-        visualPrompt: `Industrial high-tech mechanical brake clamp glowing with neon blue cybernetic data streams, ultra-clean premium render.`
+        id: 'dest-x-4',
+        category: 'written',
+        destination: 'X (Twitter)',
+        title: 'X Post 4/4: Full Guide Link Back',
+        countLabel: '4 short tweets (4/4) • Links back',
+        icon: <XTwitterIcon size={16} />,
+        backlinkUrl: mainBacklink,
+        content: `We documented the full architecture, code templates, and safeguards in Episode #100:\n\n👉 ${mainBacklink}\n\nRetweet to share with your engineering team!`
+      },
+
+      // 15-18. THREADS (4 Short Posts)
+      {
+        id: 'dest-threads-1',
+        category: 'written',
+        destination: 'Threads',
+        title: 'Threads Post 1/4: Why Prompts Fail',
+        countLabel: '4 short posts (1/4)',
+        icon: <ThreadsIcon size={16} />,
+        content: `Natural language system prompts are not security guardrails.\n\nWhen edge cases hit, models will hallucinate past your instructions. Hard software limits are non-negotiable.`
       },
       {
-        slideNumber: 5,
-        type: 'insight',
-        headline: `4. Cryptographic Intent Tokens`,
-        body: `High-risk actions (spending money, database edits, public emails) must require signed, cryptographically verified tokens.`,
-        bulletPoints: [
-          'Immutable action authorization',
-          'Human-in-the-loop escalation gates',
-          'Full audit provenance trail'
-        ],
-        visualPrompt: `Glowing holographic cryptographic key card floating above a secure server rack, emerald green and dark slate palette.`
+        id: 'dest-threads-2',
+        category: 'written',
+        destination: 'Threads',
+        title: 'Threads Post 2/4: The $100 Runaway Loop',
+        countLabel: '4 short posts (2/4)',
+        icon: <ThreadsIcon size={16} />,
+        content: `Dr. Hannah Fry's experimental agent burned $100 in seconds because of an unbounded recursive loop.\n\nAlways enforce strict step ceilings and token velocity throttles.`
       },
       {
-        slideNumber: 6,
-        type: 'insight',
-        headline: `5. Native Multimodal Workflows`,
-        body: `State-of-the-art models don't just read text—they reason over audio, video, charts, and live browser sessions seamlessly.`,
-        bulletPoints: [
-          'Direct computer-use automation',
-          'Instant audio & video synthesis',
-          'Unified reasoning token space'
-        ],
-        visualPrompt: `Abstract prism splitting a single laser beam of data into video, audio, and code streams, vibrant spectrum against dark background.`
+        id: 'dest-threads-3',
+        category: 'written',
+        destination: 'Threads',
+        title: 'Threads Post 3/4: Modular Swarm Architecture',
+        countLabel: '4 short posts (3/4)',
+        icon: <ThreadsIcon size={16} />,
+        content: `Decouple planning from execution.\n\nSmall, specialized agents out-perform monolithic prompt monsters 10 times out of 10.`
       },
       {
-        slideNumber: 7,
-        type: 'insight',
-        headline: `6. The Enterprise Blueprint`,
-        body: `Start with 1 high-friction repetitive process. Build a 3-agent pipeline with deterministic validation before scaling.`,
-        bulletPoints: [
-          '1. Research & Data Ingest Agent',
-          '2. Synthesis & Drafting Agent',
-          '3. QA & Compliance Inspector'
-        ],
-        visualPrompt: `Step-by-step modular 3D pipeline blocks assembling into a golden trophy structure, clean architectural isometric render.`
+        id: 'dest-threads-4',
+        category: 'written',
+        destination: 'Threads',
+        title: 'Threads Post 4/4: Substack Link Back',
+        countLabel: '4 short posts (4/4) • Links back',
+        icon: <ThreadsIcon size={16} />,
+        backlinkUrl: mainBacklink,
+        content: `Check out our full Episode #100 master broadcast for the complete step-by-step breakdown: ${mainBacklink}`
+      },
+
+      // 19-22. BLUESKY (4 Short Posts)
+      {
+        id: 'dest-bs-1',
+        category: 'written',
+        destination: 'Bluesky',
+        title: 'Bluesky Post 1/4: Open Models & Swarms',
+        countLabel: '4 short posts (1/4)',
+        icon: <BlueskyIcon size={16} />,
+        content: `Open-weights models and local SLMs are rewriting the economics of autonomous agent swarms. You no longer need to pay hyperscale API tax for routine operational subtasks.`
       },
       {
-        slideNumber: 8,
-        type: 'cta',
-        headline: `Stop Prompting. Start Automating.`,
-        body: `Save this post for your next sprint.\n\nComment 'SWARM' below and I'll send you our complete zero-cost automation code pack.`,
-        bulletPoints: [
-          '📌 Save for later reference',
-          '🚀 Share with your engineering team',
-          '💬 Drop your thoughts below'
-        ],
-        visualPrompt: `Clean final slide with glowing bookmark and paper plane icons, luxury dark aesthetic, bold white and amber typography.`
+        id: 'dest-bs-2',
+        category: 'written',
+        destination: 'Bluesky',
+        title: 'Bluesky Post 2/4: Deterministic State Brakes',
+        countLabel: '4 short posts (2/4)',
+        icon: <BlueskyIcon size={16} />,
+        content: `Deterministic state machines + probabilistic reasoning = the winning enterprise stack in 2026.`
+      },
+      {
+        id: 'dest-bs-3',
+        category: 'written',
+        destination: 'Bluesky',
+        title: 'Bluesky Post 3/4: Zero-Trust Protocol',
+        countLabel: '4 short posts (3/4)',
+        icon: <BlueskyIcon size={16} />,
+        content: `Every agent tool call should be treated as an untrusted external request until cryptographically signed and validated.`
+      },
+      {
+        id: 'dest-bs-4',
+        category: 'written',
+        destination: 'Bluesky',
+        title: 'Bluesky Post 4/4: Deep Dive Link',
+        countLabel: '4 short posts (4/4)',
+        icon: <BlueskyIcon size={16} />,
+        backlinkUrl: mainBacklink,
+        content: `Read the full architectural case study on Voxstar AI: ${mainBacklink}`
+      },
+
+      // 23-26. SUBSTACK NOTES & COMMUNITY POSTS (4 Written Posts)
+      {
+        id: 'dest-sub-1',
+        category: 'written',
+        destination: 'Substack Notes',
+        title: 'Substack Note 1/4: Century Milestone Reflection',
+        countLabel: '4 written posts (1/4)',
+        icon: <SubstackIcon size={16} />,
+        content: `100 episodes of Voxstar AI Automation.\n\nFrom simple GPT-3 prompts to full multi-agent autonomous swarms.\n\nThank you to our community of founders, engineers, and builders.`
+      },
+      {
+        id: 'dest-sub-2',
+        category: 'written',
+        destination: 'Substack Notes',
+        title: 'Substack Note 2/4: Key Takeaways Summary',
+        countLabel: '4 written posts (2/4)',
+        icon: <SubstackIcon size={16} />,
+        content: `If you only remember one thing from Episode #100: Build software-level circuit breakers before you connect any agent to an external tool or database.`
+      },
+      {
+        id: 'dest-sub-3',
+        category: 'written',
+        destination: 'Substack Notes',
+        title: 'Substack Note 3/4: Audio Master Release',
+        countLabel: '4 written posts (3/4)',
+        icon: <SubstackIcon size={16} />,
+        content: `Episode #100 master audio broadcast is live on Spotify, Apple Podcasts, and Voxstar.\n\nMastered at -16 LUFS with full ID3 metadata.`
+      },
+      {
+        id: 'dest-sub-4',
+        category: 'written',
+        destination: 'Substack Notes',
+        title: 'Substack Note 4/4: Direct Article Link',
+        countLabel: '4 written posts (4/4) • Links back',
+        icon: <SubstackIcon size={16} />,
+        backlinkUrl: mainBacklink,
+        content: `Catch the full article and code templates right here: ${mainBacklink}`
       }
     ];
-
-    const ltxVideoPrompt = `Cinematic 9:16 vertical video of a futuristic high-tech AI command center with glowing holographic charts, smooth slow pan over glowing fiber-optic data streams and floating agent node graph, neon cyan and amber lighting, photorealistic 8k, 60fps, shallow depth of field.`;
-
-    const ffmpegCommand = `ffmpeg -loop 1 -i ep100_social_image.jpg -i Episode_100_Master.mp3 -filter_complex "[0:v]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,setsar=1[bg]; [1:a]showwaves=s=900x240:mode=p2p:colors=0x60a5fa@0.9[wave]; [bg][wave]overlay=(W-w)/2:H-h-350[v]" -map "[v]" -map 1:a -c:v libx264 -preset fast -crf 20 -c:a aac -b:a 192k -shortest ep100_vertical_short.mp4`;
-
-    return {
-      linkedinPost,
-      xPost,
-      facebookPost,
-      tiktokScript,
-      carouselSlides,
-      ltxVideoPrompt,
-      ffmpegCommand
-    };
   };
 
-  const multiplied = generateMultiplication(sourceIdea, sourceTitle);
+  const allPieces = generate26Pieces(sourceIdea, sourceTitle);
+
+  const filteredPieces = filterCategory === 'all' 
+    ? allPieces 
+    : allPieces.filter(p => p.category === filterCategory);
 
   // Timer simulation for 9:16 video player preview
   useEffect(() => {
@@ -295,27 +436,32 @@ Use simple language and short sentences. Keep every claim grounded in the source
 Source content:
 ${sourceIdea}`;
 
+  const copyAllPiecesAsMarkdown = () => {
+    const md = allPieces.map((p, idx) => `### [${idx + 1}/26] ${p.destination}: ${p.title} (${p.countLabel})\n\n${p.content}\n\n${p.dmAutomationTrigger ? `*DM Automation Trigger*: ${p.dmAutomationTrigger}\n` : ''}${p.backlinkUrl ? `*Backlink*: ${p.backlinkUrl}\n` : ''}\n---\n`).join('\n');
+    copyToClipboard(md, 'copy-all-26');
+  };
+
   return (
     <div className="content-multiplier-studio animate-fade">
       {/* Screen Help Banner */}
       <ScreenHelpBanner
-        screenTitle="Content Multiplier & Free Video Engine (Blotato Alternative)"
-        subtitle="1 Proven Idea → Multiplied natively for LinkedIn, X, Facebook, TikTok & 8-Slide Instagram Carousels. 100% Free with zero subscription fees."
+        screenTitle="Long-Form Multiplication Engine: 1 Long Piece ➔ 26 Finished Posts"
+        subtitle="1 Source Idea ➔ 13 Destinations ➔ 26 Finished Pieces (1 Newsletter + 1 Edited Video + 5 Short Videos + 2 Stories + 17 Written Posts) with closed-loop DM Automation traffic back to your source."
         steps={[
           {
             number: 1,
-            title: "Input 1 Proven Idea",
-            detail: "Paste an article, podcast summary, video script, or select an episode preset."
+            title: "TEACH: 1 High-Quality Long-Form Piece",
+            detail: "Create 1 valuable guide with unique insights (Substack article, podcast, or transcript)."
           },
           {
             number: 2,
-            title: "Multiply Across Platforms",
-            detail: "Instantly generate native conversational posts, viral 8-slide carousels, and TikTok scripts."
+            title: "REPURPOSE: 13 Destinations (26 Pieces)",
+            detail: "AI automatically rebuilds the idea as short videos, stories, carousels, and tailored feed posts."
           },
           {
             number: 3,
-            title: "Zero-Cost 9:16 Video & B-Roll",
-            detail: "Use LTX-Video, free stock footage, and FFmpeg audio waveforms to produce vertical Shorts & Reels."
+            title: "SEND PEOPLE BACK: Closed-Loop Funnel",
+            detail: "Instagram and Facebook reels and stories use DM automation to drive viewers back to the original source."
           }
         ]}
         proTip="No $29-$499/mo Blotato credit limits. You have unlimited local generation and direct 1-click clipboard blast."
@@ -326,7 +472,7 @@ ${sourceIdea}`;
         <div className="source-card-header">
           <div className="flex-align-center gap-2">
             <Zap className="text-amber" size={20} />
-            <h3 className="card-title">1. Start with 1 Proven Idea (The Core Source)</h3>
+            <h3 className="card-title">1. Start with 1 High-Quality Long-Form Piece</h3>
           </div>
           <div className="preset-selector-row">
             <span className="text-secondary text-xs">Load Preset:</span>
@@ -368,27 +514,19 @@ ${sourceIdea}`;
           </div>
         </div>
 
-        {/* PROMPT 1 & 2 QUICK COPY BAR */}
-        <div className="prompt-quick-actions">
-          <div className="flex-align-center gap-2">
-            <Sparkles className="text-accent" size={16} />
-            <span className="font-semibold text-sm">2 Free Viral Multiplication Prompts:</span>
+        {/* 1 -> 26 HERO STAT STRIP */}
+        <div className="multiplication-hero-badge-strip">
+          <div className="hero-1-to-26">
+            <span className="num-1">1</span>
+            <span className="arrow-green">➔</span>
+            <span className="num-26">26</span>
           </div>
-          <div className="flex-align-center gap-2">
-            <button 
-              className="btn btn-secondary btn-sm"
-              onClick={() => copyToClipboard(rawPrompt1, 'prompt1')}
-            >
-              {copiedKey === 'prompt1' ? <Check size={14} className="text-success" /> : <Copy size={14} />}
-              Copy Prompt 1 (All Platforms)
-            </button>
-            <button 
-              className="btn btn-secondary btn-sm"
-              onClick={() => copyToClipboard(rawPrompt2, 'prompt2')}
-            >
-              {copiedKey === 'prompt2' ? <Check size={14} className="text-success" /> : <Copy size={14} />}
-              Copy Prompt 2 (8-Slide Carousel)
-            </button>
+          <div className="hero-stat-desc">
+            <strong>1 long-form idea becomes 26 published pieces.</strong>
+            <p>1 newsletter + 1 edited video + 5 short videos + 2 Stories + 17 written posts.</p>
+          </div>
+          <div className="hero-pill-badge">
+            1 source ➔ 13 destinations ➔ 26 finished pieces
           </div>
         </div>
       </div>
@@ -396,19 +534,20 @@ ${sourceIdea}`;
       {/* 2. TAB NAVIGATION */}
       <div className="multiplier-tabs-nav">
         <button
-          className={`tab-button ${activeTab === 'multiplier' ? 'active' : ''}`}
-          onClick={() => setActiveTab('multiplier')}
-        >
-          <Share2 size={16} />
-          <span>Platform Multiplier (LinkedIn, X, FB, TikTok)</span>
-        </button>
-        <button
-          className={`tab-button ${activeTab === 'carousel' ? 'active' : ''}`}
-          onClick={() => setActiveTab('carousel')}
+          className={`tab-button ${activeTab === 'architecture' ? 'active' : ''}`}
+          onClick={() => setActiveTab('architecture')}
         >
           <Layers size={16} />
-          <span>8-Slide Instagram & LinkedIn Carousel</span>
-          <span className="badge-pill">8 Slides</span>
+          <span>Interactive Architecture Flow (1 ➔ 26)</span>
+          <span className="badge-pill">Visual Blueprint</span>
+        </button>
+        <button
+          className={`tab-button ${activeTab === 'all-26' ? 'active' : ''}`}
+          onClick={() => setActiveTab('all-26')}
+        >
+          <Share2 size={16} />
+          <span>All 26 Finished Pieces (13 Destinations)</span>
+          <span className="badge-pill badge-free">26 Ready</span>
         </button>
         <button
           className={`tab-button ${activeTab === 'video-916' ? 'active' : ''}`}
@@ -427,267 +566,297 @@ ${sourceIdea}`;
         </button>
       </div>
 
-      {/* TAB 1: 4 PLATFORMS MULTIPLIER */}
-      {activeTab === 'multiplier' && (
-        <div className="platforms-grid animate-fade">
-          {/* A. LINKEDIN POST */}
-          <div className="glass-panel platform-card">
-            <div className="platform-card-header">
-              <div className="flex-align-center gap-2">
-                <div className="icon-badge linkedin-badge">
-                  <LinkedInIcon size={16} />
-                </div>
-                <div>
-                  <h4 className="platform-name">LinkedIn Conversational Post</h4>
-                  <span className="text-muted text-xs">Formatted for high Dwell Time & Comments</span>
-                </div>
-              </div>
-              <button
-                className="btn btn-secondary btn-sm"
-                onClick={() => copyToClipboard(multiplied.linkedinPost, 'li-post')}
+      {/* TAB 1: INTERACTIVE ARCHITECTURE FLOW GRAPH (MATCHING DIAGRAM) */}
+      {activeTab === 'architecture' && (
+        <div className="architecture-flow-container animate-fade">
+          <div className="architecture-diagram-card glass-panel">
+            <div className="diagram-header-bar">
+              <span className="diagram-sub-label">1 BECOMES MANY</span>
+              <button 
+                className="btn btn-primary btn-sm"
+                onClick={copyAllPiecesAsMarkdown}
               >
-                {copiedKey === 'li-post' ? <Check size={14} className="text-success" /> : <Copy size={14} />}
-                Copy LinkedIn
+                {copiedKey === 'copy-all-26' ? <Check size={14} className="text-success" /> : <Copy size={14} />}
+                Copy All 26 Pieces (.md)
               </button>
             </div>
-            <div className="platform-content-box">
-              <pre className="post-preview-text">{multiplied.linkedinPost}</pre>
+
+            {/* FLOW GRAPH NODES */}
+            <div className="flow-graph-layout">
+              {/* LEFT NODE: 1x YOU MAKE LONG FORM PIECE */}
+              <div className="node-box node-source-purple">
+                <span className="node-chip">1x</span>
+                <span className="node-sub">YOU MAKE</span>
+                <h4 className="node-main-title">Long-form piece</h4>
+                <p className="node-caption">Newsletter / Podcast / Video</p>
+              </div>
+
+              {/* ARROW */}
+              <div className="flow-connector-arrow">
+                <span className="arrow-line"></span>
+                <span className="arrow-head">➔</span>
+              </div>
+
+              {/* CENTER NODE: AI REPURPOSES */}
+              <div className="node-box node-ai-green">
+                <span className="node-chip chip-green">AI</span>
+                <span className="node-sub">AI REPURPOSES</span>
+                <h4 className="node-main-title">One idea ➔ many formats</h4>
+                <p className="node-caption">Automated Multiplier Engine</p>
+              </div>
+
+              {/* ARROW */}
+              <div className="flow-connector-arrow">
+                <span className="arrow-line"></span>
+                <span className="arrow-head">➔</span>
+              </div>
+
+              {/* RIGHT: 13 DESTINATIONS GRID */}
+              <div className="destinations-flow-grid">
+                {/* 1. Newsletter */}
+                <div className="dest-node-card">
+                  <div className="dest-icon-badge color-orange"><SubstackIcon size={14} /></div>
+                  <div className="dest-node-info">
+                    <strong>Newsletter</strong>
+                    <span>1 complete guide</span>
+                  </div>
+                </div>
+
+                {/* 2. YouTube Long Video */}
+                <div className="dest-node-card">
+                  <div className="dest-icon-badge color-red"><YoutubeIcon size={14} /></div>
+                  <div className="dest-node-info">
+                    <strong>YouTube</strong>
+                    <span>1 edited long video</span>
+                  </div>
+                </div>
+
+                {/* 3. TikTok */}
+                <div className="dest-node-card">
+                  <div className="dest-icon-badge color-pink"><TikTokIcon size={14} /></div>
+                  <div className="dest-node-info">
+                    <strong>TikTok</strong>
+                    <span>Short video</span>
+                  </div>
+                </div>
+
+                {/* 4. YouTube Shorts */}
+                <div className="dest-node-card">
+                  <div className="dest-icon-badge color-red"><YoutubeIcon size={14} /></div>
+                  <div className="dest-node-info">
+                    <strong>YouTube Shorts</strong>
+                    <span>Short video</span>
+                  </div>
+                </div>
+
+                {/* 5. Threads Video */}
+                <div className="dest-node-card">
+                  <div className="dest-icon-badge color-white"><ThreadsIcon size={14} /></div>
+                  <div className="dest-node-info">
+                    <strong>Threads video</strong>
+                    <span>Short video</span>
+                  </div>
+                </div>
+
+                {/* 6. Bluesky */}
+                <div className="dest-node-card">
+                  <div className="dest-icon-badge color-blue"><BlueskyIcon size={14} /></div>
+                  <div className="dest-node-info">
+                    <strong>Bluesky</strong>
+                    <span>4 short tweets</span>
+                  </div>
+                </div>
+
+                {/* 7. LinkedIn */}
+                <div className="dest-node-card">
+                  <div className="dest-icon-badge color-linkedin"><LinkedInIcon size={14} /></div>
+                  <div className="dest-node-info">
+                    <strong>LinkedIn</strong>
+                    <span>1 written post • Sometimes links back</span>
+                  </div>
+                </div>
+
+                {/* 8. X (Twitter) */}
+                <div className="dest-node-card">
+                  <div className="dest-icon-badge color-white"><XTwitterIcon size={14} /></div>
+                  <div className="dest-node-info">
+                    <strong>X</strong>
+                    <span>4 short tweets • Sometimes links back</span>
+                  </div>
+                </div>
+
+                {/* 9. Threads */}
+                <div className="dest-node-card">
+                  <div className="dest-icon-badge color-white"><ThreadsIcon size={14} /></div>
+                  <div className="dest-node-info">
+                    <strong>Threads</strong>
+                    <span>4 short tweets • Sometimes links back</span>
+                  </div>
+                </div>
+
+                {/* 10. Substack */}
+                <div className="dest-node-card">
+                  <div className="dest-icon-badge color-orange"><SubstackIcon size={14} /></div>
+                  <div className="dest-node-info">
+                    <strong>Substack</strong>
+                    <span>4 written posts • Sometimes links back</span>
+                  </div>
+                </div>
+
+                {/* 11. Instagram Reels */}
+                <div className="dest-node-card dest-card-dm">
+                  <div className="dest-icon-badge color-pink"><InstagramIcon size={14} /></div>
+                  <div className="dest-node-info">
+                    <strong>Instagram Reels</strong>
+                    <span>Short video • DM automation drives to original</span>
+                  </div>
+                </div>
+
+                {/* 12. Facebook Reels */}
+                <div className="dest-node-card dest-card-dm">
+                  <div className="dest-icon-badge color-blue"><FacebookIcon size={14} /></div>
+                  <div className="dest-node-info">
+                    <strong>Facebook Reels</strong>
+                    <span>Short video • DM automation drives to original</span>
+                  </div>
+                </div>
+
+                {/* 13. Instagram / Facebook Stories */}
+                <div className="dest-node-card dest-card-dm dest-span-2">
+                  <div className="dest-icon-badge color-gradient"><InstagramIcon size={14} /></div>
+                  <div className="dest-node-info">
+                    <strong>Instagram / Facebook Stories</strong>
+                    <span>2 story posts • DM automation drives traffic to original</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* CLOSED-LOOP RETURN ARROW (DM AUTOMATION DRIVES BACK TO SOURCE) */}
+            <div className="closed-loop-traffic-banner">
+              <div className="closed-loop-arrow-line">
+                <span className="dot-pulse"></span>
+                <span className="loop-text">
+                  DM AUTOMATION + SELECTED LINKS DRIVE VIEWERS BACK TO THE ORIGINAL
+                </span>
+                <span className="arrow-left-head">◄</span>
+              </div>
             </div>
           </div>
 
-          {/* B. X (TWITTER) POST */}
-          <div className="glass-panel platform-card">
-            <div className="platform-card-header">
-              <div className="flex-align-center gap-2">
-                <div className="icon-badge x-badge">
-                  <XTwitterIcon size={16} />
-                </div>
-                <div>
-                  <h4 className="platform-name">X Post (Under 280 Chars)</h4>
-                  <span className="text-muted text-xs">
-                    Length: {multiplied.xPost.length} / 280 chars • {280 - multiplied.xPost.length} remaining
-                  </span>
-                </div>
-              </div>
-              <button
-                className="btn btn-secondary btn-sm"
-                onClick={() => copyToClipboard(multiplied.xPost, 'x-post')}
-              >
-                {copiedKey === 'x-post' ? <Check size={14} className="text-success" /> : <Copy size={14} />}
-                Copy X Post
-              </button>
+          {/* 3 PILLARS SUMMARY CARDS */}
+          <div className="pillars-grid-row">
+            <div className="glass-panel pillar-card">
+              <span className="pillar-num">1. TEACH</span>
+              <h4>Create 1 Valuable Guide</h4>
+              <p>Create 1 valuable guide with unique insights, deep research, and actionable principles.</p>
             </div>
-            <div className="platform-content-box">
-              <pre className="post-preview-text">{multiplied.xPost}</pre>
+            <div className="glass-panel pillar-card">
+              <span className="pillar-num">2. REPURPOSE</span>
+              <h4>Rebuild for 13 Channels</h4>
+              <p>Rebuild the idea as short videos, long videos, stories, carousels, and written feed posts.</p>
             </div>
-          </div>
-
-          {/* C. FACEBOOK CONVERSATIONAL POST */}
-          <div className="glass-panel platform-card">
-            <div className="platform-card-header">
-              <div className="flex-align-center gap-2">
-                <div className="icon-badge fb-badge">
-                  <FacebookIcon size={16} />
-                </div>
-                <div>
-                  <h4 className="platform-name">Facebook Conversational Post</h4>
-                  <span className="text-muted text-xs">Story-driven with engagement discussion CTA</span>
-                </div>
-              </div>
-              <button
-                className="btn btn-secondary btn-sm"
-                onClick={() => copyToClipboard(multiplied.facebookPost, 'fb-post')}
-              >
-                {copiedKey === 'fb-post' ? <Check size={14} className="text-success" /> : <Copy size={14} />}
-                Copy Facebook
-              </button>
-            </div>
-            <div className="platform-content-box">
-              <pre className="post-preview-text">{multiplied.facebookPost}</pre>
-            </div>
-          </div>
-
-          {/* D. TIKTOK / REELS VIDEO SCRIPT */}
-          <div className="glass-panel platform-card">
-            <div className="platform-card-header">
-              <div className="flex-align-center gap-2">
-                <div className="icon-badge tt-badge">
-                  <TikTokIcon size={16} />
-                </div>
-                <div>
-                  <h4 className="platform-name">TikTok & Reels Video Script</h4>
-                  <span className="text-muted text-xs">3-Second Hook + Fast Visual Cues + High-Retention CTA</span>
-                </div>
-              </div>
-              <button
-                className="btn btn-secondary btn-sm"
-                onClick={() => copyToClipboard(
-                  `HOOK (0-3s):\n${multiplied.tiktokScript.hook}\n\nNARRATION:\n${multiplied.tiktokScript.bodyNarration}\n\nVISUAL CUES:\n${multiplied.tiktokScript.visualCues.join('\n')}\n\nCTA:\n${multiplied.tiktokScript.cta}`,
-                  'tt-script'
-                )}
-              >
-                {copiedKey === 'tt-script' ? <Check size={14} className="text-success" /> : <Copy size={14} />}
-                Copy TikTok Script
-              </button>
-            </div>
-            <div className="platform-content-box tiktok-script-box">
-              <div className="script-hook-banner">
-                <Flame size={16} className="text-amber" />
-                <span className="font-semibold text-xs">VIRAL HOOK (0-3s):</span>
-                <p className="hook-text">"{multiplied.tiktokScript.hook}"</p>
-              </div>
-
-              <div className="script-section">
-                <span className="script-section-label">🎙️ NARRATION (Voiceover):</span>
-                <p className="narration-text">{multiplied.tiktokScript.bodyNarration}</p>
-              </div>
-
-              <div className="script-section">
-                <span className="script-section-label">🎬 VISUAL CUES & B-ROLL:</span>
-                <ul className="visual-cues-list">
-                  {multiplied.tiktokScript.visualCues.map((cue, idx) => (
-                    <li key={idx}>{cue}</li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="script-cta-banner">
-                <span className="font-semibold text-xs">🚀 CALL TO ACTION:</span>
-                <p>{multiplied.tiktokScript.cta}</p>
-              </div>
+            <div className="glass-panel pillar-card">
+              <span className="pillar-num">3. SEND PEOPLE BACK</span>
+              <h4>Closed-Loop Traffic</h4>
+              <p>Instagram & Facebook reels and stories use DM automation to drive viewers back to original long-form piece.</p>
             </div>
           </div>
         </div>
       )}
 
-      {/* TAB 2: 8-SLIDE CAROUSEL GENERATOR */}
-      {activeTab === 'carousel' && (
-        <div className="carousel-studio-layout animate-fade">
-          {/* LEFT: SLIDE PREVIEW CANVAS */}
-          <div className="glass-panel carousel-preview-container">
-            <div className="carousel-nav-controls">
+      {/* TAB 2: ALL 26 FINISHED PIECES */}
+      {activeTab === 'all-26' && (
+        <div className="all-26-studio-layout animate-fade">
+          {/* FILTER & ACTIONS BAR */}
+          <div className="pieces-action-bar glass-panel">
+            <div className="category-filter-chips">
               <button 
-                className="btn btn-secondary btn-sm"
-                disabled={selectedSlide === 1}
-                onClick={() => setSelectedSlide(prev => Math.max(1, prev - 1))}
+                className={`filter-chip ${filterCategory === 'all' ? 'active' : ''}`}
+                onClick={() => setFilterCategory('all')}
               >
-                <ChevronLeft size={16} /> Prev Slide
+                All 26 Pieces ({allPieces.length})
               </button>
-              <div className="slide-counter-badge">
-                Slide {selectedSlide} of 8 ({multiplied.carouselSlides[selectedSlide - 1]?.type.toUpperCase()})
-              </div>
               <button 
-                className="btn btn-secondary btn-sm"
-                disabled={selectedSlide === 8}
-                onClick={() => setSelectedSlide(prev => Math.min(8, prev + 1))}
+                className={`filter-chip ${filterCategory === 'written' ? 'active' : ''}`}
+                onClick={() => setFilterCategory('written')}
               >
-                Next Slide <ChevronRight size={16} />
+                Written Posts (17)
+              </button>
+              <button 
+                className={`filter-chip ${filterCategory === 'shorts' ? 'active' : ''}`}
+                onClick={() => setFilterCategory('shorts')}
+              >
+                Short Videos (5)
+              </button>
+              <button 
+                className={`filter-chip ${filterCategory === 'stories' ? 'active' : ''}`}
+                onClick={() => setFilterCategory('stories')}
+              >
+                Stories (2)
+              </button>
+              <button 
+                className={`filter-chip ${filterCategory === 'newsletter' || filterCategory === 'video-long' ? 'active' : ''}`}
+                onClick={() => setFilterCategory('newsletter')}
+              >
+                Long-Form & Video (2)
               </button>
             </div>
 
-            {/* VISUAL CAROUSEL CARD (Square 1:1 Aspect Ratio) */}
-            {multiplied.carouselSlides[selectedSlide - 1] && (
-              <div className="carousel-visual-card">
-                <div className="card-top-bar">
-                  <span className="card-brand-tag">VOXSTAR AI AUTOMATION</span>
-                  <span className="card-slide-pill">{selectedSlide} / 8</span>
-                </div>
-
-                <div className="card-body-content">
-                  <h3 className="card-slide-title">
-                    {multiplied.carouselSlides[selectedSlide - 1].headline}
-                  </h3>
-                  <p className="card-slide-sub">
-                    {multiplied.carouselSlides[selectedSlide - 1].body}
-                  </p>
-
-                  {multiplied.carouselSlides[selectedSlide - 1].bulletPoints && (
-                    <div className="card-bullets">
-                      {multiplied.carouselSlides[selectedSlide - 1].bulletPoints?.map((b, i) => (
-                        <div key={i} className="card-bullet-item">
-                          <span className="bullet-dot">▸</span>
-                          <span>{b}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                <div className="card-bottom-bar">
-                  <span>Gene Da Rocha</span>
-                  <span>Swipe ➔</span>
-                </div>
-              </div>
-            )}
-
-            {/* SLIDE THUMBNAIL TRACK */}
-            <div className="carousel-thumbnails-track">
-              {multiplied.carouselSlides.map((slide) => (
-                <button
-                  key={slide.slideNumber}
-                  className={`slide-thumb ${selectedSlide === slide.slideNumber ? 'active' : ''}`}
-                  onClick={() => setSelectedSlide(slide.slideNumber)}
-                >
-                  <span className="thumb-num">{slide.slideNumber}</span>
-                  <span className="thumb-type">{slide.type}</span>
-                </button>
-              ))}
-            </div>
+            <button
+              className="btn btn-primary btn-sm"
+              onClick={copyAllPiecesAsMarkdown}
+            >
+              {copiedKey === 'copy-all-26' ? <Check size={14} className="text-success" /> : <Copy size={14} />}
+              Copy All 26 Pieces
+            </button>
           </div>
 
-          {/* RIGHT: AI IMAGE PROMPTS & EXPORT FOR ALL 8 SLIDES */}
-          <div className="glass-panel carousel-prompts-panel">
-            <div className="flex-between">
-              <div className="flex-align-center gap-2">
-                <ImageIcon className="text-accent" size={18} />
-                <h4 className="panel-title">AI Image Prompts for 8 Slides</h4>
-              </div>
-              <button
-                className="btn btn-primary btn-sm"
-                onClick={() => copyToClipboard(
-                  multiplied.carouselSlides.map(s => `SLIDE ${s.slideNumber} (${s.type.toUpperCase()}):\nHeadline: ${s.headline}\nText: ${s.body}\nImage Prompt: ${s.visualPrompt}\n`).join('\n---\n'),
-                  'all-slides'
-                )}
-              >
-                {copiedKey === 'all-slides' ? <Check size={14} className="text-success" /> : <Copy size={14} />}
-                Copy All 8 Slide Prompts
-              </button>
-            </div>
-
-            <div className="slide-prompt-details">
-              <div className="current-slide-inspector">
-                <div className="inspector-header">
-                  <span className="badge-pill">Slide #{selectedSlide} Prompt</span>
-                  <button
-                    className="btn btn-secondary btn-xs"
-                    onClick={() => copyToClipboard(multiplied.carouselSlides[selectedSlide - 1].visualPrompt, `prompt-${selectedSlide}`)}
-                  >
-                    {copiedKey === `prompt-${selectedSlide}` ? <Check size={12} className="text-success" /> : <Copy size={12} />}
-                    Copy Prompt #{selectedSlide}
-                  </button>
-                </div>
-                <div className="prompt-text-box">
-                  <code>{multiplied.carouselSlides[selectedSlide - 1]?.visualPrompt}</code>
-                </div>
-              </div>
-
-              <div className="all-slides-list">
-                <span className="text-secondary text-xs font-semibold">ALL 8 SLIDES SUMMARY:</span>
-                {multiplied.carouselSlides.map(s => (
-                  <div 
-                    key={s.slideNumber} 
-                    className={`slide-summary-row ${selectedSlide === s.slideNumber ? 'active' : ''}`}
-                    onClick={() => setSelectedSlide(s.slideNumber)}
-                  >
-                    <span className="slide-num-badge">#{s.slideNumber}</span>
-                    <div className="slide-summary-text">
-                      <strong>{s.headline}</strong>
-                      <p className="text-xs text-muted truncate">{s.body}</p>
+          {/* PIECES GRID */}
+          <div className="pieces-cards-grid">
+            {filteredPieces.map((piece, idx) => (
+              <div key={piece.id} className="glass-panel piece-item-card">
+                <div className="piece-card-header">
+                  <div className="flex-align-center gap-2">
+                    <div className="piece-icon-circle">{piece.icon}</div>
+                    <div>
+                      <div className="flex-align-center gap-2">
+                        <span className="piece-index">#{idx + 1}</span>
+                        <h4 className="piece-dest-name">{piece.destination}</h4>
+                      </div>
+                      <span className="piece-count-badge">{piece.countLabel}</span>
                     </div>
                   </div>
-                ))}
+                  <button
+                    className="btn btn-secondary btn-xs"
+                    onClick={() => copyToClipboard(piece.content, piece.id)}
+                  >
+                    {copiedKey === piece.id ? <Check size={12} className="text-success" /> : <Copy size={12} />}
+                    Copy
+                  </button>
+                </div>
+
+                <div className="piece-content-container">
+                  <pre className="piece-text-pre">{piece.content}</pre>
+                </div>
+
+                {/* DM AUTOMATION & BACKLINK BADGE */}
+                {(piece.dmAutomationTrigger || piece.backlinkUrl) && (
+                  <div className="piece-footer-meta">
+                    {piece.dmAutomationTrigger && (
+                      <span className="dm-trigger-badge">
+                        <MessageCircle size={12} /> {piece.dmAutomationTrigger}
+                      </span>
+                    )}
+                    {piece.backlinkUrl && (
+                      <span className="backlink-badge">
+                        <Globe size={12} /> Backlink Included
+                      </span>
+                    )}
+                  </div>
+                )}
               </div>
-            </div>
+            ))}
           </div>
         </div>
       )}
@@ -699,23 +868,19 @@ ${sourceIdea}`;
           <div className="glass-panel video-phone-card">
             <div className="phone-wrapper">
               <div className="phone-screen" ref={videoRef}>
-                {/* Background Simulation / Video */}
                 <div className="phone-bg-glow" />
 
-                {/* Top Badge */}
                 <div className="phone-top-badge">
                   <Flame size={14} className="text-amber animate-pulse" />
                   <span>VIRAL SHORTS • #100</span>
                 </div>
 
-                {/* Animated Captions & Waveform */}
                 <div className="phone-center-hook">
                   <span className="hook-pill">EPISODE REVEAL</span>
                   <h2 className="hook-heading">
                     {sourceTitle.replace(/^Episode #\d+:\s*/i, '')}
                   </h2>
                   
-                  {/* Dynamic Subtitle Highlight */}
                   <div className="karaoke-captions">
                     <span className="caption-word active">Autonomous</span>
                     <span className="caption-word">agent</span>
@@ -726,7 +891,6 @@ ${sourceIdea}`;
                   </div>
                 </div>
 
-                {/* Animated Waveform Visualizer */}
                 <div className="phone-waveform-container">
                   <div className={`waveform-bar ${isPlayingVideo ? 'animating' : ''}`} style={{ height: '60%' }} />
                   <div className={`waveform-bar ${isPlayingVideo ? 'animating' : ''}`} style={{ height: '85%' }} />
@@ -739,14 +903,12 @@ ${sourceIdea}`;
                   <div className={`waveform-bar ${isPlayingVideo ? 'animating' : ''}`} style={{ height: '65%' }} />
                 </div>
 
-                {/* Bottom Host Tag */}
                 <div className="phone-host-tag">
                   <Radio size={14} className="text-accent" />
                   <span>Gene Da Rocha • Voxstar AI</span>
                 </div>
               </div>
 
-              {/* Video Player Controls */}
               <div className="video-player-controls">
                 <button 
                   className="btn btn-primary btn-sm"
@@ -774,13 +936,12 @@ ${sourceIdea}`;
               </div>
             </div>
 
-            {/* 1. LTX-Video / LTX-2.5 Prompt */}
             <div className="pipeline-step-card">
               <div className="step-header">
                 <span className="step-badge">1. Open AI Video (LTX-Video / LTX-2.5)</span>
                 <button
                   className="btn btn-secondary btn-xs"
-                  onClick={() => copyToClipboard(multiplied.ltxVideoPrompt, 'ltx-prompt')}
+                  onClick={() => copyToClipboard(`Cinematic 9:16 vertical video of futuristic AI command center, glowing holographic charts, smooth slow pan over glowing fiber-optic data streams and floating agent node graph, neon cyan and amber lighting, photorealistic 8k, 60fps.`, 'ltx-prompt')}
                 >
                   {copiedKey === 'ltx-prompt' ? <Check size={12} className="text-success" /> : <Copy size={12} />}
                   Copy LTX Prompt
@@ -790,11 +951,10 @@ ${sourceIdea}`;
                 Paste this into free Hugging Face Spaces (LTX-Video / CogVideoX) or run locally on your GPU:
               </p>
               <div className="code-snippet-box">
-                <code>{multiplied.ltxVideoPrompt}</code>
+                <code>Cinematic 9:16 vertical video of futuristic AI command center, glowing holographic charts, smooth slow pan over glowing fiber-optic data streams and floating agent node graph, neon cyan and amber lighting, photorealistic 8k, 60fps.</code>
               </div>
             </div>
 
-            {/* 2. Free Pexels / Pixabay Vertical B-Roll */}
             <div className="pipeline-step-card">
               <div className="step-header">
                 <span className="step-badge">2. Free HD Vertical Stock B-Roll</span>
@@ -812,13 +972,12 @@ ${sourceIdea}`;
               </p>
             </div>
 
-            {/* 3. 1-Line FFmpeg Master Render Command */}
             <div className="pipeline-step-card">
               <div className="step-header">
                 <span className="step-badge">3. 1-Line FFmpeg Automated Video Render</span>
                 <button
                   className="btn btn-secondary btn-xs"
-                  onClick={() => copyToClipboard(multiplied.ffmpegCommand, 'ffmpeg-cmd')}
+                  onClick={() => copyToClipboard(`ffmpeg -loop 1 -i ep100_social_image.jpg -i Episode_100_Master.mp3 -filter_complex "[0:v]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,setsar=1[bg]; [1:a]showwaves=s=900x240:mode=p2p:colors=0x60a5fa@0.9[wave]; [bg][wave]overlay=(W-w)/2:H-h-350[v]" -map "[v]" -map 1:a -c:v libx264 -preset fast -crf 20 -c:a aac -b:a 192k -shortest ep100_vertical_short.mp4`, 'ffmpeg-cmd')}
                 >
                   {copiedKey === 'ffmpeg-cmd' ? <Check size={12} className="text-success" /> : <Copy size={12} />}
                   Copy Terminal Command
@@ -828,7 +987,7 @@ ${sourceIdea}`;
                 Combines your mastered podcast audio, background visual, moving waveform, and outputs a 1080x1920 MP4:
               </p>
               <div className="code-snippet-box">
-                <code>{multiplied.ffmpegCommand}</code>
+                <code>ffmpeg -loop 1 -i ep100_social_image.jpg -i Episode_100_Master.mp3 -filter_complex "[0:v]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,setsar=1[bg]; [1:a]showwaves=s=900x240:mode=p2p:colors=0x60a5fa@0.9[wave]; [bg][wave]overlay=(W-w)/2:H-h-350[v]" -map "[v]" -map 1:a -c:v libx264 -preset fast -crf 20 -c:a aac -b:a 192k -shortest ep100_vertical_short.mp4</code>
               </div>
             </div>
           </div>
