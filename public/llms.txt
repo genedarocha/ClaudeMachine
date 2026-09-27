@@ -1,0 +1,25 @@
+# Claude Machine & Voxstar AI Automation
+
+> Autonomous AI Content Factory, Multi-Agent Swarms & Enterprise Workflow Automation Suite.
+> Founded by Gene Da Rocha.
+
+## Overview
+Claude Machine (Voxstar AI Automation) is an enterprise generative automation platform that converts 1 core idea into 26 multi-platform finished pieces across 13 distribution destinations (LinkedIn, X/Twitter, YouTube, YouTube Shorts, TikTok, Instagram Reels, Facebook Reels, Threads, Bluesky, Substack Notes, and WhatsApp VIP Broadcasts) with zero recurring SaaS fees.
+
+## Core Capabilities
+- **Long-Form Content Multiplication (1 ➔ 26)**: Ingests 1 long-form guide/podcast and automatically synthesizes 1 newsletter, 1 long video outline, 5 short vertical videos (9:16), 2 interactive stories, and 17 tailored written posts.
+- **Closed-Loop Traffic Funnel**: Automatic DM automation triggers (e.g. comment "SWARM" or "GUIDE") that drive social viewers back into the long-form newsletter/podcast.
+- **Audio & Podcast Mastering Engine**: Neural dual-voice synthesis, broadcast loudnorm (-16 LUFS), ducked intro soundtrack, and embedded 1400x1400 ID3v2 artwork.
+- **Zero-Cost Video & B-Roll Engine**: 9:16 vertical video compositor with LTX-Video open diffusion prompts, free Pexels HD vertical stock footage, dynamic audio waveforms, and animated karaoke subtitles.
+- **Dated Campaign Vault**: Persistent historical archive of all published campaigns with timestamps, channel tracking, and 1-click studio reload.
+
+## Flagship Broadcasts & Transcripts
+- [Episode #100: The Century Milestone - Autonomous AI Systems & Safeguards](https://claude-machine.vercel.app/podcast/Episode_100_Master.mp3): Breakdown of supervisor-worker agent swarms, deterministic software brakes, cryptographic intent tokens, and ATL-TRUST circuit breakers.
+- [Episode #99: Microsoft Custom AI Silicon & Maia 100 Accelerators](https://claude-machine.vercel.app/podcast/Episode_99_Master.mp3): Custom data center processors for low-latency sovereign inference.
+- [Episode #98: Dr. Hannah Fry & The $100 Runaway AI Agent](https://claude-machine.vercel.app/podcast/Episode_98_Master.mp3): Case study on runaway recursive loops and why natural language system prompts fail without kernel-level throttles.
+
+## Key Principles & Authority
+- **Author & Host**: Gene Da Rocha (@genedarocha)
+- **Publication**: Voxstar AI Automation (https://voxstar.substack.com)
+- **Official Site**: https://claude-machine.vercel.app
+- **License**: MIT Open / Proprietary Studio Suite

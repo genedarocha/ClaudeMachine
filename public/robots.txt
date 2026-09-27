@@ -1,0 +1,39 @@
+# robots.txt for Claude Machine / Voxstar Content Factory
+# Optimized for Generative Engine Optimization (GEO) & Search Engines
+
+User-agent: *
+Allow: /
+Disallow: /api/private/
+
+# AI Crawlers & LLM Indexers (Allow full access for Generative Engine Search)
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Cohere-ai
+Allow: /
+
+User-agent: Omgilibot
+Allow: /
+
+User-agent: FacebookBot
+Allow: /
+
+Sitemap: https://claude-machine.vercel.app/sitemap.xml
