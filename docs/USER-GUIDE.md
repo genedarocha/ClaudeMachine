@@ -13,7 +13,7 @@ Everything you create is stored in this browser on this computer. Your API keys 
 ## What's real and what's a demo
 
 Real (makes live AI calls or real files):
-- **Daily** sites, **Content Calendar**, **Agents**, **Advisor**, **Weekly AI Automation Newsletter**, **YouTube Channel Builder**, **LinkedIn Comment Replies** (and its Chrome extension), the 105 **Specialists** on the Agent Dashboard, **Design Specialist**, and **Podcast Studio** playback.
+- **Daily** sites, **Content Calendar**, **Agents**, **Second Brain**, **Advisor**, **Weekly AI Automation Newsletter**, **YouTube Channel Builder**, **LinkedIn Comment Replies** (and its Chrome extension), the 105 **Specialists** on the Agent Dashboard, **Design Specialist**, and **Podcast Studio** playback.
 
 Demos (look real but only simulate output; nothing is generated or posted):
 - **Voxstar Connect**, **Content Multiplier**, **Idea**, **Wiredvibe app** (under Creation), **Video Factory**, and **Linkedin-Comments (Top 100)**.
@@ -125,6 +125,44 @@ Good starting tasks:
 - **AEO Foundations Architect**: "What should this site add so AI assistants can find and cite it? Give me an llms.txt and the changes."
 - **Offer & Lead Gen Strategist**: "Design a lead magnet and a 3-email follow-up for this site."
 - **TikTok Strategist**: "Plan 10 TikTok videos for this site with hooks."
+
+## Second Brain
+
+Your second brain is everything you've written and know, kept as plain markdown files in a private folder on your own computer: `~/Documents/second-brain`. It's based on the approach in [How to build an AI second brain](https://learnwithhasan.com/guide/ai-second-brain/): readable files, every change tracked with git, and AI answers that always say which notes they came from. Nothing is stored on the Claude Machine website.
+
+**What's in the folder**
+- `CLAUDE.md`: the rules any AI follows when it works with the brain (answer only from notes, cite them, list gaps, never invent, ask before writing).
+- `identity/`: `core.md` (who you are), `voice.md` (how you write), `beliefs.md` (positions you defend). These are drafts: rewrite them in your own words, because they shape everything the AI writes as you.
+- `projects/`: one card per company, product or channel. Fill in status, audience and offers.
+- `knowledge/`: short notes in your words, in `stories/`, `takes/`, `facts/` and `lessons/`.
+- `raw/`: the original material, untouched: your websites, both Substacks, LinkedIn articles, posts and newsletters. One file per article, with its source link and date.
+- `docs/`: any other documentation you add later.
+- `lenses/public.md`: the rule for anything you publish (public material only).
+- `INDEX.md`: a list of every note, rebuilt automatically.
+
+**Visibility** (set on every note)
+- **Public**: already published.
+- **Agents only**: the AI may use it but should never quote it publicly.
+- **Private**: used only when you tick "Include private notes".
+
+**Opening it**: Second Brain in the sidebar → **Open my second brain folder** → choose `Documents/second-brain` → allow editing. Chrome or Edge on a desktop is needed. Chrome asks for permission again once per session (**Reconnect**).
+
+**Browse**: groups on the left (Identity, Projects, Knowledge, Raw by source, Docs), the notes in the middle, the note on the right with its source link and visibility. **Search everything** finds notes by their words.
+
+**Distil into knowledge notes**: on any raw article, the AI proposes stories, takes, facts and lessons, each with the exact sentence it came from. Untick or edit any of them, then **Save approved**. Nothing is written until you approve, as the guide recommends.
+
+**Ask**: type a question. The machine finds the most relevant notes plus your identity files, sends only those to your AI, and returns an answer that cites the notes it used and lists **Gaps** (what the brain doesn't know yet). "Notes were sent" shows exactly what left your computer.
+
+**Add**: write or paste a note (document, story, take, fact or lesson) with its visibility, or upload markdown, text, HTML, CSV or JSON files into `docs/`. PDF and Word files need saving as text or HTML first.
+
+**Collecting your writing**: browsers can't read other websites, so collecting runs on your Mac. In Terminal, from the Claude Machine folder:
+- `node scripts/collect-second-brain.mjs` collects new posts from genedarocha.com, atl-trust.com, the aitoolboard.com blog, voxstar.com, voxstar.ai, genedarocha.substack.com and voxstar.substack.com. Run it whenever you've published something; it skips what it already has.
+- LinkedIn can't be collected automatically (that breaks LinkedIn's rules and needs your login). Instead: LinkedIn → Settings & Privacy → Data privacy → **Get a copy of your data** → tick Articles and Posts (Shares) → request, then download the zip when LinkedIn emails you. Run `node scripts/collect-second-brain.mjs --linkedin ~/Downloads/<the zip file>`.
+- Then press **Rescan** on the Second Brain screen.
+
+**Using it with Claude Code**: open Terminal in `~/Documents/second-brain` and run `claude`. Claude Code reads `CLAUDE.md` and can answer from the brain or propose new notes, the same way this screen does.
+
+**Backing it up**: the folder is a git repository. Commit after changes (`git add -A && git commit -m "notes"`), and if you want an off-computer copy, push it to a **private** GitHub repository.
 
 ## Advisor
 

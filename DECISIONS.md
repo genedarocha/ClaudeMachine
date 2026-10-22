@@ -51,3 +51,7 @@ Claude calls moved from hand-written `fetch` to `@anthropic-ai/sdk` with `danger
 
 ## The Agency agents are vendored, not fetched live (2026-10-22)
 282 MIT-licensed agent prompts are snapshotted into `public/agency-agents/` by `scripts/sync-agency-agents.mjs` rather than fetched from GitHub at runtime, so the app doesn't break if the upstream repo moves or restructures. Re-run the script to update.
+
+
+## Second Brain stays on Gene's computer, as files (2026-10-22)
+Following learnwithhasan.com/guide/ai-second-brain, the brain is a folder of markdown files in its own private git repo (`~/Documents/second-brain`), not a database or a hosted vector store. The deployed app is public, so the brain is never bundled or uploaded: the Second Brain screen reads the folder in place through the browser's File System Access API, and only the notes chosen for a question are sent to the AI provider. Retrieval is keyword/structural (as the guide recommends) rather than embeddings. LinkedIn content comes from LinkedIn's official data export, not scraping. The guide's optional hosted "head" (BrainOutside on a VPS with MCP) isn't built; it would be the route to using the brain from claude.ai or other devices.

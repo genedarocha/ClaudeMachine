@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { 
   Plus, Search, Settings, History, LayoutDashboard, 
   Trash2, Copy, Check, ChevronRight, Terminal, Cpu, FileText, Zap, HelpCircle,
-  Calendar, Headphones, Video, Globe, Sparkles, Radio, Share2, Clapperboard, Newspaper, CalendarDays, Bot, Lightbulb, BookOpen
+  Calendar, Headphones, Video, Globe, Sparkles, Radio, Share2, Clapperboard, Newspaper, CalendarDays, Bot, Lightbulb, BookOpen, Brain
 } from 'lucide-react';
 
 const LinkedInIcon: React.FC<{ size?: number; className?: string }> = ({ size = 16, className = "" }) => (
@@ -31,6 +31,7 @@ import { autoDraftIfFriday, seedNewsletterCalendar } from './utils/newsletterPip
 import { AgentStudio } from './components/AgentStudio';
 import { AdvisorStudio } from './components/AdvisorStudio';
 import { UserGuide } from './components/UserGuide';
+import { SecondBrainStudio } from './components/SecondBrainStudio';
 import { recordViewUse } from './utils/advisor';
 import { UniversalVideoStudio } from './components/UniversalVideoStudio';
 import { LinkedInCommentsStudio } from './components/LinkedInCommentsStudio';
@@ -66,7 +67,7 @@ function App() {
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [activeSpecialist, setActiveSpecialist] = useState<Specialist | null>(null);
-  const [currentView, setCurrentView] = useState<'dashboard' | 'runner' | 'generator' | 'history' | 'voxstar' | 'podcast-studio' | 'creation-wiredvibe' | 'creation-idea' | 'site-content' | 'calendar' | 'agents' | 'advisor' | 'guide' | 'video-factory' | 'linkedin-comments' | 'linkedin-replies' | 'youtube-builder' | 'newsletter' | 'content-multiplier'>('content-multiplier');
+  const [currentView, setCurrentView] = useState<'dashboard' | 'runner' | 'generator' | 'history' | 'voxstar' | 'podcast-studio' | 'creation-wiredvibe' | 'creation-idea' | 'site-content' | 'calendar' | 'agents' | 'advisor' | 'guide' | 'brain' | 'video-factory' | 'linkedin-comments' | 'linkedin-replies' | 'youtube-builder' | 'newsletter' | 'content-multiplier'>('content-multiplier');
   const [activeSoundscape, setActiveSoundscape] = useState<string>('Gamma Retention Pulse');
   const [activeSiteId, setActiveSiteId] = useState<string>('wiredvibe');
   const [autoDraftNotice, setAutoDraftNotice] = useState<string | null>(null);
@@ -242,6 +243,14 @@ function App() {
             <Bot size={16} />
             <span>Agents</span>
             <span className="nav-badge-hot">282</span>
+          </button>
+
+          <button 
+            className={`nav-item ${currentView === 'brain' ? 'active' : ''}`}
+            onClick={() => { setCurrentView('brain'); setActiveSpecialist(null); }}
+          >
+            <Brain size={16} />
+            <span>Second Brain</span>
           </button>
 
           <button 
@@ -831,6 +840,10 @@ function App() {
           )}
 
           {currentView === 'guide' && <UserGuide />}
+
+          {currentView === 'brain' && (
+            <SecondBrainStudio keys={keys} settings={settings} onOpenSettings={() => setIsSettingsOpen(true)} />
+          )}
 
           {/* K. CONTENT MULTIPLIER STUDIO (1 IDEA -> ALL PLATFORMS & 9:16 VIDEO ENGINE) */}
           {currentView === 'content-multiplier' && (
