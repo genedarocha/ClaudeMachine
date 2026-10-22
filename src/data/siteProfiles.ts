@@ -82,6 +82,21 @@ export const SITE_PROFILES: SiteProfile[] = [
     color: '#3b82f6'
   },
   {
+    id: 'lantern-light',
+    name: 'Lantern-Light',
+    url: 'https://lantern-light.com',
+    description: '',
+    audience: '',
+    pillars: '',
+    tone: '',
+    cta: '',
+    linkedinPageUrl: '',
+    facebookPageUrl: '',
+    substackUrl: '',
+    siteAdminUrl: '',
+    color: '#eab308'
+  },
+  {
     id: 'voxskills',
     name: 'VoxSkills',
     url: 'https://voxskills.com',

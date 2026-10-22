@@ -10,6 +10,7 @@ export interface VideoPlan {
   voiceover: string;
   scenes: { visual: string; onScreenText: string }[];
   aiVideoPrompt: string;
+  renderedDataUrl?: string; // a video rendered by Produce Videos, stored as a data URL (small videos only)
 }
 
 export interface CalendarEntry {

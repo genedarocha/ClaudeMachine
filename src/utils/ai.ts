@@ -536,6 +536,25 @@ export async function generateText(
   return claudeStream(apiKey, model, prompt, Math.max(maxTokens, 16000));
 }
 
+// Text to speech via OpenAI's audio API (browser CORS is allowed; BYOK). Returns an mp3 Blob.
+// Only OpenAI is wired here because it's the one with a browser-callable, mp3-returning TTS endpoint.
+export async function generateSpeech(text: string, voice: string, keys: ApiKeys, opts: { model?: string } = {}): Promise<Blob> {
+  const apiKey = keys.openai;
+  if (!apiKey) throw new Error('Voiceover needs an OpenAI API key. Add it in Settings (voiceover uses OpenAI text-to-speech).');
+  const response = await fetch(`${OPENAI_BASE_URL}/audio/speech`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
+    body: JSON.stringify({ model: opts.model || 'tts-1', voice: voice || 'onyx', input: text.slice(0, 4000), response_format: 'mp3' })
+  });
+  if (!response.ok) {
+    const body = await response.text().catch(() => '');
+    throw new Error(`OpenAI TTS Error ${response.status}: ${body.slice(0, 200) || response.statusText}`);
+  }
+  return response.blob();
+}
+
+export const TTS_VOICES = ['onyx', 'echo', 'fable', 'alloy', 'nova', 'shimmer'];
+
 export interface HumanizedResult {
   text: string;
   issues: string[];

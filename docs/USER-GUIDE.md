@@ -178,6 +178,24 @@ Five linked steps: niche, competitor research and video ideas, a full script, a 
 - **On the website**: paste posts you've found (link and text, separated by `---`), press **Rank & draft replies**. Each post gets a brand-fit score, the best-matching brand and a humanized reply to copy.
 - **The Chrome extension** adds a **✨ Draft reply** button under every LinkedIn post. **Approve** puts the reply in that post's comment box; you press Post. Install it from the download on that screen (unzip, open chrome://extensions, turn on Developer mode, Load unpacked). It reuses your key, brands and voice samples from this app.
 
+## Produce Videos
+
+Turns the video plans your Daily content already wrote (hook, voiceover, scenes, on-screen text) into real 9:16 video files, free, in your browser. Needs Chrome or Edge on a desktop.
+
+1. Pick a **brand**. The list shows that site's days that have a video plan (generate the site's 50 days first if the list is empty).
+2. Pick a day, then a mode:
+   - **Captions (free):** a branded 9:16 slideshow (title card → scene captions → call to action). No key needed.
+   - **With voiceover:** the same, with the plan's voiceover spoken aloud. Uses your **OpenAI key** (OpenAI text-to-speech). Pick a voice.
+   - **Avatar (HeyGen):** for a presenter that looks and sounds like you. HeyGen is a paid outside service; create your avatar there once from a photo and short recording, then **Copy script for HeyGen** and paste it into a HeyGen video. The app doesn't call HeyGen for you.
+3. **AI background images** (optional): adds a generated image behind each scene. Slower, because the free image service allows one image every ~45 seconds.
+4. **Render video**, then watch it, **Download .webm**, or **Attach to calendar item**. If a platform rejects .webm, convert it to .mp4 first (e.g. CloudConvert).
+
+For coding tutorials, record your screen separately and use the avatar only for the intro and outro.
+
+## Ask about any field (help chatbot)
+
+At the bottom of the **User Guide** screen there's an **Ask about any field** box. Type a question like "What goes in a site's Content themes box?" or "What does the humanizer do?" and your AI answers using only this guide. It needs a real AI chosen in Settings.
+
 ## Specialists
 
 The Agent Dashboard holds 105 prompt specialists in 10 categories. Open one, fill in its fields and press Run. Output goes through the humanizer and is saved in **Run History**. **Design Specialist** creates a new specialist from a description.
