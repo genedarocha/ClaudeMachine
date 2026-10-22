@@ -7,9 +7,11 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "package:extension": "rolldown -c linkedin-extension/rolldown.config.mjs && rm -f public/voxstar-linkedin-extension.zip && cd linkedin-extension && zip -qr ../public/voxstar-linkedin-extension.zip . -x '.*' -x 'src/*' -x 'rolldown.config.mjs'"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^1.1.0",
     "lucide-react": "^1.22.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7"

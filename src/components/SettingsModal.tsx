@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { X, Key, Cpu, Eye, EyeOff, Check, AlertCircle } from 'lucide-react';
-import { type ApiKeys, type ModelSettings } from '../utils/ai';
+import React, { useState, useEffect } from 'react';
+import { X, Key, Cpu, Eye, EyeOff, Check, RefreshCw } from 'lucide-react';
+import { type ApiKeys, type ModelSettings, listModels } from '../utils/ai';
 import { FieldHelpTooltip } from './FieldHelpTooltip';
 import { ScreenHelpBanner } from './ScreenHelpBanner';
 
@@ -12,11 +12,32 @@ interface SettingsModalProps {
   onSave: (keys: ApiKeys, settings: ModelSettings) => void;
 }
 
-const PROVIDER_MODELS: Record<string, string[]> = {
+// Starting suggestions only. "Load my models" asks the provider which models this key can use, and
+// any model ID can be typed in, so the app doesn't go stale when providers ship new models.
+const PROVIDER_MODELS: Record<ModelSettings['provider'], string[]> = {
   gemini: ['gemini-2.5-flash', 'gemini-2.5-pro'],
-  openai: ['gpt-4o-mini', 'gpt-4o'],
-  anthropic: ['claude-3-5-sonnet-20241022', 'claude-3-5-haiku-20241022'],
+  openai: ['gpt-4o', 'gpt-4o-mini'],
+  anthropic: ['claude-opus-5-5', 'claude-sonnet-5-5', 'claude-haiku-5-5', 'claude-fable-5-1'],
+  grok: ['grok-4', 'grok-4-1-fast-reasoning'],
   mock: ['Demo Simulated Model']
+};
+
+const PROVIDER_LABELS: Record<ModelSettings['provider'], string> = {
+  mock: 'Demo Mode',
+  gemini: 'Gemini',
+  openai: 'ChatGPT',
+  anthropic: 'Claude',
+  grok: 'Grok'
+};
+
+const MODEL_LIST_KEY = 'claude_machine_model_lists';
+
+const loadModelLists = (): Partial<Record<ModelSettings['provider'], string[]>> => {
+  try {
+    return JSON.parse(localStorage.getItem(MODEL_LIST_KEY) || '{}');
+  } catch {
+    return {};
+  }
 };
 
 export const SettingsModal: React.FC<SettingsModalProps> = ({
@@ -28,18 +49,54 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
 }) => {
   const [localKeys, setLocalKeys] = useState<ApiKeys>({ ...keys });
   const [localSettings, setLocalSettings] = useState<ModelSettings>({ ...settings });
+
+  // The modal is mounted before App has loaded saved keys from storage, so re-sync every time it
+  // opens. Without this, Settings showed empty boxes after a reload and Save wiped the saved keys.
+  useEffect(() => {
+    if (!isOpen) return;
+    setLocalKeys({ ...keys });
+    setLocalSettings({ ...settings });
+  }, [isOpen]); // eslint-disable-line react-hooks/exhaustive-deps
   
   const [showKeys, setShowKeys] = useState<Record<string, boolean>>({
     gemini: false,
     openai: false,
-    anthropic: false
+    anthropic: false,
+    grok: false
   });
   
   const [savedSuccess, setSavedSuccess] = useState(false);
+  const [modelLists, setModelLists] = useState(loadModelLists);
+  const [loadingModels, setLoadingModels] = useState(false);
+  const [modelError, setModelError] = useState<string | null>(null);
+  const [customModel, setCustomModel] = useState(false);
 
   if (!isOpen) return null;
 
+  const modelOptions = (provider: ModelSettings['provider']) =>
+    Array.from(new Set([...(modelLists[provider] || []), ...PROVIDER_MODELS[provider]]));
+
+  const handleLoadModels = async () => {
+    const provider = localSettings.provider;
+    if (provider === 'mock') return;
+    setLoadingModels(true);
+    setModelError(null);
+    try {
+      const ids = (await listModels(provider, localKeys[provider] || '')).sort();
+      if (!ids.length) throw new Error('No models came back for this key.');
+      const next = { ...modelLists, [provider]: ids };
+      setModelLists(next);
+      try { localStorage.setItem(MODEL_LIST_KEY, JSON.stringify(next)); } catch { /* storage blocked */ }
+    } catch (err) {
+      setModelError(err instanceof Error ? err.message : 'Could not load models.');
+    } finally {
+      setLoadingModels(false);
+    }
+  };
+
   const handleProviderChange = (provider: ModelSettings['provider']) => {
+    setCustomModel(false);
+    setModelError(null);
     const defaultModel = PROVIDER_MODELS[provider][0];
     setLocalSettings({
       provider,
@@ -121,7 +178,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 />
               </div>
               <div className="provider-grid">
-                {(['mock', 'gemini', 'openai', 'anthropic'] as const).map((prov) => (
+                {(['mock', 'anthropic', 'gemini', 'openai', 'grok'] as const).map((prov) => (
                   <button
                     key={prov}
                     type="button"
@@ -129,7 +186,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                     onClick={() => handleProviderChange(prov)}
                   >
                     <span className="provider-dot" />
-                    {prov === 'mock' ? 'Demo Mode' : prov.toUpperCase()}
+                    {PROVIDER_LABELS[prov]}
                   </button>
                 ))}
               </div>
@@ -142,7 +199,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                   <FieldHelpTooltip
                     label="Model Selection"
                     description="Select the specific LLM model variant for your chosen provider."
-                    placeholder="gemini-2.5-flash / gpt-4o / claude-3-5-sonnet"
+                    placeholder="claude-opus-5-5 / gemini-2.5-flash / gpt-4o / grok-4"
                     example="gemini-2.5-flash"
                     tips={[
                       "Flash/Haiku models are faster and lower latency.",
@@ -150,17 +207,36 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                     ]}
                   />
                 </div>
-                <select
-                  className="input-field"
-                  value={localSettings.model}
-                  onChange={(e) => setLocalSettings(prev => ({ ...prev, model: e.target.value }))}
-                >
-                  {PROVIDER_MODELS[localSettings.provider].map((model) => (
-                    <option key={model} value={model}>
-                      {model}
-                    </option>
-                  ))}
-                </select>
+                {customModel ? (
+                  <input
+                    className="input-field"
+                    value={localSettings.model}
+                    placeholder="Type the exact model ID"
+                    onChange={(e) => setLocalSettings(prev => ({ ...prev, model: e.target.value.trim() }))}
+                  />
+                ) : (
+                  <select
+                    className="input-field"
+                    value={localSettings.model}
+                    onChange={(e) => setLocalSettings(prev => ({ ...prev, model: e.target.value }))}
+                  >
+                    {Array.from(new Set([localSettings.model, ...modelOptions(localSettings.provider)])).map((model) => (
+                      <option key={model} value={model}>
+                        {model}
+                      </option>
+                    ))}
+                  </select>
+                )}
+                <div className="model-tools">
+                  <button type="button" className="model-tool-btn" onClick={handleLoadModels} disabled={loadingModels}>
+                    <RefreshCw size={12} /> {loadingModels ? 'Loading…' : 'Load my models'}
+                  </button>
+                  <button type="button" className="model-tool-btn" onClick={() => setCustomModel(!customModel)}>
+                    {customModel ? 'Pick from list' : 'Type a model ID'}
+                  </button>
+                  {modelLists[localSettings.provider] && <span className="model-count">{modelLists[localSettings.provider]!.length} models available to your key</span>}
+                </div>
+                {modelError && <div className="form-description"><span className="warning-text">{modelError}</span></div>}
               </div>
             )}
           </div>
@@ -271,7 +347,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                     placeholder="sk-ant-..."
                     example="sk-ant-api03-12345..."
                     tips={[
-                      "Required if selecting Anthropic Claude 3.5 models.",
+                      "Required if selecting Claude as the active provider.",
                       "Stored strictly on client browser."
                     ]}
                   />
@@ -302,10 +378,41 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 </button>
               </div>
               <div className="form-description">
-                <span className="warning-text">
-                  <AlertCircle size={10} style={{ display: 'inline', marginRight: '2px', verticalAlign: 'middle' }} />
-                  Warning: Anthropic CORS policy blocks direct browser calls. Requires browser flags or proxy.
-                </span>
+                Claude runs through Anthropic's official SDK in browser mode, with your key kept in this browser only.
+              </div>
+            </div>
+
+            {/* Grok Key */}
+            <div className="form-group">
+              <div className="key-label-row">
+                <div className="label-with-help">
+                  <label className="form-label">Grok (xAI) API Key</label>
+                  <FieldHelpTooltip
+                    label="Grok API Key"
+                    description="Your key from console.x.ai, starting with xai-..."
+                    placeholder="xai-..."
+                    example="xai-1234..."
+                    tips={[
+                      "Required if selecting Grok as the active provider.",
+                      "Stored strictly on client browser."
+                    ]}
+                  />
+                </div>
+                <a href="https://console.x.ai/" target="_blank" rel="noopener noreferrer" className="settings-link">
+                  Get Key
+                </a>
+              </div>
+              <div className="key-input-wrapper">
+                <input
+                  type={showKeys.grok ? 'text' : 'password'}
+                  className="input-field key-input"
+                  placeholder="Paste Grok API Key (e.g. xai-...)"
+                  value={localKeys.grok || ''}
+                  onChange={(e) => setLocalKeys(prev => ({ ...prev, grok: e.target.value }))}
+                />
+                <button type="button" className="key-toggle" onClick={() => toggleShowKey('grok')}>
+                  {showKeys.grok ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
               </div>
             </div>
           </div>
@@ -409,6 +516,10 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           align-items: center;
         }
 
+        .model-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 8px; }
+        .model-tool-btn { background: none; border: 1px solid var(--border-glass); border-radius: 6px; color: var(--text-secondary); font-size: 12px; padding: 4px 10px; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; }
+        .model-tool-btn:hover:not(:disabled) { color: var(--primary); border-color: var(--primary); }
+        .model-count { color: var(--text-muted); font-size: 12px; }
         .provider-grid {
           display: grid;
           grid-template-columns: repeat(2, 1fr);

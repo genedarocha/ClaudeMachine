@@ -1,15 +1,38 @@
+import Anthropic from '@anthropic-ai/sdk';
 import { type Specialist } from '../data/specialists';
+import { buildSpecialistPrompt, buildRewritePrompt, checkHumanizer, tidyText } from './humanizer';
 
 export interface ApiKeys {
   gemini?: string;
   anthropic?: string;
   openai?: string;
+  grok?: string;
 }
 
 export interface ModelSettings {
-  provider: 'gemini' | 'anthropic' | 'openai' | 'mock';
+  provider: 'gemini' | 'anthropic' | 'openai' | 'grok' | 'mock';
   model: string;
 }
+
+// Default model per provider when a screen lets the user switch provider for a single run.
+export const DEFAULT_MODELS: Record<ModelSettings['provider'], string> = {
+  anthropic: 'claude-opus-5-5',
+  gemini: 'gemini-2.5-flash',
+  openai: 'gpt-4o',
+  grok: 'grok-4',
+  mock: 'Demo Simulated Model'
+};
+
+export const PROVIDER_NAMES: Record<ModelSettings['provider'], string> = {
+  anthropic: 'Claude',
+  gemini: 'Gemini',
+  openai: 'ChatGPT',
+  grok: 'Grok',
+  mock: 'Demo Mode'
+};
+
+const OPENAI_BASE_URL = 'https://api.openai.com/v1';
+const XAI_BASE_URL = 'https://api.x.ai/v1';
 
 // Generate the prompt text by replacing placeholders
 export function compilePrompt(template: string, inputs: Record<string, string>): string {
@@ -30,9 +53,13 @@ export async function runSpecialistStream(
   settings: ModelSettings,
   onChunk: (text: string) => void,
   onComplete: (fullText: string) => void,
-  onError: (error: string) => void
+  onError: (error: string) => void,
+  voiceSamples = '',
+  // raw: promptTemplate is already a finished prompt (callers that build their own, e.g. agents)
+  options: { raw?: boolean } = {}
 ) {
-  const prompt = compilePrompt(specialist.promptTemplate, inputs);
+  // Every specialist run goes through the humanizer: structured sections, tagged user inputs, writing rules.
+  const prompt = options.raw ? specialist.promptTemplate : buildSpecialistPrompt(specialist.promptTemplate, inputs, voiceSamples);
   
   if (settings.provider === 'mock') {
     runMockStream(specialist.name, prompt, onChunk, onComplete);
@@ -53,6 +80,8 @@ export async function runSpecialistStream(
       await streamGemini(model, apiKey, prompt, onChunk, onComplete);
     } else if (provider === 'openai') {
       await streamOpenAI(model, apiKey, prompt, onChunk, onComplete);
+    } else if (provider === 'grok') {
+      await streamOpenAI(model, apiKey, prompt, onChunk, onComplete, XAI_BASE_URL);
     } else if (provider === 'anthropic') {
       await streamAnthropic(model, apiKey, prompt, onChunk, onComplete);
     }
@@ -71,7 +100,9 @@ async function streamGemini(
   onComplete: (fullText: string) => void
 ) {
   // Use generateContent for a simple POST. Gemini streaming is easiest with standard fetch and streamGenerateContent
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:streamGenerateContent?key=${apiKey}`;
+  // alt=sse makes Gemini send one `data: {json}` line per chunk; without it the stream is a pretty-printed
+  // JSON array spread over many lines, which the line-based parser below can't read.
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:streamGenerateContent?alt=sse&key=${apiKey}`;
   
   const response = await fetch(url, {
     method: 'POST',
@@ -137,7 +168,7 @@ async function streamGemini(
         if (trimmed === '[' || trimmed === ']' || trimmed === ',') continue;
         
         // Let's try to parse as JSON. The line might have a trailing comma
-        let jsonStr = trimmed;
+        let jsonStr = trimmed.startsWith('data:') ? trimmed.slice(5).trim() : trimmed;
         if (jsonStr.endsWith(',')) {
           jsonStr = jsonStr.slice(0, -1);
         }
@@ -162,6 +193,7 @@ async function streamGemini(
   if (buffer) {
     try {
       let jsonStr = buffer.trim();
+      if (jsonStr.startsWith('data:')) jsonStr = jsonStr.slice(5).trim();
       if (jsonStr.endsWith(']')) jsonStr = jsonStr.slice(0, -1);
       if (jsonStr.startsWith(',')) jsonStr = jsonStr.slice(1);
       const parsed = JSON.parse(jsonStr);
@@ -182,9 +214,10 @@ async function streamOpenAI(
   apiKey: string,
   prompt: string,
   onChunk: (text: string) => void,
-  onComplete: (fullText: string) => void
+  onComplete: (fullText: string) => void,
+  baseUrl = OPENAI_BASE_URL
 ) {
-  const response = await fetch('https://api.openai.com/v1/chat/completions', {
+  const response = await fetch(`${baseUrl}/chat/completions`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -244,6 +277,40 @@ async function streamOpenAI(
 }
 
 // Anthropic Streaming Fetch (Requires proxy or CORS disabled. We warn the user, but provide implementation)
+// Claude via the official SDK. dangerouslyAllowBrowser is required for this app's BYOK design: the
+// key lives in the user's own browser (see DECISIONS.md); there is no server to hide it behind.
+const anthropicClient = (apiKey: string) => new Anthropic({ apiKey, dangerouslyAllowBrowser: true });
+
+// Current-generation models take an explicit effort and (except Haiku) the server-side refusal
+// fallback. Older or custom model IDs get neither, since they may reject the fields.
+const CLAUDE_EFFORT_MODELS = ['claude-opus-5-5', 'claude-sonnet-5-5', 'claude-haiku-5-5', 'claude-opus-5', 'claude-fable-5-1', 'claude-fable-5'];
+const CLAUDE_FALLBACK_MODELS = ['claude-opus-5-5', 'claude-sonnet-5-5', 'claude-opus-5', 'claude-fable-5-1'];
+
+const claudeRequest = (model: string, prompt: string, maxTokens: number) => ({
+  model,
+  max_tokens: maxTokens,
+  messages: [{ role: 'user' as const, content: prompt }],
+  ...(CLAUDE_EFFORT_MODELS.includes(model) ? { output_config: { effort: 'medium' as const } } : {}),
+  ...(CLAUDE_FALLBACK_MODELS.includes(model) ? { betas: ['server-side-fallback-2026-07-01'], fallbacks: 'default' as const } : {})
+});
+
+// Streams text and resolves with the full text; throws on refusal or a cut-off response so a partial
+// answer is never reported as complete.
+async function claudeStream(apiKey: string, model: string, prompt: string, maxTokens: number, onChunk?: (t: string) => void): Promise<string> {
+  const stream = anthropicClient(apiKey).beta.messages.stream(claudeRequest(model, prompt, maxTokens));
+  if (onChunk) stream.on('text', delta => onChunk(delta));
+  const message = await stream.finalMessage();
+  if (message.stop_reason === 'refusal') {
+    const category = message.stop_details && 'category' in message.stop_details ? message.stop_details.category : null;
+    throw new Error(`Claude declined this request${category ? ` (${category})` : ''}. Rephrase it or try another provider.`);
+  }
+  const text = message.content.map(block => (block.type === 'text' ? block.text : '')).join('');
+  if (message.stop_reason === 'max_tokens') {
+    throw new Error('Claude hit its output limit before finishing. Try a shorter request.');
+  }
+  return text;
+}
+
 async function streamAnthropic(
   model: string,
   apiKey: string,
@@ -251,69 +318,10 @@ async function streamAnthropic(
   onChunk: (text: string) => void,
   onComplete: (fullText: string) => void
 ) {
-  // Direct fetch call. Note: Anthropic restricts CORS, so browser calls might trigger preflight failures.
-  // Using standard HTTP stream.
-  const response = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'content-type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-      // Note: Anthropic client library usually uses this header but browser fetch doesn't support it directly.
-      // If CORS fails, we advise users in Settings to use Gemini or OpenAI which allow browser fetches more easily.
-    },
-    body: JSON.stringify({
-      model: model,
-      max_tokens: 4000,
-      messages: [
-        { role: 'user', content: prompt }
-      ],
-      stream: true
-    })
-  });
-
-  if (!response.ok) {
-    const errText = await response.text();
-    throw new Error(`Anthropic API error (${response.status}): ${errText || response.statusText}. Note: Direct browser calls to Anthropic may fail due to CORS. If so, please use Gemini or OpenAI.`);
-  }
-
-  const reader = response.body?.getReader();
-  if (!reader) {
-    throw new Error('Response body is not readable.');
-  }
-
-  const decoder = new TextDecoder();
-  let buffer = '';
-  let fullText = '';
-
-  while (true) {
-    const { done, value } = await reader.read();
-    if (done) break;
-
-    buffer += decoder.decode(value, { stream: true });
-    const lines = buffer.split('\n');
-    buffer = lines.pop() || '';
-
-    for (const line of lines) {
-      const cleaned = line.trim();
-      if (!cleaned.startsWith('data:')) continue;
-      
-      const dataStr = cleaned.slice(5).trim();
-      try {
-        const parsed = JSON.parse(dataStr);
-        if (parsed.type === 'content_block_delta' && parsed.delta?.text) {
-          const chunk = parsed.delta.text;
-          onChunk(chunk);
-          fullText += chunk;
-        }
-      } catch {}
-    }
-  }
-  
-  onComplete(fullText);
+  const text = await claudeStream(apiKey, model, prompt, 64000, onChunk);
+  onComplete(text);
 }
 
-// Simulated Typist for Mock Mode
 function runMockStream(
   name: string,
   prompt: string,
@@ -393,7 +401,7 @@ You must respond with a JSON object matching this exact TypeScript schema:
   "number": "string (e.g., '#CUSTOM')",
   "icon": "string (A single emoji related to the role)",
   "description": "string (1-sentence summary of what this agent does)",
-  "promptTemplate": "string (A detailed, deeply engineered system prompt instructions. It must contain double-brace template variables like {{input1}} or {{input2}} that will be filled out by the user in the form. Write a very thorough prompt with rules, tone, structure, and formatting guidelines. Make it feel elite.)",
+  "promptTemplate": "string (A thorough, well-structured prompt. Use double-brace template variables like {{input1}} for every value the user fills in the form. Lay it out in these sections, each starting with a markdown heading on its own line: '# Task' (what to produce, with the {{variables}}), '# Audience' (who it is for), '# Rules' (every requirement as its own '- ' list item: length, structure, tone), '# Output format' (the exact sections or shape to return). Put each long user-supplied value on its own line inside a tag named after it, e.g. <notes>{{notes}}</notes>. Write tone rules for a real human voice: plain words, contractions, specific examples, no hype words like 'elite', 'game-changing' or 'unlock'. Writing-style rules against AI clichés are added automatically at run time, so don't repeat them.)",
   "inputs": [
     {
       "id": "string (matching a double-brace variable in the promptTemplate, camelCase)",
@@ -434,62 +442,7 @@ Tone: {{tone}}`,
     });
   }
 
-  const provider = settings.provider;
-  const model = settings.model;
-  const apiKey = keys[provider];
-
-  if (!apiKey) {
-    throw new Error(`API Key for ${provider.toUpperCase()} is required to design new specialists.`);
-  }
-
-  let jsonResult = '';
-
-  if (provider === 'gemini') {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: generatorPrompt }] }]
-      })
-    });
-    if (!response.ok) throw new Error(`Gemini Error: ${response.statusText}`);
-    const data = await response.json();
-    jsonResult = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-  } else if (provider === 'openai') {
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`
-      },
-      body: JSON.stringify({
-        model: model,
-        messages: [{ role: 'user', content: generatorPrompt }],
-        temperature: 0.2
-      })
-    });
-    if (!response.ok) throw new Error(`OpenAI Error: ${response.statusText}`);
-    const data = await response.json();
-    jsonResult = data.choices?.[0]?.message?.content || '';
-  } else if (provider === 'anthropic') {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01'
-      },
-      body: JSON.stringify({
-        model: model,
-        max_tokens: 2000,
-        messages: [{ role: 'user', content: generatorPrompt }]
-      })
-    });
-    if (!response.ok) throw new Error(`Anthropic Error: ${response.statusText}`);
-    const data = await response.json();
-    jsonResult = data.content?.[0]?.text || '';
-  }
+  const jsonResult = await generateText(generatorPrompt, keys, settings, 2000, 0.2);
 
   // Clean the response from potential markdown wrapper
   let cleanedJson = jsonResult.trim();
@@ -511,4 +464,218 @@ Tone: {{tone}}`,
     console.error('Failed to parse generated specialist JSON. Raw output was:', jsonResult);
     throw new Error('AI generated an invalid format. Please try again with a different description.');
   }
+}
+
+// Single-shot (non-streaming) completion against the user's configured provider.
+// Throws on a missing key, the demo provider, or any non-2xx response — never returns canned text.
+export async function generateText(
+  prompt: string,
+  keys: ApiKeys,
+  settings: ModelSettings,
+  maxTokens = 4000,
+  temperature = 0.7,
+  // json: ask the provider for strict JSON output (Gemini responseMimeType / OpenAI json_object).
+  // The prompt must ask for a JSON object; Anthropic has no equivalent switch, so it relies on the prompt.
+  options: { json?: boolean } = {}
+): Promise<string> {
+  const provider = settings.provider;
+  if (provider === 'mock') {
+    throw new Error('Demo Mode has no real model. Pick Claude, Gemini, ChatGPT or Grok in Settings and add a key.');
+  }
+  const model = settings.model;
+  const apiKey = keys[provider];
+  if (!apiKey) {
+    throw new Error(`API Key for ${provider.toUpperCase()} is missing. Please enter it in the Settings.`);
+  }
+
+  const fail = async (label: string, response: Response) => {
+    const body = await response.text().catch(() => '');
+    return new Error(`${label} Error ${response.status}: ${body.slice(0, 300) || response.statusText}`);
+  };
+
+  if (provider === 'gemini') {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: {
+          temperature,
+          maxOutputTokens: maxTokens,
+          ...(options.json ? { responseMimeType: 'application/json' } : {})
+        }
+      })
+    });
+    if (!response.ok) throw await fail('Gemini', response);
+    const data = await response.json();
+    return data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+  }
+
+  if (provider === 'openai' || provider === 'grok') {
+    const response = await fetch(`${provider === 'grok' ? XAI_BASE_URL : OPENAI_BASE_URL}/chat/completions`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        model,
+        messages: [{ role: 'user', content: prompt }],
+        temperature,
+        ...(options.json ? { response_format: { type: 'json_object' } } : {})
+      })
+    });
+    if (!response.ok) throw await fail(provider === 'grok' ? 'Grok' : 'OpenAI', response);
+    const data = await response.json();
+    return data.choices?.[0]?.message?.content || '';
+  }
+
+  // Claude: streamed through the SDK (long outputs), no temperature (current models reject it), at least
+  // 16k tokens because adaptive thinking shares the output budget.
+  return claudeStream(apiKey, model, prompt, Math.max(maxTokens, 16000));
+}
+
+export interface HumanizedResult {
+  text: string;
+  issues: string[];
+  rewriteError?: string;
+}
+
+// Humanizer post-pass for long-form output: deterministic cleanup, local check, and one automatic
+// rewrite when AI tells remain. A failed rewrite keeps the original text and reports why — never hidden.
+export async function humanizeLongform(
+  text: string,
+  keys: ApiKeys,
+  settings: ModelSettings,
+  voiceSamples = '',
+  force = false
+): Promise<HumanizedResult> {
+  let finalText = tidyText(text, 'longform');
+  let issues = checkHumanizer(finalText, 'longform');
+  if (!issues.length && !force) return { text: finalText, issues };
+  try {
+    // Gemini 2.5 counts thinking tokens against the output limit, so leave plenty of room for long pieces.
+    const maxTokens = settings.provider === 'anthropic' ? 8000 : 16000;
+    const rewritten = tidyText(await generateText(buildRewritePrompt(finalText, issues, voiceSamples), keys, settings, maxTokens, 0.8), 'longform');
+    // A rewrite that comes back far shorter was almost certainly cut off: keep the original rather than lose content.
+    if (rewritten && rewritten.length < finalText.length * 0.6) {
+      return { text: finalText, issues, rewriteError: 'The humanizer rewrite came back much shorter than the original (likely cut off), so the original was kept.' };
+    }
+    if (rewritten) {
+      finalText = rewritten;
+      issues = checkHumanizer(finalText, 'longform');
+    }
+    return { text: finalText, issues };
+  } catch (err) {
+    return { text: finalText, issues, rewriteError: err instanceof Error ? err.message : String(err) };
+  }
+}
+
+export interface GroundedSource {
+  title: string;
+  url: string;
+}
+
+export interface GroundedResult {
+  text: string;
+  // Pages the provider's search tool actually returned — used to check the model's own citations.
+  sources: GroundedSource[];
+}
+
+// Completion with live web search (Gemini: Google Search grounding; OpenAI: Responses API web search).
+// Used where the model must not rely on its training data, e.g. "this week's news". Throws on any failure,
+// and refuses providers without a search tool rather than silently answering from memory.
+export async function generateGroundedText(prompt: string, keys: ApiKeys, settings: ModelSettings): Promise<GroundedResult> {
+  const provider = settings.provider;
+  if (provider === 'mock') {
+    throw new Error('Demo Mode has no web search. Pick Gemini or OpenAI in Settings and add a key.');
+  }
+  if (provider === 'anthropic' || provider === 'grok') {
+    throw new Error('Live news research is wired for Gemini or OpenAI. Switch provider in Settings for this step.');
+  }
+  const apiKey = keys[provider];
+  if (!apiKey) throw new Error(`API Key for ${provider.toUpperCase()} is missing. Please enter it in the Settings.`);
+  const model = settings.model;
+
+  if (provider === 'gemini') {
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }],
+        tools: [{ google_search: {} }],
+        generationConfig: { temperature: 0.3, maxOutputTokens: 16000 }
+      })
+    });
+    if (!response.ok) {
+      const body = await response.text().catch(() => '');
+      throw new Error(`Gemini search Error ${response.status}: ${body.slice(0, 300) || response.statusText}`);
+    }
+    const data = await response.json();
+    const candidate = data.candidates?.[0];
+    const text = (candidate?.content?.parts || []).map((p: { text?: string }) => p.text || '').join('');
+    const chunks: Array<{ web?: { uri?: string; title?: string } }> = candidate?.groundingMetadata?.groundingChunks || [];
+    const sources = chunks
+      .filter(c => c.web?.uri)
+      .map(c => ({ title: c.web?.title || '', url: c.web?.uri || '' }));
+    if (!sources.length) {
+      throw new Error('Gemini answered without running a web search, so the results could be from memory. Try again, or use a model that supports Google Search grounding (e.g. gemini-2.5-flash).');
+    }
+    return { text, sources };
+  }
+
+  // OpenAI Responses API. The tool was called "web_search_preview" before it went GA as "web_search".
+  const callOpenAI = (toolType: string) => fetch('https://api.openai.com/v1/responses', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
+    body: JSON.stringify({ model, tools: [{ type: toolType }], input: prompt })
+  });
+  let response = await callOpenAI('web_search');
+  if (response.status === 400) response = await callOpenAI('web_search_preview');
+  if (!response.ok) {
+    const body = await response.text().catch(() => '');
+    throw new Error(`OpenAI search Error ${response.status}: ${body.slice(0, 300) || response.statusText}`);
+  }
+  const data = await response.json();
+  let text = '';
+  const sources: GroundedSource[] = [];
+  for (const item of data.output || []) {
+    if (item.type !== 'message') continue;
+    for (const part of item.content || []) {
+      if (part.type !== 'output_text') continue;
+      text += part.text || '';
+      for (const ann of part.annotations || []) {
+        if (ann.type === 'url_citation' && ann.url) sources.push({ title: ann.title || '', url: ann.url });
+      }
+    }
+  }
+  if (!sources.length) {
+    throw new Error('OpenAI answered without citing any web pages, so the results could be from memory. Try again or use a model with web search (e.g. gpt-4o).');
+  }
+  return { text, sources };
+}
+
+// Lists the models this key can use, straight from the provider, so the Settings dropdown never goes
+// stale as providers ship new models.
+export async function listModels(provider: Exclude<ModelSettings['provider'], 'mock'>, apiKey: string): Promise<string[]> {
+  if (!apiKey) throw new Error('Enter the API key first.');
+  if (provider === 'anthropic') {
+    const ids: string[] = [];
+    for await (const model of anthropicClient(apiKey).models.list()) ids.push(model.id);
+    return ids;
+  }
+  if (provider === 'gemini') {
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}&pageSize=200`);
+    if (!res.ok) throw new Error(`Gemini Error ${res.status}: ${(await res.text()).slice(0, 200)}`);
+    const data = await res.json();
+    return (data.models || [])
+      .filter((m: { supportedGenerationMethods?: string[] }) => m.supportedGenerationMethods?.includes('generateContent'))
+      .map((m: { name: string }) => m.name.replace(/^models\//, ''));
+  }
+  const res = await fetch(`${provider === 'grok' ? XAI_BASE_URL : OPENAI_BASE_URL}/models`, { headers: { Authorization: `Bearer ${apiKey}` } });
+  if (!res.ok) throw new Error(`${provider === 'grok' ? 'Grok' : 'OpenAI'} Error ${res.status}: ${(await res.text()).slice(0, 200)}`);
+  const data = await res.json();
+  const ids: string[] = (data.data || []).map((m: { id: string }) => m.id);
+  return provider === 'openai' ? ids.filter(id => /^(gpt|o\d|chatgpt)/.test(id)) : ids;
 }

@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Play, Copy, Check, ChevronLeft, RefreshCw, Trash2, BookOpen, AlertCircle, FileText, CheckCircle2 } from 'lucide-react';
+import { Play, Copy, Check, ChevronLeft, RefreshCw, Trash2, BookOpen, AlertCircle, FileText, CheckCircle2, ShieldCheck, Wand2, Loader2 } from 'lucide-react';
 import { type Specialist } from '../data/specialists';
-import { type ApiKeys, type ModelSettings, runSpecialistStream } from '../utils/ai';
+import { type ApiKeys, type ModelSettings, runSpecialistStream, humanizeLongform } from '../utils/ai';
+import { readVoiceSamples, tidyText } from '../utils/humanizer';
+
 import { FieldHelpTooltip } from './FieldHelpTooltip';
 import { ScreenHelpBanner } from './ScreenHelpBanner';
 
@@ -22,7 +24,7 @@ interface SpecialistRunnerProps {
 }
 
 // Simple Custom Markdown Formatter for rendering streaming output beautifully
-const SafeMarkdown: React.FC<{ text: string }> = ({ text }) => {
+export const SafeMarkdown: React.FC<{ text: string }> = ({ text }) => {
   if (!text) return <p className="text-muted">Waiting for execution...</p>;
 
   // Convert simple markdown elements to React elements
@@ -110,7 +112,7 @@ const SafeMarkdown: React.FC<{ text: string }> = ({ text }) => {
     }
     // Lists
     else if (line.trim().startsWith('- ') || line.trim().startsWith('* ')) {
-      const bulletText = line.replace(/^[\s*-]+/, '').trim();
+      const bulletText = line.replace(/^\s*[-*]\s+/, '').trim();
       formattedElements.push(<li key={elementKey++}>{parseInlineStyles(bulletText)}</li>);
     }
     // Number lists
@@ -138,9 +140,13 @@ const SafeMarkdown: React.FC<{ text: string }> = ({ text }) => {
 
 // Parse basic inline styles like **bold** and `code`
 function parseInlineStyles(text: string): React.ReactNode[] {
-  // Regex to match bold and inline code
-  const parts = text.split(/(\*\*.*?\*\*|`.*?`)/g);
+  // Bold, inline code and [links](https://…). Only http(s) links are rendered as anchors.
+  const parts = text.split(/(\*\*.*?\*\*|`.*?`|\[[^\]]+\]\(https?:\/\/[^)\s]+\))/g);
   return parts.map((part, idx) => {
+    const link = part.match(/^\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)$/);
+    if (link) {
+      return <a key={idx} href={link[2]} target="_blank" rel="noopener noreferrer">{link[1]}</a>;
+    }
     if (part.startsWith('**') && part.endsWith('**')) {
       return <strong key={idx}>{part.slice(2, -2)}</strong>;
     }
@@ -164,6 +170,8 @@ export const SpecialistRunner: React.FC<SpecialistRunnerProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
+  const [humanizerIssues, setHumanizerIssues] = useState<string[] | null>(null);
+  const [isHumanizing, setIsHumanizing] = useState(false);
 
   // Load default input values when specialist changes
   useEffect(() => {
@@ -175,6 +183,7 @@ export const SpecialistRunner: React.FC<SpecialistRunnerProps> = ({
     setOutput('');
     setError(null);
     setIsSaved(false);
+    setHumanizerIssues(null);
   }, [specialist]);
 
   const handleInputChange = (id: string, value: string) => {
@@ -196,6 +205,8 @@ export const SpecialistRunner: React.FC<SpecialistRunnerProps> = ({
     setError(null);
     setOutput('');
     setIsSaved(false);
+    setHumanizerIssues(null);
+    const voiceSamples = readVoiceSamples();
 
     try {
       await runSpecialistStream(
@@ -206,8 +217,20 @@ export const SpecialistRunner: React.FC<SpecialistRunnerProps> = ({
         (chunk) => {
           setOutput((prev) => prev + chunk);
         },
-        (fullText) => {
+        async (fullText) => {
           setIsRunning(false);
+          let finalText = fullText;
+          // Demo Mode output is canned sample text, so the humanizer only runs on real model output.
+          if (settings.provider !== 'mock') {
+            setOutput(tidyText(fullText, 'longform'));
+            setIsHumanizing(true);
+            const result = await humanizeLongform(fullText, keys, settings, voiceSamples);
+            setIsHumanizing(false);
+            if (result.rewriteError) setError(`Humanizer rewrite failed, showing the original draft: ${result.rewriteError}`);
+            finalText = result.text;
+            setOutput(finalText);
+            setHumanizerIssues(result.issues);
+          }
           // Automatically save completed run to history
           const runId = `run-${Date.now()}`;
           onSaveHistory({
@@ -217,19 +240,31 @@ export const SpecialistRunner: React.FC<SpecialistRunnerProps> = ({
             specialistIcon: specialist.icon,
             timestamp: Date.now(),
             inputs: formInputs,
-            output: fullText
+            output: finalText
           });
           setIsSaved(true);
         },
         (errMessage) => {
           setIsRunning(false);
           setError(errMessage);
-        }
+        },
+        voiceSamples
       );
     } catch (err: any) {
       setIsRunning(false);
       setError(err.message || 'An unexpected error occurred during execution.');
     }
+  };
+
+  const handleHumanizeAgain = async () => {
+    if (!output || isHumanizing) return;
+    setIsHumanizing(true);
+    setError(null);
+    const result = await humanizeLongform(output, keys, settings, readVoiceSamples(), true);
+    setIsHumanizing(false);
+    if (result.rewriteError) setError(result.rewriteError);
+    setOutput(result.text);
+    setHumanizerIssues(result.issues);
   };
 
   const handleCopy = () => {
@@ -248,6 +283,7 @@ export const SpecialistRunner: React.FC<SpecialistRunnerProps> = ({
     setOutput('');
     setError(null);
     setIsSaved(false);
+    setHumanizerIssues(null);
   };
 
   return (
@@ -401,6 +437,19 @@ export const SpecialistRunner: React.FC<SpecialistRunnerProps> = ({
                   Saved to history
                 </span>
               )}
+              {isHumanizing && (
+                <span className="humanizer-badge running"><Loader2 size={13} className="humanizer-spin" /> Humanizing…</span>
+              )}
+              {!isHumanizing && humanizerIssues && (
+                humanizerIssues.length === 0
+                  ? <span className="humanizer-badge ok" title="No AI tells found"><ShieldCheck size={13} /> Humanizer passed</span>
+                  : <span className="humanizer-badge warn" title={humanizerIssues.join('\n')}><AlertCircle size={13} /> {humanizerIssues.join(' · ')}</span>
+              )}
+              {output && !isRunning && settings.provider !== 'mock' && (
+                <button className="btn-icon" onClick={handleHumanizeAgain} disabled={isHumanizing} title="Humanize again">
+                  <Wand2 size={16} />
+                </button>
+              )}
               {output && (
                 <button className="btn-icon" onClick={handleCopy} title="Copy output">
                   {copied ? <Check size={16} style={{ color: 'var(--success)' }} /> : <Copy size={16} />}
@@ -416,6 +465,22 @@ export const SpecialistRunner: React.FC<SpecialistRunnerProps> = ({
       </div>
 
       <style>{`
+        .humanizer-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 5px;
+          font-size: 12px;
+          max-width: 320px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        .humanizer-badge.ok { color: var(--success); }
+        .humanizer-badge.warn { color: var(--warning); }
+        .humanizer-badge.running { color: var(--text-secondary); }
+        .humanizer-spin { animation: humanizer-spin 1s linear infinite; }
+        @keyframes humanizer-spin { to { transform: rotate(360deg); } }
+
         .runner-workspace {
           display: flex;
           flex-direction: column;
