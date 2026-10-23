@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { 
   Plus, Search, Settings, History, LayoutDashboard, 
   Trash2, Copy, Check, ChevronRight, Terminal, Cpu, FileText, Zap, HelpCircle,
-  Calendar, Headphones, Video, Globe, Sparkles, Radio, Share2
+  Calendar, Headphones, Video, Globe, Sparkles, Radio, Share2, Clapperboard, Newspaper, CalendarDays, Bot, Lightbulb, BookOpen, Brain
 } from 'lucide-react';
 
 const LinkedInIcon: React.FC<{ size?: number; className?: string }> = ({ size = 16, className = "" }) => (
@@ -24,9 +24,22 @@ import { ScreenHelpBanner } from './components/ScreenHelpBanner';
 import { SystemGuideModal } from './components/SystemGuideModal';
 import { WiredvibeStudio } from './components/WiredvibeStudio';
 import { DailyIdeaStudio } from './components/DailyIdeaStudio';
-import { DailyAutopilotStudio } from './components/DailyAutopilotStudio';
+import { SiteContentStudio } from './components/SiteContentStudio';
+import { ContentCalendar } from './components/ContentCalendar';
+import { SITE_PROFILES } from './data/siteProfiles';
+import { autoDraftIfFriday, seedNewsletterCalendar } from './utils/newsletterPipeline';
+import { AgentStudio } from './components/AgentStudio';
+import { AdvisorStudio } from './components/AdvisorStudio';
+import { UserGuide } from './components/UserGuide';
+import { SecondBrainStudio } from './components/SecondBrainStudio';
+import { ProduceVideosStudio } from './components/ProduceVideosStudio';
+import { VoxPressStudio } from './components/VoxPressStudio';
+import { recordViewUse } from './utils/advisor';
 import { UniversalVideoStudio } from './components/UniversalVideoStudio';
 import { LinkedInCommentsStudio } from './components/LinkedInCommentsStudio';
+import { LinkedInRepliesStudio } from './components/LinkedInRepliesStudio';
+import { YouTubeChannelBuilder } from './components/YouTubeChannelBuilder';
+import { NewsletterStudio } from './components/NewsletterStudio';
 import { ContentMultiplierStudio } from './components/ContentMultiplierStudio';
 import { type ApiKeys, type ModelSettings } from './utils/ai';
 
@@ -56,9 +69,11 @@ function App() {
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [activeSpecialist, setActiveSpecialist] = useState<Specialist | null>(null);
-  const [currentView, setCurrentView] = useState<'dashboard' | 'runner' | 'generator' | 'history' | 'voxstar' | 'podcast-studio' | 'creation-wiredvibe' | 'creation-idea' | 'daily-autopilot' | 'video-factory' | 'linkedin-comments' | 'content-multiplier'>('content-multiplier');
+  const [currentView, setCurrentView] = useState<'dashboard' | 'runner' | 'generator' | 'history' | 'voxstar' | 'podcast-studio' | 'creation-wiredvibe' | 'creation-idea' | 'site-content' | 'calendar' | 'agents' | 'advisor' | 'guide' | 'brain' | 'produce-videos' | 'voxpress' | 'video-factory' | 'linkedin-comments' | 'linkedin-replies' | 'youtube-builder' | 'newsletter' | 'content-multiplier'>('content-multiplier');
   const [activeSoundscape, setActiveSoundscape] = useState<string>('Gamma Retention Pulse');
-  const [activeAutopilotServiceId, setActiveAutopilotServiceId] = useState<string>('srv-1');
+  const [activeSiteId, setActiveSiteId] = useState<string>('wiredvibe');
+  const [autoDraftNotice, setAutoDraftNotice] = useState<string | null>(null);
+  const autoDraftStarted = useRef(false);
   
   const [history, setHistory] = useState<RunHistoryItem[]>([]);
   const [activeHistoryItem, setActiveHistoryItem] = useState<RunHistoryItem | null>(null);
@@ -95,6 +110,42 @@ function App() {
       try { setHistory(JSON.parse(storedHistory)); } catch (e) { console.error(e); }
     }
   }, []);
+
+  // Hash links: #/calendar/<id> (calendar item permalinks) and #/newsletter open their screens.
+  useEffect(() => {
+    const route = () => {
+      const h = window.location.hash;
+      if (h.startsWith('#/calendar')) setCurrentView('calendar');
+      else if (h === '#/newsletter') setCurrentView('newsletter');
+    };
+    route();
+    window.addEventListener('hashchange', route);
+    return () => window.removeEventListener('hashchange', route);
+  }, []);
+
+  // Which screens get used: feeds the Advisor's "what you're not using" check.
+  useEffect(() => {
+    recordViewUse(currentView);
+  }, [currentView]);
+
+  // Newsletter slots on the calendar (#69 plus the next 7 Fridays). Safe to run every start.
+  useEffect(() => {
+    seedNewsletterCalendar().catch(err => console.error('Calendar seed failed', err));
+  }, []);
+
+  // Friday auto-draft: once settings with a real key are loaded, draft this week's newsletter if it's
+  // Friday (or that weekend) and it hasn't been drafted. Runs in the background; never publishes.
+  useEffect(() => {
+    if (autoDraftStarted.current || settings.provider === 'mock' || !keys[settings.provider]) return;
+    autoDraftStarted.current = true;
+    autoDraftIfFriday(keys, settings).then(result => {
+      if (result.status === 'drafted') {
+        setAutoDraftNotice(`It's Friday: newsletter #${result.issueNumber} has been drafted from ${result.stories} checked stories. Review it before posting.`);
+      } else if (result.status === 'failed') {
+        setAutoDraftNotice(`Friday newsletter auto-draft failed: ${result.error} Open the newsletter screen to run it by hand.`);
+      }
+    });
+  }, [keys, settings]);
 
   // --- ACTIONS ---
   const handleSaveSettings = (newKeys: ApiKeys, newSettings: ModelSettings) => {
@@ -187,6 +238,39 @@ function App() {
             <span>Agent Dashboard</span>
           </button>
 
+          <button 
+            className={`nav-item ${currentView === 'agents' ? 'active' : ''}`}
+            onClick={() => { setCurrentView('agents'); setActiveSpecialist(null); }}
+          >
+            <Bot size={16} />
+            <span>Agents</span>
+            <span className="nav-badge-hot">282</span>
+          </button>
+
+          <button 
+            className={`nav-item ${currentView === 'brain' ? 'active' : ''}`}
+            onClick={() => { setCurrentView('brain'); setActiveSpecialist(null); }}
+          >
+            <Brain size={16} />
+            <span>Second Brain</span>
+          </button>
+
+          <button 
+            className={`nav-item ${currentView === 'advisor' ? 'active' : ''}`}
+            onClick={() => { setCurrentView('advisor'); setActiveSpecialist(null); }}
+          >
+            <Lightbulb size={16} />
+            <span>Advisor</span>
+          </button>
+
+          <button 
+            className={`nav-item ${currentView === 'guide' ? 'active' : ''}`}
+            onClick={() => { setCurrentView('guide'); setActiveSpecialist(null); }}
+          >
+            <BookOpen size={16} />
+            <span>User Guide</span>
+          </button>
+
           {/* 1. CREATION SECTION GROUP (Renamed) */}
           <div className="nav-group-section">
             <div className="nav-group-header">
@@ -210,6 +294,32 @@ function App() {
                 <Radio size={14} />
                 <span>Podcast Studio</span>
                 <span className="nav-badge-hot">Ep #100 Ready</span>
+              </button>
+
+              <button 
+                className={`nav-sub-item ${currentView === 'voxpress' ? 'active' : ''}`}
+                onClick={() => { setCurrentView('voxpress'); setActiveSpecialist(null); }}
+              >
+                <BookOpen size={14} />
+                <span>VoxPress Creative Factory v2</span>
+                <span className="nav-badge-hot">Books · Film</span>
+              </button>
+
+              <button 
+                className={`nav-sub-item ${currentView === 'produce-videos' ? 'active' : ''}`}
+                onClick={() => { setCurrentView('produce-videos'); setActiveSpecialist(null); }}
+              >
+                <Clapperboard size={14} />
+                <span>Produce Videos</span>
+                <span className="nav-badge-hot">Real 9:16</span>
+              </button>
+
+              <button 
+                className={`nav-sub-item ${currentView === 'youtube-builder' ? 'active' : ''}`}
+                onClick={() => { setCurrentView('youtube-builder'); setActiveSpecialist(null); }}
+              >
+                <Clapperboard size={14} />
+                <span>YouTube Channel Builder</span>
               </button>
 
               <button 
@@ -248,28 +358,23 @@ function App() {
             </div>
             <div className="nav-sub-items">
               <button 
-                className={`nav-sub-item ${currentView === 'daily-autopilot' && activeAutopilotServiceId === 'srv-1' ? 'active' : ''}`}
-                onClick={() => { setActiveAutopilotServiceId('srv-1'); setCurrentView('daily-autopilot'); setActiveSpecialist(null); }}
+                className={`nav-sub-item ${currentView === 'calendar' ? 'active' : ''}`}
+                onClick={() => { setCurrentView('calendar'); setActiveSpecialist(null); window.history.replaceState(null, '', '#/calendar'); }}
               >
-                <Globe size={14} />
-                <span>Wiredvibe App</span>
+                <CalendarDays size={14} />
+                <span>Content Calendar</span>
               </button>
 
-              <button 
-                className={`nav-sub-item ${currentView === 'daily-autopilot' && activeAutopilotServiceId === 'srv-2' ? 'active' : ''}`}
-                onClick={() => { setActiveAutopilotServiceId('srv-2'); setCurrentView('daily-autopilot'); setActiveSpecialist(null); }}
-              >
-                <Globe size={14} />
-                <span>AIToolboard</span>
-              </button>
-
-              <button 
-                className={`nav-sub-item ${currentView === 'daily-autopilot' && activeAutopilotServiceId === 'srv-3' ? 'active' : ''}`}
-                onClick={() => { setActiveAutopilotServiceId('srv-3'); setCurrentView('daily-autopilot'); setActiveSpecialist(null); }}
-              >
-                <Globe size={14} />
-                <span>ATL-Trust</span>
-              </button>
+              {SITE_PROFILES.map(site => (
+                <button
+                  key={site.id}
+                  className={`nav-sub-item ${currentView === 'site-content' && activeSiteId === site.id ? 'active' : ''}`}
+                  onClick={() => { setActiveSiteId(site.id); setCurrentView('site-content'); setActiveSpecialist(null); }}
+                >
+                  <Globe size={14} style={{ color: site.color }} />
+                  <span>{site.name}</span>
+                </button>
+              ))}
 
               <button 
                 className={`nav-sub-item ${currentView === 'linkedin-comments' ? 'active' : ''}`}
@@ -281,6 +386,22 @@ function App() {
               </button>
             </div>
           </div>
+
+          <button 
+            className={`nav-item ${currentView === 'newsletter' ? 'active' : ''}`}
+            onClick={() => { setCurrentView('newsletter'); setActiveSpecialist(null); }}
+          >
+            <Newspaper size={16} />
+            <span>Weekly AI Automation Newsletter</span>
+          </button>
+
+          <button 
+            className={`nav-item ${currentView === 'linkedin-replies' ? 'active' : ''}`}
+            onClick={() => { setCurrentView('linkedin-replies'); setActiveSpecialist(null); }}
+          >
+            <LinkedInIcon size={16} />
+            <span>LinkedIn Comment Replies</span>
+          </button>
 
           <button 
             className={`nav-item ${currentView === 'voxstar' ? 'active' : ''}`}
@@ -330,6 +451,14 @@ function App() {
 
       {/* 2. MAIN APPLICATION CONTENT AREA */}
       <main className="content-container">
+        {autoDraftNotice && (
+          <div className="auto-draft-notice glass-panel">
+            <Newspaper size={15} />
+            <span>{autoDraftNotice}</span>
+            <button onClick={() => { setAutoDraftNotice(null); window.history.replaceState(null, '', '#/newsletter'); setCurrentView('newsletter'); }}>Open newsletter</button>
+            <button onClick={() => setAutoDraftNotice(null)} aria-label="Dismiss">✕</button>
+          </div>
+        )}
         {/* Main Header bar */}
         <header className="main-header glass-panel">
           {/* Settings model active description indicator */}
@@ -648,9 +777,24 @@ function App() {
           )}
 
           {/* H. NEW DAILY > AUTOPILOT 6-STEP CONTENT ENGINE VIEW */}
-          {currentView === 'daily-autopilot' && (
-            <DailyAutopilotStudio
-              initialServiceId={activeAutopilotServiceId}
+          {currentView === 'site-content' && (
+            <SiteContentStudio
+              siteId={activeSiteId}
+              keys={keys}
+              settings={settings}
+              onOpenSettings={() => setIsSettingsOpen(true)}
+              onOpenCalendar={(entryId) => {
+                window.history.replaceState(null, '', entryId ? `#/calendar/${encodeURIComponent(entryId)}` : '#/calendar');
+                setCurrentView('calendar');
+              }}
+            />
+          )}
+
+          {currentView === 'calendar' && (
+            <ContentCalendar
+              keys={keys}
+              settings={settings}
+              onOpenNewsletter={() => { window.history.replaceState(null, '', '#/newsletter'); setCurrentView('newsletter'); }}
             />
           )}
 
@@ -662,6 +806,71 @@ function App() {
           {/* J. LINKEDIN-COMMENTS 100 POSTS & HUMANIZER STUDIO */}
           {currentView === 'linkedin-comments' && (
             <LinkedInCommentsStudio onBack={() => setCurrentView('dashboard')} />
+          )}
+
+          {/* J2. LINKEDIN COMMENT REPLIES — real LLM ranking/drafting, manual posting */}
+          {currentView === 'linkedin-replies' && (
+            <LinkedInRepliesStudio
+              keys={keys}
+              settings={settings}
+              onOpenSettings={() => setIsSettingsOpen(true)}
+            />
+          )}
+
+          {/* J3. YOUTUBE CHANNEL BUILDER — 5 chained real LLM steps through the humanizer */}
+          {currentView === 'youtube-builder' && (
+            <YouTubeChannelBuilder
+              keys={keys}
+              settings={settings}
+              onOpenSettings={() => setIsSettingsOpen(true)}
+            />
+          )}
+
+          {/* J4. WEEKLY AI AUTOMATION NEWSLETTER — web-search research, source checks, humanized writing */}
+          {currentView === 'newsletter' && (
+            <NewsletterStudio
+              keys={keys}
+              settings={settings}
+              onOpenSettings={() => setIsSettingsOpen(true)}
+            />
+          )}
+
+          {currentView === 'agents' && (
+            <AgentStudio
+              keys={keys}
+              settings={settings}
+              onOpenSettings={() => setIsSettingsOpen(true)}
+              onOpenCalendar={(entryId) => {
+                window.history.replaceState(null, '', entryId ? `#/calendar/${encodeURIComponent(entryId)}` : '#/calendar');
+                setCurrentView('calendar');
+              }}
+            />
+          )}
+
+          {currentView === 'advisor' && (
+            <AdvisorStudio
+              keys={keys}
+              settings={settings}
+              onNavigate={(view, siteId) => {
+                if (siteId) setActiveSiteId(siteId);
+                if (view === 'calendar') window.history.replaceState(null, '', '#/calendar');
+                setCurrentView(view as typeof currentView);
+              }}
+            />
+          )}
+
+          {currentView === 'guide' && <UserGuide keys={keys} settings={settings} onOpenSettings={() => setIsSettingsOpen(true)} />}
+
+          {currentView === 'voxpress' && (
+            <VoxPressStudio keys={keys} settings={settings} onOpenSettings={() => setIsSettingsOpen(true)} />
+          )}
+
+          {currentView === 'produce-videos' && (
+            <ProduceVideosStudio keys={keys} onOpenSettings={() => setIsSettingsOpen(true)} />
+          )}
+
+          {currentView === 'brain' && (
+            <SecondBrainStudio keys={keys} settings={settings} onOpenSettings={() => setIsSettingsOpen(true)} />
           )}
 
           {/* K. CONTENT MULTIPLIER STUDIO (1 IDEA -> ALL PLATFORMS & 9:16 VIDEO ENGINE) */}

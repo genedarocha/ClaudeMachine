@@ -44,3 +44,14 @@ No CSS modules, no Tailwind, no styled-components — global `index.css` defines
 Both `ai.ts`'s `generateNewSpecialist`/stream functions (implicitly, via `onError` callbacks that surface to the UI) and every `automation_<provider>.py` synthesizer catch broad `Exception` and substitute hardcoded content, printing/logging a warning but not distinguishing "no key," "rate limited," "network down," and "malformed response" from each other.
 **Why (inferred):** keeps the demo always "working" end-to-end even when a real integration hiccups.
 **Consequence:** in the Python engine this is actively dangerous for an "autonomous daily" system — see audit CRITICAL findings — because it can silently publish (or claim to publish) fabricated content indistinguishable from a real AI-generated run.
+
+
+## Claude via the official SDK in the browser (2026-10-22)
+Claude calls moved from hand-written `fetch` to `@anthropic-ai/sdk` with `dangerouslyAllowBrowser: true`. This is consistent with the existing BYOK, client-only decision above (the key already lives in the user's browser); the SDK just replaces hand-rolled request/stream code. Current Claude models reject `temperature`, so it is not sent. `fallbacks: "default"` (beta `server-side-fallback-2026-07-01`) is on for current Opus/Sonnet/Fable models so a safety refusal is retried on a fallback model server-side; remaining refusals surface as errors, never as empty success. Grok was added as a fourth provider through xAI's OpenAI-compatible API (browser CORS allowed).
+
+## The Agency agents are vendored, not fetched live (2026-10-22)
+282 MIT-licensed agent prompts are snapshotted into `public/agency-agents/` by `scripts/sync-agency-agents.mjs` rather than fetched from GitHub at runtime, so the app doesn't break if the upstream repo moves or restructures. Re-run the script to update.
+
+
+## Second Brain stays on Gene's computer, as files (2026-10-22)
+Following learnwithhasan.com/guide/ai-second-brain, the brain is a folder of markdown files in its own private git repo (`~/Documents/second-brain`), not a database or a hosted vector store. The deployed app is public, so the brain is never bundled or uploaded: the Second Brain screen reads the folder in place through the browser's File System Access API, and only the notes chosen for a question are sent to the AI provider. Retrieval is keyword/structural (as the guide recommends) rather than embeddings. LinkedIn content comes from LinkedIn's official data export, not scraping. The guide's optional hosted "head" (BrainOutside on a VPS with MCP) isn't built; it would be the route to using the brain from claude.ai or other devices.

@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Voxstar LinkedIn Reply Assistant</title>
+<style>
+  body { font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #1d2226; margin: 0; padding: 16px; width: 360px; }
+  h1 { font-size: 16px; margin: 0 0 8px; }
+  .row { display: flex; justify-content: space-between; gap: 8px; padding: 4px 0; border-bottom: 1px solid #eef3f8; }
+  .k { color: #56687a; }
+  .ok { color: #057642; font-weight: 600; } .bad { color: #b24020; font-weight: 600; }
+  label { display: block; margin-top: 12px; font-weight: 600; }
+  select { width: 100%; margin-top: 4px; padding: 6px; font: inherit; }
+  p.hint { color: #56687a; font-size: 12px; }
+  a { color: #0a66c2; }
+</style>
+</head>
+<body>
+  <h1>Voxstar LinkedIn Reply Assistant</h1>
+  <div id="status"></div>
+  <label>Reply angle
+    <select id="tone">
+      <option value="insight">Add a practitioner insight</option>
+      <option value="question">Ask a sharp follow-up question</option>
+      <option value="contrarian">Respectful contrarian angle</option>
+      <option value="story">Short first-hand story</option>
+    </select>
+  </label>
+  <p class="hint">
+    Settings, API key, brands and your voice samples sync automatically from
+    <a href="https://claude-machine.vercel.app" target="_blank">Claude Machine</a> whenever it's open in a tab.
+    Change them there (Settings, and LinkedIn Comment Replies), then reload that tab.
+  </p>
+  <p class="hint">On LinkedIn: click <b>✨ Draft reply</b> under a post, or select a post's text → right-click → <b>Draft Voxstar reply</b>. Approve puts the reply in the comment box; you press Post.</p>
+  <script src="options.js"></script>
+</body>
+</html>

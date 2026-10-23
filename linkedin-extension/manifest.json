@@ -1,0 +1,48 @@
+{
+  "manifest_version": 3,
+  "name": "Voxstar LinkedIn Reply Assistant",
+  "version": "1.2.0",
+  "description": "Drafts humanized LinkedIn comment replies for Gene Da Rocha's Voxstar brands with Claude, Gemini, ChatGPT or Grok. You approve each one and press Post yourself.",
+  "permissions": [
+    "storage",
+    "contextMenus"
+  ],
+  "host_permissions": [
+    "https://www.linkedin.com/*",
+    "https://generativelanguage.googleapis.com/*",
+    "https://api.openai.com/*",
+    "https://api.anthropic.com/*",
+    "https://api.x.ai/*"
+  ],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.linkedin.com/*"
+      ],
+      "js": [
+        "content-linkedin.js"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://claude-machine.vercel.app/*",
+        "http://localhost:5173/*",
+        "http://localhost:4173/*"
+      ],
+      "js": [
+        "content-sync.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "options_page": "options.html",
+  "action": {
+    "default_title": "Voxstar LinkedIn Reply Assistant",
+    "default_popup": "options.html"
+  }
+}

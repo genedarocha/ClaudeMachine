@@ -7,20 +7,26 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "package:extension": "rolldown -c linkedin-extension/rolldown.config.mjs && rm -f public/voxstar-linkedin-extension.zip && cd linkedin-extension && zip -qr ../public/voxstar-linkedin-extension.zip . -x '.*' -x 'src/*' -x 'rolldown.config.mjs'"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^1.1.0",
     "lucide-react": "^1.22.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7"
   },
   "devDependencies": {
+    "@mozilla/readability": "^0.6.0",
     "@types/node": "^24.13.2",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.3",
+    "jsdom": "^28.1.0",
     "oxlint": "^1.71.0",
+    "turndown": "^7.2.4",
     "typescript": "~6.0.2",
+    "undici": "^7.30.1",
     "vite": "^8.1.1"
   }
 }
