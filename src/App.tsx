@@ -33,6 +33,7 @@ import { AdvisorStudio } from './components/AdvisorStudio';
 import { UserGuide } from './components/UserGuide';
 import { SecondBrainStudio } from './components/SecondBrainStudio';
 import { ProduceVideosStudio } from './components/ProduceVideosStudio';
+import { VoxPressStudio } from './components/VoxPressStudio';
 import { recordViewUse } from './utils/advisor';
 import { UniversalVideoStudio } from './components/UniversalVideoStudio';
 import { LinkedInCommentsStudio } from './components/LinkedInCommentsStudio';
@@ -68,7 +69,7 @@ function App() {
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [activeSpecialist, setActiveSpecialist] = useState<Specialist | null>(null);
-  const [currentView, setCurrentView] = useState<'dashboard' | 'runner' | 'generator' | 'history' | 'voxstar' | 'podcast-studio' | 'creation-wiredvibe' | 'creation-idea' | 'site-content' | 'calendar' | 'agents' | 'advisor' | 'guide' | 'brain' | 'produce-videos' | 'video-factory' | 'linkedin-comments' | 'linkedin-replies' | 'youtube-builder' | 'newsletter' | 'content-multiplier'>('content-multiplier');
+  const [currentView, setCurrentView] = useState<'dashboard' | 'runner' | 'generator' | 'history' | 'voxstar' | 'podcast-studio' | 'creation-wiredvibe' | 'creation-idea' | 'site-content' | 'calendar' | 'agents' | 'advisor' | 'guide' | 'brain' | 'produce-videos' | 'voxpress' | 'video-factory' | 'linkedin-comments' | 'linkedin-replies' | 'youtube-builder' | 'newsletter' | 'content-multiplier'>('content-multiplier');
   const [activeSoundscape, setActiveSoundscape] = useState<string>('Gamma Retention Pulse');
   const [activeSiteId, setActiveSiteId] = useState<string>('wiredvibe');
   const [autoDraftNotice, setAutoDraftNotice] = useState<string | null>(null);
@@ -293,6 +294,15 @@ function App() {
                 <Radio size={14} />
                 <span>Podcast Studio</span>
                 <span className="nav-badge-hot">Ep #100 Ready</span>
+              </button>
+
+              <button 
+                className={`nav-sub-item ${currentView === 'voxpress' ? 'active' : ''}`}
+                onClick={() => { setCurrentView('voxpress'); setActiveSpecialist(null); }}
+              >
+                <BookOpen size={14} />
+                <span>VoxPress Creative Factory v2</span>
+                <span className="nav-badge-hot">Books · Film</span>
               </button>
 
               <button 
@@ -850,6 +860,10 @@ function App() {
           )}
 
           {currentView === 'guide' && <UserGuide keys={keys} settings={settings} onOpenSettings={() => setIsSettingsOpen(true)} />}
+
+          {currentView === 'voxpress' && (
+            <VoxPressStudio keys={keys} settings={settings} onOpenSettings={() => setIsSettingsOpen(true)} />
+          )}
 
           {currentView === 'produce-videos' && (
             <ProduceVideosStudio keys={keys} onOpenSettings={() => setIsSettingsOpen(true)} />
