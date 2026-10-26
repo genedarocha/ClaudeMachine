@@ -264,3 +264,51 @@ export function campaignToCsv(leads: Lead[], steps: SeqStep[], signature: string
   }
   return rows.join('\n');
 }
+
+// --- Sending engine (optional Supabase Edge Functions backend) -----------------------------------
+
+export interface EngineConfig { functionsUrl: string; secret: string }
+const ENGINE_KEY = 'claude_machine_outreach_engine';
+export const loadEngine = (): EngineConfig | null => { try { return JSON.parse(localStorage.getItem(ENGINE_KEY) || 'null'); } catch { return null; } };
+export const saveEngine = (e: EngineConfig) => { try { localStorage.setItem(ENGINE_KEY, JSON.stringify(e)); } catch { /* ignore */ } };
+
+export interface CampaignRow {
+  name: string; steps: SeqStep[]; from_name: string; from_email: string; reply_to?: string; signature: string; physical_address: string;
+}
+
+// Creates the campaign in Supabase and tells the engine to queue it. Returns the enqueue result.
+export async function launchCampaign(cfg: SupabaseConfig, engine: EngineConfig, campaign: CampaignRow): Promise<{ leads_queued: number; messages_created: number }> {
+  const [created] = await sb<{ id: string }[]>(cfg, 'campaigns', { method: 'POST', headers: { Prefer: 'return=representation' }, body: JSON.stringify(campaign) });
+  if (!created?.id) throw new Error('Could not create the campaign in Supabase.');
+  const res = await fetch(`${engine.functionsUrl.replace(/\/$/, '')}/enqueue`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'x-outreach-secret': engine.secret },
+    body: JSON.stringify({ campaign_id: created.id })
+  });
+  if (!res.ok) throw new Error(`Engine ${res.status}: ${(await res.text()).slice(0, 200)}`);
+  return res.json();
+}
+
+export interface SendStats { sent: number; opened: number; clicked: number; replied: number; queued: number; cancelled: number; failed: number }
+
+// Reads message/event counts straight from Supabase for a live dashboard.
+export async function fetchStats(cfg: SupabaseConfig): Promise<SendStats> {
+  const head = async (query: string): Promise<number> => {
+    const res = await fetch(`${cfg.url.replace(/\/$/, '')}/rest/v1/${query}`, {
+      method: 'HEAD',
+      headers: { apikey: cfg.anonKey, Authorization: `Bearer ${cfg.anonKey}`, Prefer: 'count=exact', Range: '0-0' }
+    });
+    const cr = res.headers.get('content-range') || '*/0';
+    return Number(cr.split('/')[1]) || 0;
+  };
+  const [sent, opened, clicked, queued, cancelled, failed, replied] = await Promise.all([
+    head('messages?status=eq.sent&select=id'),
+    head('messages?status=eq.opened&select=id'),
+    head('messages?status=eq.clicked&select=id'),
+    head('messages?status=eq.queued&select=id'),
+    head('messages?status=eq.cancelled&select=id'),
+    head('messages?status=eq.failed&select=id'),
+    head('leads?status=eq.replied&select=id')
+  ]);
+  return { sent: sent + opened + clicked, opened: opened + clicked, clicked, queued, cancelled, failed, replied };
+}

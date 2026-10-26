@@ -1,0 +1,16 @@
+# Supabase project config for the Outreach sending engine.
+# Deploy functions with:  supabase functions deploy <name>
+# The track and unsubscribe functions are PUBLIC (recipients call them), so disable JWT verification.
+# enqueue, send-due and inbound are protected by the x-outreach-secret header instead.
+project_id = "voxpress-outreach"
+
+[functions.enqueue]
+verify_jwt = false
+[functions.send-due]
+verify_jwt = false
+[functions.track]
+verify_jwt = false
+[functions.unsubscribe]
+verify_jwt = false
+[functions.inbound]
+verify_jwt = false

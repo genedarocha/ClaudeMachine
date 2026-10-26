@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import {
-  Send, Database, Upload, Loader2, AlertTriangle, Check, Copy, Download, Mail, UserX, Sparkles, RefreshCw, Shield, ExternalLink
+  Send, Database, Upload, Loader2, AlertTriangle, Check, Copy, Download, Mail, UserX, Sparkles, RefreshCw, Shield
 } from 'lucide-react';
 import { type ApiKeys, type ModelSettings } from '../utils/ai';
 import {
   type SupabaseConfig, type Lead, type SeqStep, SCHEMA_SQL, loadSupabase, saveSupabase, clearSupabase, testConnection,
   fetchLeads, fetchUnsubscribes, importLeads, addUnsubscribe, parseCsv, guessMapping, rowsToLeads,
-  generateSequence, campaignToCsv, renderStep
+  generateSequence, campaignToCsv, renderStep,
+  type EngineConfig, type SendStats, loadEngine, saveEngine, launchCampaign, fetchStats
 } from '../utils/outreach';
 import { SafeMarkdown } from './SpecialistRunner';
 
@@ -58,6 +59,15 @@ export const OutreachStudio: React.FC<OutreachStudioProps> = ({ keys, settings, 
 
   // Suppression input
   const [unsubEmail, setUnsubEmail] = useState('');
+  // Sending engine
+  const [engine, setEngine] = useState<EngineConfig | null>(loadEngine);
+  const [fnUrl, setFnUrl] = useState(engine?.functionsUrl || '');
+  const [secret, setSecret] = useState(engine?.secret || '');
+  const [campaignName, setCampaignName] = useState('Outreach campaign');
+  const [replyTo, setReplyTo] = useState('');
+  const [fromEmail, setFromEmail] = useState('');
+  const [stats, setStats] = useState<SendStats | null>(null);
+  const [launching, setLaunching] = useState(false);
 
   const isDemo = settings.provider === 'mock';
 
@@ -73,6 +83,7 @@ export const OutreachStudio: React.FC<OutreachStudioProps> = ({ keys, settings, 
   }, []);
 
   useEffect(() => { if (cfg) refresh(cfg); }, [cfg, refresh]);
+  useEffect(() => { if (cfg && engine) fetchStats(cfg).then(setStats).catch(() => {}); }, [cfg, engine, tab]);
   useEffect(() => { if (!notice) return; const t = setTimeout(() => setNotice(null), 4000); return () => clearTimeout(t); }, [notice]);
 
   const connect = async () => {
@@ -132,6 +143,24 @@ export const OutreachStudio: React.FC<OutreachStudioProps> = ({ keys, settings, 
     if (!cfg || !unsubEmail.trim()) return;
     try { await addUnsubscribe(cfg, unsubEmail); setUnsubEmail(''); await refresh(cfg); setNotice('Added to the suppression list.'); }
     catch (e) { setError(e instanceof Error ? e.message : 'Could not add.'); }
+  };
+
+  const saveEngineCfg = () => {
+    if (!fnUrl.trim() || !secret.trim()) { setError('Enter the functions URL and the outreach secret.'); return; }
+    const e = { functionsUrl: fnUrl.trim(), secret: secret.trim() }; saveEngine(e); setEngine(e); setNotice('Sending engine saved.');
+  };
+  const launch = async () => {
+    if (!cfg || !engine) return;
+    if (!steps.length) { setError('Generate a sequence first.'); return; }
+    if (!fromEmail.trim()) { setError('Enter the From email (a verified sender on your email provider).'); return; }
+    if (!window.confirm(`Launch "${campaignName}" to ${sendable.length} leads? The engine will start sending on its schedule. Make sure your domain is warmed up and you have a lawful basis to contact these people.`)) return;
+    setLaunching(true); setError(null);
+    try {
+      const res = await launchCampaign(cfg, engine, { name: campaignName, steps, from_name: fromName, from_email: fromEmail.trim(), reply_to: replyTo.trim() || undefined, signature, physical_address: address });
+      await refresh(cfg); fetchStats(cfg).then(setStats).catch(() => {});
+      setNotice(`Launched: ${res.leads_queued} leads queued, ${res.messages_created} emails scheduled. The engine sends them on its cron schedule.`);
+    } catch (e) { setError(e instanceof Error ? e.message : 'Launch failed.'); }
+    finally { setLaunching(false); }
   };
 
   const exportCsv = () => {
@@ -266,17 +295,49 @@ export const OutreachStudio: React.FC<OutreachStudioProps> = ({ keys, settings, 
       {tab === 'send' && (
         <section className="ou-card glass-panel">
           <h3>Send the campaign</h3>
-          <p className="ou-muted">{sendable.length} leads ready ({suppressed.size} suppressed). This app prepares the campaign; a sending platform does the actual sending, open/click tracking, drip retries and unsubscribe handling.</p>
-          <button className="btn btn-primary ou-btn" disabled={!steps.length || !sendable.length} onClick={exportCsv}><Download size={14} /> Export send-ready CSV ({sendable.length} leads × {steps.length} steps)</button>
+          <p className="ou-muted">{sendable.length} leads ready ({suppressed.size} suppressed).</p>
+
+          {/* Option 1: export to a sending platform */}
           <div className="ou-send-how">
-            <h4>How to actually send (pick one)</h4>
-            <ul>
-              <li><b>A sending platform</b> (recommended): import the CSV into <a href="https://instantly.ai" target="_blank" rel="noopener noreferrer">Instantly</a>, Smartlead, Lemlist or Mailchimp. They handle sending, open/click tracking, automatic follow-ups and unsubscribe links, and protect your deliverability.</li>
-              <li><b>Your own server</b>: deploy a sender using SendGrid/Resend/SES + Supabase Edge Functions (the <code>messages</code>/<code>events</code> tables and tracking pixel/unsubscribe endpoints). Ask Claude Code to scaffold it — it's a separate backend, not a browser feature.</li>
-            </ul>
-            <p className="ou-muted"><Shield size={12} /> Cold email is regulated. Only email people you have a lawful basis to contact, include your address and a real opt-out, honour unsubscribes immediately, and warm up your sending domain.</p>
-            <a className="ou-link-ext" href="https://gdpr.eu/email-encryption/" target="_blank" rel="noopener noreferrer"><ExternalLink size={12} /> GDPR for email</a>
+            <h4>Option 1 — export to a sending platform (no backend)</h4>
+            <button className="btn btn-secondary ou-btn" disabled={!steps.length || !sendable.length} onClick={exportCsv}><Download size={14} /> Export send-ready CSV ({sendable.length}×{steps.length})</button>
+            <p className="ou-muted">Import into <a href="https://instantly.ai" target="_blank" rel="noopener noreferrer">Instantly</a>, Smartlead or Lemlist — they handle sending, tracking, follow-ups and unsubscribe.</p>
           </div>
+
+          {/* Option 2: the built-in sending engine */}
+          <div className="ou-send-how">
+            <h4>Option 2 — your own sending engine (Supabase Edge Functions)</h4>
+            <p className="ou-muted">Deploy the engine in <code>supabase/functions</code> (see docs/OUTREACH_SENDING_ENGINE.md). It sends via Resend, tracks opens/clicks, runs the follow-up drip, and stops on reply/unsubscribe — all on your own infrastructure.</p>
+            {!engine ? (
+              <>
+                <label className="ou-field"><span>Functions base URL</span><input value={fnUrl} onChange={e => setFnUrl(e.target.value)} placeholder="https://<ref>.functions.supabase.co" /></label>
+                <label className="ou-field"><span>Outreach secret (the OUTREACH_SECRET you set on the functions)</span><input value={secret} onChange={e => setSecret(e.target.value)} placeholder="a long random string" /></label>
+                <button className="btn btn-secondary ou-btn" onClick={saveEngineCfg}>Save engine</button>
+              </>
+            ) : (
+              <>
+                <div className="ou-grid">
+                  <label className="ou-field"><span>Campaign name</span><input value={campaignName} onChange={e => setCampaignName(e.target.value)} /></label>
+                  <label className="ou-field"><span>From email (verified sender)</span><input value={fromEmail} onChange={e => setFromEmail(e.target.value)} placeholder="gene@voxstar.com" /></label>
+                  <label className="ou-field"><span>Reply-to (optional)</span><input value={replyTo} onChange={e => setReplyTo(e.target.value)} /></label>
+                </div>
+                <div className="ou-row">
+                  <button className="btn btn-primary ou-btn" disabled={launching || !steps.length} onClick={launch}>{launching ? <Loader2 size={14} className="ou-spin" /> : <Send size={14} />} Launch campaign ({sendable.length} leads)</button>
+                  <button className="ou-link" onClick={() => { saveEngine({ functionsUrl: '', secret: '' }); setEngine(null); }}>Change engine settings</button>
+                </div>
+                {stats && (
+                  <div className="ou-stats">
+                    {([['Sent', stats.sent], ['Opened', stats.opened], ['Clicked', stats.clicked], ['Replied', stats.replied], ['Queued', stats.queued], ['Unsub/cancelled', stats.cancelled], ['Failed', stats.failed]] as [string, number][]).map(([k, v]) => (
+                      <div key={k} className="ou-stat"><strong>{v}</strong><span>{k}</span></div>
+                    ))}
+                    <button className="ou-link" onClick={() => cfg && fetchStats(cfg).then(setStats).catch(() => {})}>Refresh stats</button>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+
+          <p className="ou-muted"><Shield size={12} /> Cold email is regulated. Only email people you have a lawful basis to contact, keep the opt-out working, and warm up your sending domain. <a href="https://gdpr.eu/email-encryption/" target="_blank" rel="noopener noreferrer">GDPR for email</a></p>
         </section>
       )}
 
@@ -327,5 +388,8 @@ const STYLES = `
   .ou-out { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5; white-space: pre-wrap; }
   .ou-send-how { border-top: 1px solid var(--border-glass); padding-top: 12px; } .ou-send-how ul { margin: 0 0 8px; padding-left: 18px; color: var(--text-secondary); font-size: 0.85rem; line-height: 1.6; }
   .ou-send-how code { font-family: var(--font-mono); color: var(--accent); font-size: 0.8rem; }
+  .ou-stats { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 8px; }
+  .ou-stat { border: 1px solid var(--border-glass); border-radius: 8px; padding: 8px 14px; text-align: center; min-width: 72px; }
+  .ou-stat strong { display: block; font-size: 1.2rem; color: var(--primary); } .ou-stat span { font-size: 0.7rem; color: var(--text-muted); }
   .ou-spin { animation: ou-spin 1s linear infinite; } @keyframes ou-spin { to { transform: rotate(360deg); } }
 `;
