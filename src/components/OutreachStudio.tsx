@@ -128,6 +128,16 @@ export const OutreachStudio: React.FC<OutreachStudioProps> = ({ keys, settings, 
     finally { setBusy(null); }
   };
 
+  const loadSample = () => {
+    setOffer('AlbionLM — a UK-hosted, security-cleared AI for regulated organisations. Early-access pilots open.');
+    setAudience('CISOs and heads of security at UK banks and public bodies');
+    setSteps([
+      { subject: 'Quick one, {{first_name}}', body: "Hi {{first_name}}, I'm building AlbionLM, a UK-hosted AI model for security teams who can't send data to US clouds. Thought it might be relevant to {{company}}. Worth a short look?", waitDays: 0 },
+      { subject: 'Following up', body: "Hi {{first_name}}, circling back once in case this slipped past. Happy to send a one-page overview rather than a call if that's easier. Either way, no worries.", waitDays: 3 }
+    ]);
+    setNotice('Loaded a sample 2-step sequence. Edit it, then preview and export or launch.');
+  };
+
   const genSeq = async () => {
     if (isDemo) { onOpenSettings(); return; }
     if (!offer.trim()) { setError('Describe what you\'re offering first.'); return; }
@@ -230,6 +240,7 @@ export const OutreachStudio: React.FC<OutreachStudioProps> = ({ keys, settings, 
       {tab === 'leads' && (
         <section className="ou-card glass-panel">
           <h3>Import leads (CSV)</h3>
+          <p className="ou-muted">New here? <a href="/outreach-test-leads.csv" download>Download a 3-row test CSV</a> (edit the emails to your own address, e.g. Gmail <code>you+test1@gmail.com</code> aliases all reach one inbox) to run a safe first test.</p>
           <input type="file" accept=".csv,text/csv" onChange={e => onFile(e.target.files?.[0])} />
           {csv && (
             <>
@@ -268,7 +279,10 @@ export const OutreachStudio: React.FC<OutreachStudioProps> = ({ keys, settings, 
           <label className="ou-field"><span>Signature</span><textarea rows={3} value={signature} onChange={e => setSignature(e.target.value)} /></label>
           <label className="ou-field"><span>Physical address (required for CAN-SPAM)</span><input value={address} onChange={e => setAddress(e.target.value)} /></label>
           <label className="ou-check"><input type="checkbox" checked={humanize} onChange={e => setHumanize(e.target.checked)} /> Humanize the emails</label>
-          <button className="btn btn-primary ou-btn" disabled={busy === 'seq'} onClick={genSeq}>{busy === 'seq' ? <Loader2 size={14} className="ou-spin" /> : <Sparkles size={14} />} {steps.length ? 'Rewrite sequence' : 'Write sequence'}</button>
+          <div className="ou-row">
+            <button className="btn btn-primary ou-btn" disabled={busy === 'seq'} onClick={genSeq}>{busy === 'seq' ? <Loader2 size={14} className="ou-spin" /> : <Sparkles size={14} />} {steps.length ? 'Rewrite sequence' : 'Write sequence'}</button>
+            <button className="btn btn-secondary ou-btn" onClick={loadSample}>Load sample sequence</button>
+          </div>
           {steps.map((st, i) => (
             <div key={i} className="ou-step">
               <div className="ou-step-head"><strong>Step {i + 1}</strong>{i > 0 && <span className="ou-muted">send {st.waitDays} days after step {i}</span>}</div>
