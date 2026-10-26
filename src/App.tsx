@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { 
   Plus, Search, Settings, History, LayoutDashboard, 
   Trash2, Copy, Check, ChevronRight, Terminal, Cpu, FileText, Zap, HelpCircle,
-  Calendar, Headphones, Video, Globe, Sparkles, Radio, Share2, Clapperboard, Newspaper, CalendarDays, Bot, Lightbulb, BookOpen, Brain
+  Calendar, Headphones, Video, Globe, Sparkles, Radio, Share2, Clapperboard, Newspaper, CalendarDays, Bot, Lightbulb, BookOpen, Brain, Send
 } from 'lucide-react';
 
 const LinkedInIcon: React.FC<{ size?: number; className?: string }> = ({ size = 16, className = "" }) => (
@@ -35,6 +35,7 @@ import { SecondBrainStudio } from './components/SecondBrainStudio';
 import { ProduceVideosStudio } from './components/ProduceVideosStudio';
 import { VoxPressStudio } from './components/VoxPressStudio';
 import { LinkedInConnectStudio } from './components/LinkedInConnectStudio';
+import { OutreachStudio } from './components/OutreachStudio';
 import { recordViewUse } from './utils/advisor';
 import { UniversalVideoStudio } from './components/UniversalVideoStudio';
 import { LinkedInCommentsStudio } from './components/LinkedInCommentsStudio';
@@ -70,7 +71,7 @@ function App() {
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [activeSpecialist, setActiveSpecialist] = useState<Specialist | null>(null);
-  const [currentView, setCurrentView] = useState<'dashboard' | 'runner' | 'generator' | 'history' | 'voxstar' | 'podcast-studio' | 'creation-wiredvibe' | 'creation-idea' | 'site-content' | 'calendar' | 'agents' | 'advisor' | 'guide' | 'brain' | 'produce-videos' | 'voxpress' | 'linkedin-connect' | 'video-factory' | 'linkedin-comments' | 'linkedin-replies' | 'youtube-builder' | 'newsletter' | 'content-multiplier'>('content-multiplier');
+  const [currentView, setCurrentView] = useState<'dashboard' | 'runner' | 'generator' | 'history' | 'voxstar' | 'podcast-studio' | 'creation-wiredvibe' | 'creation-idea' | 'site-content' | 'calendar' | 'agents' | 'advisor' | 'guide' | 'brain' | 'produce-videos' | 'voxpress' | 'linkedin-connect' | 'outreach' | 'video-factory' | 'linkedin-comments' | 'linkedin-replies' | 'youtube-builder' | 'newsletter' | 'content-multiplier'>('content-multiplier');
   const [activeSoundscape, setActiveSoundscape] = useState<string>('Gamma Retention Pulse');
   const [activeSiteId, setActiveSiteId] = useState<string>('wiredvibe');
   const [autoDraftNotice, setAutoDraftNotice] = useState<string | null>(null);
@@ -410,6 +411,15 @@ function App() {
           >
             <LinkedInIcon size={16} />
             <span>LinkedIn Comment Replies</span>
+          </button>
+
+          <button 
+            className={`nav-item ${currentView === 'outreach' ? 'active' : ''}`}
+            onClick={() => { setCurrentView('outreach'); setActiveSpecialist(null); }}
+          >
+            <Send size={16} />
+            <span>Outreach</span>
+            <span className="nav-badge-hot">New clients</span>
           </button>
 
           <button 
@@ -869,6 +879,10 @@ function App() {
           )}
 
           {currentView === 'guide' && <UserGuide keys={keys} settings={settings} onOpenSettings={() => setIsSettingsOpen(true)} />}
+
+          {currentView === 'outreach' && (
+            <OutreachStudio keys={keys} settings={settings} onOpenSettings={() => setIsSettingsOpen(true)} />
+          )}
 
           {currentView === 'linkedin-connect' && (
             <LinkedInConnectStudio keys={keys} settings={settings} onOpenSettings={() => setIsSettingsOpen(true)} />
