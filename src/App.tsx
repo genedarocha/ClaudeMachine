@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { 
   Plus, Search, Settings, History, LayoutDashboard, 
   Trash2, Copy, Check, ChevronRight, Terminal, Cpu, FileText, Zap, HelpCircle,
-  Calendar, Headphones, Video, Globe, Sparkles, Radio, Share2, Clapperboard, Newspaper, CalendarDays, Bot, Lightbulb, BookOpen, Brain, Send
+  Calendar, Headphones, Video, Globe, Sparkles, Radio, Share2, Clapperboard, Newspaper, CalendarDays, Bot, Lightbulb, BookOpen, Brain, Send, Pin
 } from 'lucide-react';
 
 const LinkedInIcon: React.FC<{ size?: number; className?: string }> = ({ size = 16, className = "" }) => (
@@ -43,6 +43,7 @@ import { LinkedInRepliesStudio } from './components/LinkedInRepliesStudio';
 import { YouTubeChannelBuilder } from './components/YouTubeChannelBuilder';
 import { NewsletterStudio } from './components/NewsletterStudio';
 import { ContentMultiplierStudio } from './components/ContentMultiplierStudio';
+import { VoxPinsStudio } from './components/VoxPinsStudio';
 import { type ApiKeys, type ModelSettings } from './utils/ai';
 
 interface RunHistoryItem {
@@ -71,7 +72,7 @@ function App() {
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [activeSpecialist, setActiveSpecialist] = useState<Specialist | null>(null);
-  const [currentView, setCurrentView] = useState<'dashboard' | 'runner' | 'generator' | 'history' | 'voxstar' | 'podcast-studio' | 'creation-wiredvibe' | 'creation-idea' | 'site-content' | 'calendar' | 'agents' | 'advisor' | 'guide' | 'brain' | 'produce-videos' | 'voxpress' | 'linkedin-connect' | 'outreach' | 'video-factory' | 'linkedin-comments' | 'linkedin-replies' | 'youtube-builder' | 'newsletter' | 'content-multiplier'>('content-multiplier');
+  const [currentView, setCurrentView] = useState<'dashboard' | 'runner' | 'generator' | 'history' | 'voxstar' | 'podcast-studio' | 'creation-wiredvibe' | 'creation-idea' | 'site-content' | 'calendar' | 'agents' | 'advisor' | 'guide' | 'brain' | 'produce-videos' | 'voxpress' | 'linkedin-connect' | 'outreach' | 'video-factory' | 'linkedin-comments' | 'linkedin-replies' | 'youtube-builder' | 'newsletter' | 'content-multiplier' | 'voxpins'>('content-multiplier');
   const [activeSoundscape, setActiveSoundscape] = useState<string>('Gamma Retention Pulse');
   const [activeSiteId, setActiveSiteId] = useState<string>('wiredvibe');
   const [autoDraftNotice, setAutoDraftNotice] = useState<string | null>(null);
@@ -324,7 +325,16 @@ function App() {
                 <span>YouTube Channel Builder</span>
               </button>
 
-              <button 
+              <button
+                className={`nav-sub-item ${currentView === 'voxpins' ? 'active' : ''}`}
+                onClick={() => { setCurrentView('voxpins'); setActiveSpecialist(null); }}
+              >
+                <Pin size={14} />
+                <span>VoxPins</span>
+                <span className="nav-badge-hot">Pins → PDF</span>
+              </button>
+
+              <button
                 className={`nav-sub-item ${currentView === 'video-factory' ? 'active' : ''}`}
                 onClick={() => { setCurrentView('video-factory'); setActiveSpecialist(null); }}
               >
@@ -903,6 +913,11 @@ function App() {
           {/* K. CONTENT MULTIPLIER STUDIO (1 IDEA -> ALL PLATFORMS & 9:16 VIDEO ENGINE) */}
           {currentView === 'content-multiplier' && (
             <ContentMultiplierStudio />
+          )}
+
+          {/* L. VOXPINS — Pinterest pin research → sellable PDF product (real LLM calls) */}
+          {currentView === 'voxpins' && (
+            <VoxPinsStudio keys={keys} settings={settings} onOpenSettings={() => setIsSettingsOpen(true)} />
           )}
         </div>
       </main>
